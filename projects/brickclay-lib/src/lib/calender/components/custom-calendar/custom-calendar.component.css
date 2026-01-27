@@ -1,0 +1,698 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap'); */
+
+.calendar-container,
+.calendar-container * {
+  font-family: 'Inter', sans-serif !important;
+}
+/* --------------------------
+   CALENDAR CONTAINER
+---------------------------*/
+.calendar-container {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+/* --------------------------
+   INPUT WRAPPER
+---------------------------*/
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.calendar-input {
+  width: 100%;
+    padding: 9px 14px 9px 40px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    background: #fff;
+    transition: all 0.2s;
+}
+
+.calendar-input:hover {
+  border-color: #999;
+}
+
+.calendar-input:focus {
+  outline: none;
+    border-color: #999;
+    box-shadow: 0 0 0 3px rgb(106 106 106 / 10%);
+}
+
+.calendar-icon {
+  position: absolute;
+  left: 12px;
+  pointer-events: none;
+  font-size: 18px;
+}
+
+.clear-btn {
+  position: absolute;
+  right: 9px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #999;
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: color 0.2s;
+  top: 8px;
+}
+
+.clear-btn:hover {
+  color: #333;
+}
+
+/* --------------------------
+   CALENDAR POPUP
+---------------------------*/
+.calendar-popup {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  width: 320px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  /* padding: 16px; */
+  z-index: 1000;
+  animation: slideDown 0.2s ease-out;
+}
+
+/* Inline Calendar Mode */
+.calendar-popup.inline-calendar {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  margin-top: 0;
+  animation: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-container.inline-mode {
+  display: block;
+  width: 100%;
+}
+
+/* Increase width for dual calendar */
+.calendar-popup.dual-calendar-mode {
+  width: 600px;
+}
+.calendar-popup.dual-calendar-mode.has-ranges {
+  width: 730px;
+}
+.calendar-popup.has-ranges {
+  width: 450px;
+}
+
+.calendar-popup.dual-calendar-mode.has-ranges .dual-calendar {
+  border-left: 1px solid #eee;
+}
+
+.calendar-popup.drop-up {
+  top: auto;
+  bottom: 110%;
+  animation: slideUp 0.2s ease-out;
+}
+
+.calendar-popup.position-right {
+  left: auto;
+  right: 0;
+}
+
+.calendar-popup.position-center {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --------------------------
+   RANGES SECTION
+---------------------------*/
+.ranges {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #eee;
+  /* max-height: 300px; */
+  /* overflow-y: auto;   */
+  min-width: 150px;
+  padding-right: 8px;
+}
+
+.range-btn {
+  padding: 7px 10px;
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 14px;
+  transition: all 0.2s;
+  color: #838383;
+  font-weight: 500;
+}
+
+.range-btn:hover {
+  background: #f5f5f5;
+  color: #000;
+}
+
+.range-btn.active {
+  background: #f0f0f0;
+  color: #000;
+  font-weight: 500;
+}
+
+/* --------------------------
+   CALENDAR WRAPPER
+---------------------------*/
+.calendar-wrapper {
+  /*width: 100%;*/
+  padding: 0 12px 12px 12px;
+  border-left: 1px solid #eee;
+}
+
+/* --------------------------
+   HEADER (Month + Year + Arrows)
+---------------------------*/
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  /* margin-bottom: 8px; */
+}
+
+.month-year {
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  flex: 1;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.nav-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 11.5px 14px;
+  color: #666;
+  border-radius: 4px;
+  transition: all 0.2s;
+  line-height: 1;
+  height: 30px;
+  width: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-btn:hover {
+  background: #f0f0f0;
+  color: #000;
+}
+.nav-btn img{
+  width: auto;
+
+    max-width: none !important;
+}
+
+/* --------------------------
+   CALENDAR TABLE
+---------------------------*/
+.calendar-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.weekday-header {
+  font-size: 12px;
+  color: #7e7e7e;
+  font-weight: 600;
+  padding: 8px 4px;
+  /*text-transform: uppercase;*/
+  letter-spacing: 0.3px;
+
+}
+
+/* --------------------------
+   DATE CELLS
+---------------------------*/
+.calendar-day {
+  padding: 8px 4px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s;
+  position: relative;
+  color: #333;
+  font-weight: 500;
+  line-height: 1.5;
+  /* text-align: center; */
+  /* width: 40px; */
+  /* height: 40px; */
+  /* display: flex; */
+  /* align-items: center; */
+  /* justify-content: center; */
+}
+
+.calendar-day:hover:not(.disabled):not(.other-month) {
+  background: #efefef;
+  color: #000;
+}
+
+.calendar-day.other-month {
+  color: #ccc;
+  cursor: default;
+}
+
+.calendar-day.disabled {
+  color: #ddd;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* --------------------------
+   SELECTED DATE (Active) - Start and End dates
+---------------------------*/
+.calendar-day.active {
+  background: #000 !important;
+  color: white !important;
+  font-weight: 600;
+  /* border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto; */
+}
+
+/* --------------------------
+   TODAY DATE
+---------------------------*/
+.calendar-day.today {
+  /* border: 2px solid #007bff; */
+  font-weight: 600;
+}
+
+.calendar-day.today:not(.active) {
+  background: #e5e4e4;
+  /* color: #007bff; */
+}
+
+.calendar-day.active:hover {
+  background: #000 !important;
+}
+
+/* --------------------------
+   IN-RANGE DATES - Dates between start and end
+---------------------------*/
+.calendar-day.in-range {
+  background: #f5f5f5;
+  color: #333;
+  border-radius: 0;
+  position: relative;
+}
+
+.calendar-day.in-range:hover {
+  background: #e8e8e8;
+}
+
+/* Make in-range dates span full width */
+.calendar-day.in-range::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: #f5f5f5;
+  z-index: -1;
+}
+
+.calendar-day.in-range:hover::before {
+  background: #e8e8e8;
+}
+
+/* --------------------------
+   MULTI-SELECTED DATES
+---------------------------*/
+.calendar-day.multi-selected {
+  background: #4caf50;
+  color: white;
+  font-weight: 600;
+  border-radius: 6px;
+}
+
+.calendar-day.multi-selected:hover {
+  background: #45a049;
+}
+
+/* --------------------------
+   DUAL CALENDAR
+---------------------------*/
+.dual-calendar {
+  display: flex;
+  /* gap: 24px; */
+  width: 100%;
+  border-left: 1px solid #eee;
+}
+
+.calendar-left,
+.calendar-right {
+  flex: 1;
+  min-width: 0;
+  padding: 0 12px 12px;
+}
+
+/* When ranges are shown, adjust layout */
+.calendar-popup.has-ranges {
+  display: flex;
+  flex-direction: row;
+  /* gap: 16px; */
+  /* padding: 20px; */
+}
+
+.calendar-popup.has-ranges .ranges {
+  margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+    /* border-right: 1px solid #993535; */
+    padding: 10px;
+}
+
+.calendar-popup.has-ranges .dual-calendar,
+.calendar-popup.has-ranges .calendar-wrapper {
+  flex: 1;
+}
+
+.calendar-right .header {
+  justify-content: space-between;
+}
+
+.calendar-right .header .month-year {
+  text-align: center;
+  flex: 1;
+}
+
+/* --------------------------
+   TIMEPICKER SECTION
+---------------------------*/
+.timepicker-section {
+  margin-top: 12px;
+  padding-top: 12px;
+  /* padding-bottom: 16px; */
+  border-top: 1px solid #eee;
+}
+
+.timepicker-label {
+  font-size: 12px;
+    font-weight: 500;
+    color: #000000;
+    margin-bottom: 4px;
+    /* text-transform: uppercase; */
+    letter-spacing: -0.28px;
+}
+
+/* .timepicker-controls {
+  display: flex;
+  justify-content: center;
+} */
+
+/* --------------------------
+   CUSTOM TIME PICKER
+---------------------------*/
+.custom-time-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: start;
+}
+
+.time-input-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /*width: 100%;*/
+  gap: 8px;
+  background: #f8f9fa;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.time-control {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* gap: 4px; */
+}
+
+.time-btn {
+  background: #fff;
+  border: 1px solid #ddd;
+  width: 28px;
+  height: 20px;
+  cursor: pointer;
+  font-size: 10px;
+  color: #666;
+  border-radius: 4px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+}
+
+.time-btn:hover {
+  background: #e4e4e4;
+  color: white;
+  border-color: #e4e4e4;
+}
+
+.time-btn.up {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: none;
+}
+
+.time-btn.down {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-top: none;
+}
+
+.time-input {
+  width: 40px;
+  height: 32px;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  background: #fff;
+  color: #333;
+}
+
+.time-separator {
+  font-size: 18px;
+  font-weight: 600;
+  color: #666;
+  margin: 0 2px;
+}
+
+.ampm-control {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-left: 8px;
+}
+
+.ampm-btn {
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  transition: all 0.2s;
+  min-width: 45px;
+}
+
+.ampm-btn:hover {
+  background: #f0f0f0;
+}
+
+.ampm-btn.active {
+  background: #000;
+  color: white;
+  border-color: #000;
+}
+
+.html5-time-input {
+  margin-top: 8px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  width: 100%;
+  max-width: 120px;
+}
+
+/* --------------------------
+   FOOTER (Apply/Cancel Buttons)
+---------------------------*/
+.footer {
+  padding: 12px;
+  /* margin-top: 12px; */
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  border-top: 1px solid #eee;
+  /* padding-top: 16px; */
+  /*width: 100%;*/
+}
+
+.btn-cancel,
+.btn-apply {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 80px;
+}
+
+.btn-cancel {
+  background: #fff;
+  color: #666;
+  border: 1px solid #ddd;
+}
+
+.btn-cancel:hover {
+  background: #f5f5f5;
+  border-color: #bbb;
+}
+
+.btn-apply {
+  background: #000;
+  color: #fff;
+}
+
+.btn-apply:hover {
+  background: #333;
+}
+
+.btn-apply:active {
+  transform: translateY(0);
+}
+
+/* --------------------------
+   RESPONSIVE DESIGN
+---------------------------*/
+@media (max-width: 768px) {
+  .calendar-popup {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .calendar-popup.dual-calendar-mode {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .calendar-popup.has-ranges {
+    flex-direction: column;
+  }
+
+  .calendar-popup.has-ranges .ranges {
+    border-right: none;
+    border-bottom: 1px solid #eee;
+    padding-right: 0;
+    margin-right: 0;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+  }
+
+  .dual-calendar {
+    flex-direction: column;
+  }
+
+  .time-input-group {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+/* --------------------------
+   SCROLLBAR STYLING
+---------------------------*/
+.ranges::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ranges::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.ranges::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.ranges::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+
+.w-100 {
+  width: 100%;
+}
+.flex-grow-1 {
+  flex-grow: 1;
+}

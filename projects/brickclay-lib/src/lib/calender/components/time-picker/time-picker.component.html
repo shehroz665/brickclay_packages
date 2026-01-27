@@ -1,0 +1,60 @@
+<div class="time-picker-wrapper">
+  <div class="time-input-group">
+    <label *ngIf="label">{{ label }}</label>
+    <div class="time-input-wrapper">
+      <input
+        type="text"
+        class="time-input"
+        [value]="value"
+        [placeholder]="placeholder"
+        readonly
+        (click)="togglePicker()">
+      <span class="time-icon">
+        <img alt="timer" class="timer-icon" [src]='brickclayIcons.timerIcon'/>
+      </span>
+      <div class="custom-time-picker-dropdown" *ngIf="showPicker">
+        <div class="custom-time-picker" [ngClass]="position === 'left' ? 'left-position' : 'right-position'">
+          <!-- Hours Column -->
+          <div class="time-column">
+            <div class="time-scroll" #timeScroll>
+              <div
+                *ngFor="let h of getHours()"
+                class="time-item"
+                [class.selected]="currentHour === h"
+                (click)="onHourChange(h)">
+                {{ h.toString().padStart(2, '0') }}
+              </div>
+            </div>
+          </div>
+          <span class="time-separator">:</span>
+          <!-- Minutes Column -->
+          <div class="time-column">
+            <div class="time-scroll" #timeScroll>
+              <div
+                *ngFor="let m of getMinutes()"
+                class="time-item"
+                [class.selected]="currentMinute === m"
+                (click)="onMinuteChange(m)">
+                {{ m.toString().padStart(2, '0') }}
+              </div>
+            </div>
+          </div>
+          <span class="time-separator">:</span>
+          <!-- AM/PM Column -->
+          <div class="time-column ampm-column">
+            <div class="time-scroll" #timeScroll>
+              <div
+                *ngFor="let ap of getAMPMOptions()"
+                class="time-item"
+                [class.selected]="currentAMPM === ap"
+                (click)="onAMPMChange(ap)">
+                {{ ap }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,210 @@
+<div class="scheduled-date-picker-container">
+  <!-- Header with Tabs -->
+
+
+  <!-- Main Content Area -->
+
+  <div class="scheduled-content">
+    <!-- Left Side: Calendar -->
+    <div class="calendar-section">
+      <h2 class="scheduled-title">Scheduled Dates</h2>
+      <div class="tabs">
+        <button
+          class="tab-button"
+          [class.active]="activeTab === 'single'"
+          (click)="onTabChange('single')">
+          Single Date
+        </button>
+        <button
+          class="tab-button"
+          [class.active]="activeTab === 'multiple'"
+          (click)="onTabChange('multiple')">
+          Multiple Dates
+        </button>
+        <button
+          class="tab-button"
+          [class.active]="activeTab === 'range'"
+          (click)="onTabChange('range')">
+          Date Range
+        </button>
+      </div>
+      <!-- Single Date Calendar -->
+      <div *ngIf="activeTab === 'single'" class="calendar-wrapper-inline">
+        <brickclay-custom-calendar
+          [inline]="true"
+          [dualCalendar]="false"
+          [singleDatePicker]="true"
+          [showRanges]="false"
+          [enableTimepicker]="false"
+          [showCancel]="false"
+          placeholder="Select a date"
+          (selected)="onSingleDateSelected($event)">
+        </brickclay-custom-calendar>
+      </div>
+
+      <!-- Multiple Dates Calendar -->
+      <div *ngIf="activeTab === 'multiple'" class="calendar-wrapper-inline">
+        <brickclay-custom-calendar
+          [inline]="true"
+          [dualCalendar]="false"
+          [singleDatePicker]="false"
+          [showRanges]="false"
+          [enableTimepicker]="false"
+          [multiDateSelection]="true"
+          [showCancel]="false"
+          placeholder="Select multiple dates"
+          (selected)="onMultipleDatesSelected($event)">
+        </brickclay-custom-calendar>
+      </div>
+
+      <!-- Date Range Calendar -->
+      <div *ngIf="activeTab === 'range'" class="calendar-wrapper-inline">
+        <brickclay-custom-calendar
+          [inline]="true"
+          [dualCalendar]="false"
+          [singleDatePicker]="false"
+          [showRanges]="false"
+          [enableTimepicker]="false"
+          [showCancel]="false"
+          placeholder="Select date range"
+          (selected)="onRangeSelected($event)">
+        </brickclay-custom-calendar>
+      </div>
+    </div>
+
+    <!-- Right Side: Time Configuration -->
+    <div class="time-config-section">
+      <h3 class="time-config-title">Time Configuration</h3>
+
+      <!-- Single Date Time Configuration -->
+      <div *ngIf="activeTab === 'single'">
+        <div *ngIf="singleDate" class="time-config-item">
+          <div class="time-config-header">
+            <span class="date-label">{{ formatDate(singleDate) }}</span>
+            <label class="all-day-toggle">
+              <span class="toggle-label">All Day</span>
+              <input
+                type="checkbox"
+                [checked]="singleAllDay"
+                (change)="onSingleAllDayChange()">
+            </label>
+          </div>
+          <div *ngIf="!singleAllDay" class="time-inputs">
+            <brickclay-time-picker
+              pickerId="single-start"
+              label="Start Time"
+              [value]="singleStartTime"
+              [position]="'left'"
+              [closePicker]="shouldClosePicker('single-start')"
+              (timeChange)="onSingleStartTimeChange($event)"
+              (pickerOpened)="onTimePickerOpened($event)"
+              (pickerClosed)="onTimePickerClosed($event)">
+            </brickclay-time-picker>
+            <brickclay-time-picker
+              pickerId="single-end"
+              label="End Time"
+              [value]="singleEndTime"
+              [position]="'right'"
+              [closePicker]="shouldClosePicker('single-end')"
+              (timeChange)="onSingleEndTimeChange($event)"
+              (pickerOpened)="onTimePickerOpened($event)"
+              (pickerClosed)="onTimePickerClosed($event)">
+            </brickclay-time-picker>
+          </div>
+        </div>
+        <div *ngIf="!singleDate" class="no-selection">
+          <p>No date selected. Select a date from the calendar.</p>
+        </div>
+      </div>
+
+      <!-- Multiple Dates Time Configuration -->
+      <div *ngIf="activeTab === 'multiple'" class="time-config-list">
+        <div
+          *ngFor="let dateConfig of multipleDates; let i = index"
+          class="time-config-item">
+          <div class="time-config-header">
+            <span class="date-label">{{ formatDate(dateConfig.date) }}</span>
+            <label class="all-day-toggle">
+              <span class="toggle-label">All Day</span>
+              <input
+                type="checkbox"
+                [checked]="dateConfig.allDay"
+                (change)="onMultipleDateAllDayChange(i)">
+            </label>
+          </div>
+          <div *ngIf="!dateConfig.allDay" class="time-inputs">
+            <brickclay-time-picker
+              [pickerId]="'multiple-' + i + '-start'"
+              label="Start Time"
+              [value]="dateConfig.startTime"
+              [position]="'left'"
+              [closePicker]="shouldClosePicker('multiple-' + i + '-start')"
+              (timeChange)="onMultipleDateStartTimeChange(i, $event)"
+              (pickerOpened)="onTimePickerOpened($event)"
+              (pickerClosed)="onTimePickerClosed($event)">
+            </brickclay-time-picker>
+            <brickclay-time-picker
+              [pickerId]="'multiple-' + i + '-end'"
+              label="End Time"
+              [value]="dateConfig.endTime"
+              [position]="'right'"
+              [closePicker]="shouldClosePicker('multiple-' + i + '-end')"
+              (timeChange)="onMultipleDateEndTimeChange(i, $event)"
+              (pickerOpened)="onTimePickerOpened($event)"
+              (pickerClosed)="onTimePickerClosed($event)">
+            </brickclay-time-picker>
+          </div>
+        </div>
+        <div *ngIf="multipleDates.length === 0" class="no-selection">
+          <p>No dates selected. Select dates from the calendar.</p>
+        </div>
+      </div>
+
+      <!-- Date Range Time Configuration -->
+      <div *ngIf="activeTab === 'range' && rangeStartDate && rangeEndDate" class="time-config-item">
+        <div class="time-config-header">
+          <span class="date-label">{{ formatDate(rangeStartDate) }} - {{ formatDate(rangeEndDate) }}</span>
+          <label class="all-day-toggle">
+            <span class="toggle-label">All Day</span>
+            <input
+              type="checkbox"
+              [checked]="rangeAllDay"
+              (change)="onRangeAllDayChange()">
+          </label>
+        </div>
+        <div *ngIf="!rangeAllDay" class="time-inputs">
+          <brickclay-time-picker
+            pickerId="range-start"
+            label="Start Time"
+            [value]="rangeStartTime"
+            [position]="'left'"
+            [closePicker]="shouldClosePicker('range-start')"
+            (timeChange)="onRangeStartTimeChange($event)"
+            (pickerOpened)="onTimePickerOpened($event)"
+            (pickerClosed)="onTimePickerClosed($event)">
+          </brickclay-time-picker>
+          <brickclay-time-picker
+            pickerId="range-end"
+            label="End Time"
+            [value]="rangeEndTime"
+            [position]="'right'"
+            [closePicker]="shouldClosePicker('range-end')"
+            (timeChange)="onRangeEndTimeChange($event)"
+            (pickerOpened)="onTimePickerOpened($event)"
+            (pickerClosed)="onTimePickerClosed($event)">
+          </brickclay-time-picker>
+        </div>
+      </div>
+      <div *ngIf="activeTab === 'range' && (!rangeStartDate || !rangeEndDate)" class="no-selection">
+        <p>No date range selected. Select a date range from the calendar.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="action-buttons">
+    <button class="btn-clear" (click)="clear()">Clear</button>
+    <button class="btn-apply" (click)="apply()">Apply</button>
+  </div>
+</div>
+

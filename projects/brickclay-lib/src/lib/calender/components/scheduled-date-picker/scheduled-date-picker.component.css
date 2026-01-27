@@ -1,0 +1,373 @@
+.scheduled-date-picker-container {
+  font-family: 'Inter', sans-serif;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Header Section */
+.scheduled-header {
+  padding: 24px 24px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #ffffff;
+}
+
+.scheduled-title {
+  font-size: 18px;
+    font-weight: 500;
+    line-height: 26px;
+    color: #111827;
+    letter-spacing: -0.28px;
+    margin: 0 0 16px 0;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  /* gap: 8px; */
+  /* border-bottom: 1px solid #e5e7eb; */
+  margin-bottom: 16px;
+  border-radius: 6px;
+  padding: 3px;
+  background-color: #54578E12;
+}
+
+.tab-button {
+  padding: 5px 11px;
+    border: none;
+    background: transparent;
+    color: #6B7080;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    font-family: "Inter", sans-serif;
+    flex: 1;
+    border-radius: 4px;
+}
+
+/* .tab-button:hover {
+  color: #111827;
+  background: #f9fafb;
+} */
+
+.tab-button.active {
+  color: #15191E;
+  border-color: #42578A26;
+  background: #FFFFFF;
+}
+
+/* Main Content Area */
+.scheduled-content {
+  display: flex;
+  gap: 0;
+  align-items: stretch;
+  /* Two-column layout by default on large screens */
+}
+
+/* Calendar Section (Left) */
+.calendar-section {
+  flex: 0 0 55%;
+  max-width: 55%;
+  padding: 12px;
+  border-right: 1px solid #e5e7eb;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+.calendar-wrapper-inline {
+  width: 100%;
+}
+
+.calendar-wrapper-inline app-custom-calendar {
+  width: 100%;
+}
+
+/* Time Configuration Section (Right) */
+.time-config-section {
+  flex: 0 0 45%;
+  max-width: 45%;
+  padding: 12px;
+  background: #ffffff;
+  overflow-y: auto;
+  max-height: 600px;
+  box-sizing: border-box;
+}
+
+.time-config-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+  margin: 17px 0 14px 0;
+  /* padding-bottom: 12px; */
+  /* border-bottom: 1px solid #e5e7eb; */
+}
+
+/* Time Configuration Item */
+.time-config-item {
+  padding: 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  /* margin-bottom: 12px; */
+  background: #ffffff;
+}
+
+.time-config-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* margin-bottom: 12px; */
+}
+
+.date-label {
+  font-size: 12px;
+    font-weight: 500;
+    color: #15191E;
+    /* text-transform: uppercase; */
+    letter-spacing: -0.28px;
+}
+
+/* All Day Toggle */
+.all-day-toggle {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.all-day-toggle input[type="checkbox"] {
+  width: 28px;
+    height: 16px;
+    appearance: none;
+    background: #BBBDC5;
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin: 0;
+}
+
+.all-day-toggle input[type="checkbox"]:checked {
+  background: #22973F;
+}
+
+.all-day-toggle input[type="checkbox"]::before {
+  content: "";
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #ffffff;
+    top: 1.5px;
+    left: 2.5px;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.all-day-toggle input[type="checkbox"]:checked::before {
+  transform: translateX(12px);
+}
+
+.toggle-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #111827;
+}
+
+.all-day-toggle input[type="checkbox"]:checked + .toggle-label {
+  color: #111827;
+}
+
+/* Time Inputs */
+.time-inputs {
+  display: flex;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+
+/* Time Configuration List (for multiple dates) */
+.time-config-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-height: 350px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+
+/* Scrollbar Styling */
+.time-config-list::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.time-config-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.time-config-list::-webkit-scrollbar-thumb {
+  background: #b4b4b4;
+  border-radius: 3px;
+}
+
+.time-config-list::-webkit-scrollbar-thumb:hover {
+  background: #9b9b9b;
+}
+
+.no-selection {
+  padding: 24px;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 12px;
+  border-top: 1px solid #e5e7eb;
+  background: #ffffff;
+}
+
+.btn-clear,
+.btn-apply {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
+  min-width: 80px;
+}
+
+.btn-clear {
+  background: #ffffff;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+}
+
+.btn-clear:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.btn-apply {
+  background: #111827;
+  color: #ffffff;
+}
+
+.btn-apply:hover {
+  background: #374151;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .calendar-section {
+    flex: 0 0 52%;
+    max-width: 52%;
+  }
+
+  .time-config-section {
+    flex: 0 0 48%;
+    max-width: 48%;
+  }
+}
+
+@media (max-width: 1024px) {
+  .scheduled-content {
+    flex-direction: column;
+  }
+
+  .calendar-section {
+    flex: 1 1 auto;
+    max-width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .time-config-section {
+    flex: 1 1 auto;
+    max-width: 100%;
+    max-height: none;
+  }
+
+  .time-config-list {
+    max-height: 320px;
+  }
+}
+
+@media (max-width: 768px) {
+  .scheduled-date-picker-container {
+    border-radius: 0;
+  }
+
+  .scheduled-header {
+    padding: 16px;
+  }
+
+  .calendar-section,
+  .time-config-section {
+    padding: 12px 16px;
+  }
+
+  .tabs {
+    overflow-x: auto;
+  }
+
+  .tab-button {
+    white-space: nowrap;
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  .time-inputs {
+    flex-direction: column;
+  }
+
+  .time-config-item {
+    padding: 12px;
+  }
+
+  .action-buttons {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .scheduled-title {
+    font-size: 16px;
+  }
+
+  .time-config-title {
+    font-size: 14px;
+  }
+
+  .date-label {
+    font-size: 11px;
+  }
+
+  .time-config-list {
+    max-height: 260px;
+  }
+
+  .btn-clear,
+  .btn-apply {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+}
+

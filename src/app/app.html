@@ -1,0 +1,170 @@
+<div style="max-width: 300px;">
+  <brickclay-custom-calendar [dualCalendar]="true" [enableTimepicker]="true"></brickclay-custom-calendar>
+</div>
+
+<div class="p-5 bg-white border border-dashed border-black">
+  <h3 class="font-bold mb-8 text-xl">Toggle / Switch</h3>
+  <div class="grid grid-cols-7 mb-6 text-sm font-bold text-center text-gray-500">
+    <div class="w-20 text-left">State</div>
+    <div>Sm (Off)</div> <div>Sm (On)</div>
+    <div>Md (Off)</div> <div>Md (On)</div>
+    <div>Lg (Off)</div> <div>Lg (On)</div>
+  </div>
+
+  <div class="grid grid-cols-7 gap-y-10 items-center justify-items-center">
+
+    <div class="w-full text-sm font-bold text-gray-700 justify-self-start">Normal</div>
+
+    <brickclay-toggle [(ngModel)]="temp" (change)="onChangeToggle($event)" buttonClass="toggle-sm" ></brickclay-toggle>
+    <brickclay-toggle [(ngModel)]="valOn"  buttonClass="toggle-sm"></brickclay-toggle>
+
+    <brickclay-toggle [(ngModel)]="valOff" buttonClass="toggle-md"></brickclay-toggle>
+    <brickclay-toggle [(ngModel)]="valOn"  buttonClass="toggle-md"></brickclay-toggle>
+
+    <brickclay-toggle [(ngModel)]="valOff" buttonClass="toggle-lg"></brickclay-toggle>
+    <brickclay-toggle [(ngModel)]="valOn"  buttonClass="toggle-lg"></brickclay-toggle>
+
+
+    <div class="w-full text-sm font-bold text-gray-700 justify-self-start">Hover</div>
+
+    <brickclay-toggle [(ngModel)]="valOff" buttonClass="toggle-sm simulate-hover"></brickclay-toggle>
+    <brickclay-toggle [(ngModel)]="valOn"  buttonClass="toggle-sm simulate-hover"></brickclay-toggle>
+
+    <brickclay-toggle [(ngModel)]="valOff" buttonClass="toggle-md simulate-hover"></brickclay-toggle>
+    <brickclay-toggle [(ngModel)]="valOn"  buttonClass="toggle-md simulate-hover"></brickclay-toggle>
+
+    <brickclay-toggle [(ngModel)]="valOff" buttonClass="toggle-lg simulate-hover"></brickclay-toggle>
+    <brickclay-toggle [(ngModel)]="valOn"  buttonClass="toggle-lg simulate-hover"></brickclay-toggle>
+
+
+    <div class="w-full text-sm font-bold text-gray-700 justify-self-start">Focus</div>
+
+    <brickclay-toggle [(ngModel)]="valOff" buttonClass="toggle-sm simulate-focus"></brickclay-toggle>
+    <brickclay-toggle [(ngModel)]="valOn"  buttonClass="toggle-sm simulate-focus"></brickclay-toggle>
+
+    <brickclay-toggle [(ngModel)]="valOff" buttonClass="toggle-md simulate-focus"></brickclay-toggle>
+    <brickclay-toggle [(ngModel)]="valOn"  buttonClass="toggle-md simulate-focus"></brickclay-toggle>
+
+    <brickclay-toggle [(ngModel)]="valOff" buttonClass="toggle-lg simulate-focus"></brickclay-toggle>
+    <brickclay-toggle [(ngModel)]="valOn"  buttonClass="toggle-lg simulate-focus"></brickclay-toggle>
+
+
+    <div class="w-full text-sm font-bold text-gray-700 justify-self-start">Disabled</div>
+
+    <brickclay-toggle [ngModel]="false" [disabled]="true" buttonClass="toggle-sm"></brickclay-toggle>
+    <brickclay-toggle [ngModel]="true"  [disabled]="true" buttonClass="toggle-sm"></brickclay-toggle>
+
+    <brickclay-toggle [ngModel]="false" [disabled]="true" buttonClass="toggle-md"></brickclay-toggle>
+    <brickclay-toggle [ngModel]="true"  [disabled]="true" buttonClass="toggle-md"></brickclay-toggle>
+
+    <brickclay-toggle [ngModel]="false" [disabled]="true" buttonClass="toggle-lg"></brickclay-toggle>
+    <brickclay-toggle [ngModel]="true"  [disabled]="true" buttonClass="toggle-lg"></brickclay-toggle>
+
+  </div>
+</div>
+
+<div class="p-5 bg-white border border-dashed border-black">
+
+  <h3 class="font-bold mb-6 text-xl">Checkboxes</h3>
+
+  <div class="grid grid-cols-9 mb-6 text-sm font-bold text-center text-gray-500 items-end gap-x-4">
+    <div class="w-20 text-left">State</div>
+
+    <div>Sm (Off)</div> <div>Sm (On)</div>
+    <div>Md (Off)</div> <div>Md (On)</div>
+    <div>Lg (Off)</div> <div>Lg (On)</div>
+    <div>Xl (Off)</div> <div>Xl (On)</div>
+  </div>
+
+  <div class="grid grid-cols-9 gap-y-10 items-center justify-items-center gap-x-4">
+
+    <div class="w-full text-sm font-bold text-gray-700 justify-self-start">Normal</div>
+
+    <brickclay-checkbox checkboxClass="xsm" [disabled]="true" [ngModel]="false" ></brickclay-checkbox>
+    <brickclay-checkbox checkboxClass="xsm" [(ngModel)]="temp"></brickclay-checkbox>
+
+    <brickclay-checkbox checkboxClass="sm" [ngModel]="false"></brickclay-checkbox>
+    <brickclay-checkbox checkboxClass="sm" [(ngModel)]="tempChekbox" (change)="onChangeCheckbox($event)">-></brickclay-checkbox>
+
+    <brickclay-checkbox checkboxClass="md" [ngModel]="false"></brickclay-checkbox>
+    <brickclay-checkbox checkboxClass="md" [ngModel]="true"></brickclay-checkbox>
+
+    <brickclay-checkbox checkboxClass="lg" [ngModel]="false"></brickclay-checkbox>
+    <brickclay-checkbox checkboxClass="lg" [ngModel]="true"></brickclay-checkbox>
+
+
+    <div class="w-full text-sm font-bold text-gray-700 justify-self-start">Disabled</div>
+
+    <brickclay-checkbox checkboxClass="xsm" [ngModel]="false" [disabled]="true"></brickclay-checkbox>
+    <brickclay-checkbox checkboxClass="xsm" [ngModel]="true"  [disabled]="true"></brickclay-checkbox>
+
+    <brickclay-checkbox checkboxClass="sm" [ngModel]="false" [disabled]="true"></brickclay-checkbox>
+    <brickclay-checkbox checkboxClass="sm" [ngModel]="true"  [disabled]="true"></brickclay-checkbox>
+
+    <brickclay-checkbox checkboxClass="md" [ngModel]="false" [disabled]="true"></brickclay-checkbox>
+    <brickclay-checkbox checkboxClass="md" [ngModel]="true"  [disabled]="true"></brickclay-checkbox>
+
+    <brickclay-checkbox checkboxClass="lg" [ngModel]="false" [disabled]="true"></brickclay-checkbox>
+    <brickclay-checkbox checkboxClass="lg" [ngModel]="true"  [disabled]="true"></brickclay-checkbox>
+
+  </div>
+</div>
+
+<div class="grid grid-cols-4 gap-y-8 items-center justify-items-center p-8 bg-white border rounded-lg">
+
+  <div class="col-span-4 grid grid-cols-4 w-full mb-2 text-center border-b pb-2">
+        <div class="text-xs font-bold text-gray-500 uppercase tracking-widest">Extra Small (XSM)</div>
+    <div class="text-xs font-bold text-gray-500 uppercase tracking-widest">Small (SM)</div>
+    <div class="text-xs font-bold text-gray-500 uppercase tracking-widest">Medium (MD)</div>
+    <div class="text-xs font-bold text-gray-500 uppercase tracking-widest">Large (LG)</div>
+
+  </div>
+
+  <div class="col-span-4 w-full py-2 bg-gray-50 text-center text-sm font-semibold text-gray-700 rounded">
+    Dot Variant
+  </div>
+
+  <brickclay-radio-button variant="dot" radioClass="xsm" value="Winter" label="Winter" [(ngModel)]="selectedSeason"></brickclay-radio-button>
+  <brickclay-radio-button variant="dot" radioClass="sm" value="Winter" label="Winter" [(ngModel)]="selectedSeason" (change)="onChangeRadioButton($event)"></brickclay-radio-button>
+  <brickclay-radio-button variant="dot" radioClass="md" value="Winter" label="Winter" [(ngModel)]="selectedSeason"></brickclay-radio-button>
+  <brickclay-radio-button variant="dot" radioClass="lg" value="Winter" label="Winter" [(ngModel)]="selectedSeason"></brickclay-radio-button>
+
+  <brickclay-radio-button variant="dot" radioClass="xsm" value="Spring" label="Spring" [(ngModel)]="selectedSeason"></brickclay-radio-button>
+  <brickclay-radio-button variant="dot" radioClass="sm" value="Spring" label="Spring" [(ngModel)]="selectedSeason" (change)="onChangeRadioButton($event)"></brickclay-radio-button>
+  <brickclay-radio-button variant="dot" radioClass="md" value="Spring" label="Spring" [(ngModel)]="selectedSeason"></brickclay-radio-button>
+  <brickclay-radio-button variant="dot" radioClass="lg" value="Spring" label="Spring" [(ngModel)]="selectedSeason"></brickclay-radio-button>
+
+  <brickclay-radio-button variant="dot" radioClass="xsm" value="Summer" label="Summer" [(ngModel)]="selectedSeason"></brickclay-radio-button>
+  <brickclay-radio-button variant="dot" radioClass="sm" value="Summer" label="Summer" [(ngModel)]="selectedSeason" (change)="onChangeRadioButton($event)"></brickclay-radio-button>
+  <brickclay-radio-button variant="dot" radioClass="md" value="Summer" label="Summer" [(ngModel)]="selectedSeason"></brickclay-radio-button>
+  <brickclay-radio-button variant="dot" radioClass="lg" value="Summer" label="Summer" [(ngModel)]="selectedSeason"></brickclay-radio-button>
+
+  <div class="col-span-4 w-full py-2 bg-gray-50 text-center text-sm font-semibold text-gray-700 rounded mt-4">
+    Tick Variant
+  </div>
+
+  <brickclay-radio-button variant="tick" radioClass="xsm" value="Winter" label="Winter" [(ngModel)]="selectedSeason"></brickclay-radio-button>
+  <brickclay-radio-button variant="tick" radioClass="sm" value="Winter" label="Winter" [(ngModel)]="selectedSeason"></brickclay-radio-button>
+  <brickclay-radio-button variant="tick" radioClass="md" value="Winter" label="Winter" [(ngModel)]="selectedSeason"></brickclay-radio-button>
+  <brickclay-radio-button variant="tick" radioClass="lg" value="Winter" label="Winter" [(ngModel)]="selectedSeason"></brickclay-radio-button>
+
+  <brickclay-radio-button variant="tick" radioClass="xsm" value="Summer" label="Summer" [(ngModel)]="selectedSeason"></brickclay-radio-button>
+  <brickclay-radio-button variant="tick" radioClass="sm" value="Summer" label="Summer" [(ngModel)]="selectedSeason"></brickclay-radio-button>
+  <brickclay-radio-button variant="tick" radioClass="md" value="Summer" label="Summer" [(ngModel)]="selectedSeason"></brickclay-radio-button>
+  <brickclay-radio-button variant="tick" radioClass="lg" value="Summer" label="Summer" [(ngModel)]="selectedSeason"></brickclay-radio-button>
+
+  <brickclay-radio-button variant="tick" radioClass="xsm" value="Spring" label="Spring" [(ngModel)]="selectedSeason"></brickclay-radio-button>
+  <brickclay-radio-button variant="tick" radioClass="sm" value="Spring" label="Spring" [(ngModel)]="selectedSeason"></brickclay-radio-button>
+  <brickclay-radio-button variant="tick" radioClass="md" value="Spring" label="Spring" [(ngModel)]="selectedSeason"></brickclay-radio-button>
+  <brickclay-radio-button variant="tick" radioClass="lg" value="Spring" label="Spring" [(ngModel)]="selectedSeason"></brickclay-radio-button>
+
+  <div class="col-span-4 w-full py-2 bg-red-50 text-center text-sm font-semibold text-red-700 rounded mt-4 border border-red-100">
+    Disabled States (Tick)
+  </div>
+
+  <brickclay-radio-button variant="tick" radioClass="xsm" value="Winter" label="Winter" [disabled]="true" [(ngModel)]="selectedSeason"></brickclay-radio-button>
+  <brickclay-radio-button variant="tick" radioClass="sm" value="Winter" label="Winter" [disabled]="true" [(ngModel)]="selectedSeason"></brickclay-radio-button>
+  <brickclay-radio-button variant="tick" radioClass="md" value="Winter" label="Winter" [disabled]="true" [(ngModel)]="selectedSeason"></brickclay-radio-button>
+  <brickclay-radio-button variant="tick" radioClass="lg" value="Winter" label="Winter" [disabled]="true" [(ngModel)]="selectedSeason"></brickclay-radio-button>
+
+</div>

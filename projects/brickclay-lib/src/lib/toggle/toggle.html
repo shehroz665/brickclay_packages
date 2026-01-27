@@ -1,0 +1,24 @@
+<div class="inline-flex items-center gap-2 cursor-pointer" (click)="toggle()">
+  <button
+    type="button"
+    role="switch"
+    [attr.aria-checked]="isChecked"
+    [disabled]="disabled"
+    class="toggle-base"
+    [ngClass]="toggleClass"
+    [class.toggle-on]="isChecked"
+    [class.toggle-off]="!isChecked"
+    [class.toggle-disabled]="disabled"
+  >
+    <span
+      class="toggle-knob"
+      [class.knob-on]="isChecked"
+      [class.knob-off]="!isChecked"
+    ></span>
+  </button>
+  @if (label){
+  <span class="text-sm font-medium text-[#1B223A] select-none" [class.opacity-70]="disabled">
+    {{ label }}
+  </span>
+  }
+</div>

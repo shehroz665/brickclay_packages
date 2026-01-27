@@ -1,0 +1,39 @@
+/*---- Checkbox Sizes Class ---- */
+.xsm {
+  @apply size-[14px];
+}
+.sm {
+  @apply size-[16px];
+}
+.md {
+  @apply size-[18px];
+}
+.lg {
+  @apply size-[19px];
+}
+/*---- Dot Sizes Class ---- */
+.xsm .dot {
+  @apply size-[6px];
+}
+.sm .dot {
+  @apply size-[8px];
+}
+.md .dot {
+  @apply size-[10px];
+}
+.lg .dot {
+  @apply size-[11px];
+}
+/*---- Tick Sizes Class ---- */
+.xsm .tick {
+  @apply size-[8px];
+}
+.sm .tick {
+  @apply size-[9px];
+}
+.md .tick {
+  @apply size-[12px];
+}
+.lg .tick {
+  @apply size-[13px];
+}

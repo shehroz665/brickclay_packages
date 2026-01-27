@@ -1,0 +1,74 @@
+/* --- Base Structure --- */
+.toggle-base {
+  @apply relative inline-flex items-center rounded-full transition-colors duration-200 ease-in-out border-2 border-transparent;
+  /* Focus State (Blue Ring as seen in image) */
+  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1336EF] focus-visible:ring-offset-2;
+}
+
+/* --- Colors --- */
+.toggle-off {
+  @apply bg-[#BBBDC5] hover:bg-[#A1A3AE]; /* Gray when off */
+}
+
+.toggle-on {
+  @apply bg-[#22973F] hover:bg-[#1E7735]; /* Green when on */
+}
+
+/* --- Disabled State (Bottom row of image) --- */
+.toggle-disabled {
+  @apply bg-[#D6D7DC] hover:bg-[#D6D7DC] cursor-not-allowed;
+}
+
+/* --- Knob Base --- */
+.toggle-knob {
+  @apply pointer-events-none inline-block transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out;
+}
+
+/* --- Sizes Config --- */
+
+/* Small Size */
+.toggle-sm {
+  @apply w-7;
+}
+.toggle-sm .toggle-knob {
+  @apply h-3 w-3;
+}
+.toggle-sm .knob-on {
+  @apply translate-x-3;
+}
+.toggle-sm .knob-off {
+  @apply translate-x-0;
+}
+
+/* Medium Size (Default) */
+.toggle-md {
+  @apply w-9;
+}
+.toggle-md .toggle-knob {
+  @apply h-4 w-4;
+}
+.toggle-md .knob-on {
+  @apply translate-x-4;
+}
+.toggle-md .knob-off {
+  @apply translate-x-0;
+}
+
+/* Large Size */
+.toggle-lg {
+  @apply w-11;
+}
+.toggle-lg .toggle-knob {
+  @apply h-5 w-5;
+}
+.toggle-lg .knob-on {
+  @apply translate-x-5;
+}
+.toggle-lg .knob-off {
+  @apply translate-x-0;
+}
+
+
+
+
+

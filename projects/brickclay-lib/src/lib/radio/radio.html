@@ -1,0 +1,58 @@
+<div
+  class="inline-flex items-center gap-2 cursor-pointer group outline-none"
+  (click)="select()"
+  (keydown.enter)="select()"
+  (keydown.space)="$event.preventDefault(); select()"
+  tabindex="0"
+  [attr.aria-disabled]="disabled">
+
+  <div
+    class="relative flex items-center justify-center rounded-full border-2 transition-all duration-200 flex-shrink-0
+           group-focus-visible:ring-2 group-focus-visible:ring-blue-600 group-focus-visible:ring-offset-2"
+    [ngClass]="[
+      radioClass,
+      !isChecked && !disabled ? 'bg-white border-gray-300 group-hover:border-gray-400' : '',
+      variant === 'dot' && isChecked && !disabled ? 'border-black bg-white' : '',
+      variant === 'tick' && isChecked && !disabled ? 'bg-black border-black' : '',
+      disabled && isChecked && variant === 'tick' ? 'bg-gray-300 border-gray-300' : '',
+      disabled && isChecked && variant === 'dot' ? 'border-gray-300 bg-gray-50' : '',
+      disabled && !isChecked ? 'bg-gray-100 border-gray-200' : '',
+      disabled ? 'cursor-not-allowed' : ''
+    ]"
+  >
+
+    @if (variant === 'dot') {
+      <span
+        class="rounded-full bg-black transition-transform duration-200 transform dot"
+        [class.scale-0]="!isChecked"
+        [class.scale-100]="isChecked"
+        [class.bg-gray-400]="disabled">
+      </span>
+    }
+
+    @if (variant === 'tick') {
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="3.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="text-white pointer-events-none transition-opacity duration-200 tick"
+        [class.opacity-0]="!isChecked"
+        [class.opacity-100]="isChecked">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    }
+
+  </div>
+
+  @if (label) {
+    <span
+      class="font-medium text-xs text-[#1B223A] select-none"
+      [ngClass]="[labelClass, disabled ? 'text-gray-400' : '']">
+      {{ label }}
+    </span>
+  }
+</div>
