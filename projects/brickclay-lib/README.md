@@ -35,7 +35,7 @@ _More components coming soon..._
 ## Installation
 
 ```bash
-npm i @brickclay-org/ui@0.0.6
+npm i @brickclay-org/ui@0.0.14
 ```
 
 ### Peer Dependencies
