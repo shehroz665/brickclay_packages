@@ -1,0 +1,34 @@
+/* Main Container */
+/* Simulates the border box surrounding the buttons */
+.group-container {
+  @apply inline-flex items-center border border-[#E1E3EA] bg-white rounded-md p-1 gap-2.5 select-none transition-all;
+}
+
+/* Individual Button Item */
+.group-item {
+  @apply flex items-center justify-center font-medium rounded-md transition-all duration-200 cursor-pointer text-center relative;
+}
+
+/* --- STATES --- */
+
+/* Active State (Black Background) */
+.group-item.active {
+  @apply bg-black text-white shadow-sm;
+}
+
+/* Inactive State (Transparent/Gray) */
+.group-item.inactive {
+  @apply text-[#6B7080] hover:bg-gray-50;
+}
+
+/* --- SIZES --- */
+
+/* Small */
+.group-container .group-item {
+  @apply px-4 py-[3px] text-[13px] leading-5;
+}
+.group-container.disabled .group-item {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+

@@ -22,3 +22,9 @@ export * from './lib/radio/radio'
 export * from './lib/pill/pill'
 //Badge
 export * from './lib/badge/badge'
+//Spinner
+export * from './lib/spinner/spinner'
+//Button
+export * from './lib/ui-button/ui-button'
+export * from './lib/ui-icon-button/ui-icon-button'
+export * from './lib/button-group/button-group'

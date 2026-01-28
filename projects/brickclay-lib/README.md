@@ -38,12 +38,28 @@ A versatile pill component for displaying labels, tags, or status indicators. Fe
 
 A flexible badge component for displaying labels, tags, or status indicators. Features multiple variants (Light, Solid, Outline, Transparent), color options, size variants, optional dot indicators, and removable functionality with click events.
 
+### Button Component
+
+A versatile button component with support for text labels, icons, loading states, and multiple variants. Features seven size options, two variants (primary/secondary), optional left/right icons, loading spinner, and full customization support.
+
+### Icon Button Component
+
+A compact icon-only button component perfect for toolbars and action buttons. Features seven size options, two variants (primary/secondary), and customizable styling.
+
+### Button Group Component
+
+A button group component for creating toggleable button sets. Supports single and multiple selection modes, with automatic state management and value change events.
+
+### Spinner Component
+
+A loading spinner component for indicating asynchronous operations. Features five size variants, customizable colors, and show/hide control.
+
 _More components coming soon..._
 
 ## Installation
 
 ```bash
-npm i @brickclay-org/ui@0.0.15
+npm i @brickclay-org/ui@0.0.16
 ```
 
 ### Peer Dependencies

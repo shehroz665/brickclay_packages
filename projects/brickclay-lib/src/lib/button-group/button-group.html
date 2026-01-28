@@ -1,0 +1,12 @@
+<div [class]="containerClass">
+  @for (item of items; track item.value) {
+    <div
+      class="group-item"
+      [class.active]="isActive(item.value)"
+      [class.inactive]="!isActive(item.value)"
+      (click)="onItemClick(item.value)"
+    >
+      {{ item.label }}
+    </div>
+  }
+</div>

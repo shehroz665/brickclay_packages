@@ -1,0 +1,51 @@
+/* Base Shape */
+.btn-icon {
+  @apply rounded border flex items-center justify-center transition-all duration-200 cursor-pointer shrink-0 shadow;
+}
+
+/* --- VARIANTS --- */
+
+/* 1. Primary: Solid Black (Matches your top row) */
+.btn-icon.primary {
+  @apply bg-black text-white
+  focus-visible:outline-2 focus-visible:outline-offset-[2.5px] focus-visible:outline-black
+  active:bg-[#242424]
+  disabled:opacity-80 disabled:cursor-not-allowed;
+}
+
+/* 2. Secondary: White with Gray Border (Matches your existing secondary) */
+.btn-icon.secondary {
+  @apply bg-white border-[#E3E3E7] text-[#6B7080]
+    /* FOCUS */
+  focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-[#F5F5FA]
+    /* ACTIVE */
+  active:bg-[#F4F4F6]
+
+    /* DISABLED */
+  disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-[#F4F4F6];
+
+}
+
+
+/* --- SIZES (Square Dimensions) --- */
+/* These specific heights match the calculated height of your text buttons */
+
+.btn-icon.xxsm { @apply p-1.5;}
+.btn-icon.xsm  { @apply p-1.5;}
+.btn-icon.sm   { @apply p-2;}
+.btn-icon.md   { @apply p-2.5;}
+.btn-icon.lg   { @apply p-3;}
+.btn-icon.xl   { @apply p-[14px];}
+.btn-icon.xxl  { @apply p-4;}
+
+/* --- ICON SIZING --- */
+/* Ensures icons scale nicely within the square */
+.btn-icon.xxsm .icon { @apply size-[14px]; }
+.btn-icon.xsm .icon  { @apply size-[18px]; }
+.btn-icon.sm .icon   { @apply size-[20px]; }
+.btn-icon.md .icon   { @apply size-[20px]; }
+.btn-icon.lg .icon   { @apply size-[20px]; }
+.btn-icon.xl .icon   { @apply size-[20px]; }
+.btn-icon.xxl .icon  { @apply size-[26px]; }
+
+

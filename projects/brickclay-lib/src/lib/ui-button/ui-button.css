@@ -1,0 +1,72 @@
+/* Base Button Style */
+.btn {
+  @apply border rounded transition-colors duration-200 cursor-pointer;
+}
+
+/* --- VARIANTS --- */
+
+.btn-primary {
+  @apply
+  font-medium flex justify-center gap-2 items-center bg-black text-white
+
+    /* FOCUS */
+  focus-visible:outline-2 focus-visible:outline-offset-[2.5px] focus-visible:outline-black
+
+    /* ACTIVE */
+  active:bg-[#242424]
+
+    /* DISABLED */
+  disabled:opacity-90 disabled:cursor-not-allowed disabled:bg-[#242424];
+}
+.btn-primary.xxl {
+  @apply gap-3
+}
+
+.btn-secondary {
+  @apply
+  font-medium flex justify-center gap-2 items-center
+  bg-white text-[#6B7080]
+
+    /* FOCUS */
+  focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-[#F5F5FA]
+
+    /* ACTIVE */
+  active:bg-[#F4F4F6]
+
+    /* DISABLED */
+  disabled:opacity-90 disabled:cursor-not-allowed disabled:bg-[#F4F4F6];
+}
+
+/* --- SIZES --- */
+/* These classes define padding, text size, AND icon/spinner size */
+
+.xxsm { @apply px-2 py-1 text-xs leading-[18px]; }
+.xsm  { @apply px-3 py-2 text-xs leading-[18px]; }
+.sm   { @apply px-[14px] py-2 text-sm; }
+.md   { @apply px-4 py-2.5 text-sm; }
+.lg   { @apply px-[18px] py-2.5 text-base; }
+.xl   { @apply px-5 py-3 text-base; }
+.xxl  { @apply px-7 py-4 text-lg leading-[26px]; }
+
+/* --- ICON SIZING (Nested) --- */
+.xxsm .icon { @apply size-[11px]; }
+.xsm .icon  { @apply size-[15px]; }
+.sm .icon   { @apply size-4; }
+.md .icon   { @apply size-4; }
+.lg .icon   { @apply size-4; }
+.xl .icon   { @apply size-4; }
+.xxl .icon  { @apply size-5; }
+
+/* --- SPINNER --- */
+.spinner {
+  @apply shrink-0 border-t-transparent rounded-full animate-spin border-current;
+}
+
+/* Spinner sizing per button size */
+.xxsm .spinner { @apply size-[14px] border-[1.5px]; }
+.xsm .spinner  { @apply size-[15px] border-[1.5px]; }
+.sm .spinner   { @apply size-[15px] border-[1.5px]; }
+.md .spinner   { @apply size-[15px] border-[1.5px]; }
+.lg .spinner   { @apply size-[15px] border-[1.5px]; }
+.xl .spinner   { @apply size-[15px] border-[1.5px]; }
+.xxl .spinner  { @apply size-[24px] border-[2.34px]; }

@@ -1,0 +1,25 @@
+<button
+  [attr.type]="type"
+  [class]="buttonClasses"
+  [disabled]="disabled || loading"
+  (click)="onClick($event)"
+>
+  @if (leftIcon) {
+    <img [src]="leftIcon" [alt]="iconAlt" class="icon shrink-0" />
+  }
+
+      @if (label) {
+    <span [class]="textClass">
+        {{ label }}
+    </span>
+      }
+    @if (loading) {
+      <span [class]="spinnerClass" class="spinner"></span>
+    }
+
+
+  @if (rightIcon) {
+    <img [src]="rightIcon" [alt]="iconAlt" class="icon shrink-0" />
+  }
+
+</button>

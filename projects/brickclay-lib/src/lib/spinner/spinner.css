@@ -1,0 +1,32 @@
+/* Base Animation & Shape */
+.spinner {
+  @apply inline-block rounded-full animate-spin border-current border-t-transparent;
+  border-style: solid;
+}
+
+/* --- EXACT SIZES --- */
+
+/* 1. 15px */
+.spinner.xsm {
+  @apply w-[15px] h-[15px] border-[1.5px];
+}
+
+/* 2. 25px */
+.spinner.sm {
+  @apply w-[25px] h-[25px] border-[2.34px];
+}
+
+/* 3. 35px */
+.spinner.md {
+  @apply w-[35px] h-[35px] border-[3.28px];
+}
+
+/* 4. 50px */
+.spinner.lg {
+  @apply w-[50px] h-[50px] border-[4.7px];
+}
+
+/* 5. 64px */
+.spinner.xl {
+  @apply w-[64px] h-[64px] border-[6px];
+}
