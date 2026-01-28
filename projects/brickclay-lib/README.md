@@ -30,6 +30,14 @@ A fully accessible checkbox component with Angular forms integration. Features c
 
 A fully accessible radio button component with Angular forms integration. Features two visual variants (dot and tick), customizable styling, disabled state, keyboard navigation, and seamless integration with both template-driven and reactive forms.
 
+### Pill Component
+
+A versatile pill component for displaying labels, tags, or status indicators. Features multiple variants (Light, Solid, Outline, Transparent), color options, size variants, optional dot indicators, and removable functionality with click events.
+
+### Badge Component
+
+A flexible badge component for displaying labels, tags, or status indicators. Features multiple variants (Light, Solid, Outline, Transparent), color options, size variants, optional dot indicators, and removable functionality with click events.
+
 _More components coming soon..._
 
 ## Installation
@@ -1182,6 +1190,478 @@ The radio button component includes:
 
 Radio buttons are automatically grouped when they share the same `ngModel` binding. Only one radio button in a group can be selected at a time. When a radio button is selected, the previously selected one in the same group is automatically deselected.
 
+## 💊 Pill
+
+A versatile pill component for displaying labels, tags, or status indicators. Perfect for categorizing content, showing status, or creating removable tag lists. Supports multiple visual variants, color schemes, sizes, and optional dot indicators.
+
+### PillComponent
+
+A standalone pill component that displays text labels with customizable styling and optional removal functionality.
+
+#### Basic Example
+
+```typescript
+import { PillComponent } from '@brickclay/ui';
+
+@Component({
+  template: `
+    <brickclay-pill
+      [label]="'New Feature'"
+      [variant]="'Solid'"
+      [color]="'Primary'"
+      [size]="'md'"
+      (clicked)="onPillRemoved($event)"
+    >
+    </brickclay-pill>
+  `,
+  imports: [PillComponent],
+})
+export class MyComponent {
+  onPillRemoved(label: string) {
+    console.log('Pill removed:', label);
+  }
+}
+```
+
+#### Component Selector
+
+`<brickclay-pill>`
+
+#### Inputs
+
+| Input        | Type                                    | Default   | Description                                                          |
+| ------------ | --------------------------------------- | --------- | -------------------------------------------------------------------- |
+| `label`      | `string`                                | `''`      | The text content displayed in the pill                               |
+| `variant`    | `'Light' \| 'Solid' \| 'Outline' \| 'Transparent'` | `'Light'` | Visual style variant                                                 |
+| `color`      | `'Gray' \| 'Primary' \| 'Error' \| 'Warning' \| 'Success' \| 'Purple' \| 'Cyan'` | `'Gray'` | Color scheme for the pill                                            |
+| `size`       | `'xsm' \| 'sm' \| 'md' \| 'lg'`         | `'md'`    | Size variant of the pill                                             |
+| `dot`        | `'left' \| 'right' \| 'none'`          | `'none'`  | Position of optional dot indicator (left, right, or none)            |
+| `removable`  | `boolean`                               | `false`   | Whether to show a remove button                                      |
+| `customClass`| `string`                                | `''`      | Additional CSS classes for custom styling                            |
+
+#### Outputs
+
+| Output   | Type                     | Description                                           |
+| -------- | ------------------------ | ----------------------------------------------------- |
+| `clicked`| `EventEmitter<string>`   | Emitted when the remove button is clicked (returns label) |
+
+#### Features
+
+- ✅ **Multiple Variants** - Light, Solid, Outline, and Transparent styles
+- ✅ **Color Options** - Gray, Primary, Error, Warning, Success, Purple, and Cyan
+- ✅ **Size Variants** - Extra Small (`xsm`), Small (`sm`), Medium (`md`), Large (`lg`)
+- ✅ **Dot Indicators** - Optional dot indicator on left or right side
+- ✅ **Removable** - Optional remove button with click event
+- ✅ **Custom Styling** - Additional CSS classes for custom appearance
+- ✅ **Event Handling** - `clicked` event for remove button interactions
+
+#### Usage Examples
+
+**Basic Pill:**
+
+```typescript
+import { PillComponent } from '@brickclay/ui';
+
+@Component({
+  template: `
+    <brickclay-pill [label]="'Status'" [color]="'Success'"> </brickclay-pill>
+  `,
+  imports: [PillComponent],
+})
+export class MyComponent {}
+```
+
+**Different Variants:**
+
+```typescript
+<!-- Light variant -->
+<brickclay-pill
+  [label]="'Light Pill'"
+  [variant]="'Light'"
+  [color]="'Primary'">
+</brickclay-pill>
+
+<!-- Solid variant -->
+<brickclay-pill
+  [label]="'Solid Pill'"
+  [variant]="'Solid'"
+  [color]="'Primary'">
+</brickclay-pill>
+
+<!-- Outline variant -->
+<brickclay-pill
+  [label]="'Outline Pill'"
+  [variant]="'Outline'"
+  [color]="'Primary'">
+</brickclay-pill>
+
+<!-- Transparent variant -->
+<brickclay-pill
+  [label]="'Transparent Pill'"
+  [variant]="'Transparent'"
+  [color]="'Primary'">
+</brickclay-pill>
+```
+
+**Different Colors:**
+
+```typescript
+<brickclay-pill [label]="'Gray'" [color]="'Gray'"> </brickclay-pill>
+<brickclay-pill [label]="'Primary'" [color]="'Primary'"> </brickclay-pill>
+<brickclay-pill [label]="'Error'" [color]="'Error'"> </brickclay-pill>
+<brickclay-pill [label]="'Warning'" [color]="'Warning'"> </brickclay-pill>
+<brickclay-pill [label]="'Success'" [color]="'Success'"> </brickclay-pill>
+<brickclay-pill [label]="'Purple'" [color]="'Purple'"> </brickclay-pill>
+<brickclay-pill [label]="'Cyan'" [color]="'Cyan'"> </brickclay-pill>
+```
+
+**Different Sizes:**
+
+```typescript
+<!-- Extra Small -->
+<brickclay-pill [label]="'XSM'" [size]="'xsm'"> </brickclay-pill>
+
+<!-- Small -->
+<brickclay-pill [label]="'SM'" [size]="'sm'"> </brickclay-pill>
+
+<!-- Medium -->
+<brickclay-pill [label]="'MD'" [size]="'md'"> </brickclay-pill>
+
+<!-- Large -->
+<brickclay-pill [label]="'LG'" [size]="'lg'"> </brickclay-pill>
+```
+
+**With Dot Indicators:**
+
+```typescript
+<!-- Dot on left -->
+<brickclay-pill
+  [label]="'Active'"
+  [dot]="'left'"
+  [color]="'Success'">
+</brickclay-pill>
+
+<!-- Dot on right -->
+<brickclay-pill
+  [label]="'Pending'"
+  [dot]="'right'"
+  [color]="'Warning'">
+</brickclay-pill>
+```
+
+**Removable Pill:**
+
+```typescript
+@Component({
+  template: `
+    <brickclay-pill
+      [label]="'Removable Tag'"
+      [removable]="true"
+      (clicked)="onRemoveTag($event)">
+    </brickclay-pill>
+  `,
+})
+export class MyComponent {
+  onRemoveTag(label: string) {
+    console.log('Removed:', label);
+    // Remove from list, update state, etc.
+  }
+}
+```
+
+**Dynamic Pill List:**
+
+```typescript
+@Component({
+  template: `
+    <div>
+      <brickclay-pill
+        *ngFor="let tag of tags"
+        [label]="tag"
+        [removable]="true"
+        [color]="getTagColor(tag)"
+        (clicked)="removeTag(tag)">
+      </brickclay-pill>
+    </div>
+  `,
+})
+export class MyComponent {
+  tags = ['Angular', 'TypeScript', 'RxJS', 'NgRx'];
+
+  removeTag(tag: string) {
+    this.tags = this.tags.filter((t) => t !== tag);
+  }
+
+  getTagColor(tag: string): 'Primary' | 'Success' | 'Warning' {
+    // Custom logic to determine color
+    return 'Primary';
+  }
+}
+```
+
+**With Custom Classes:**
+
+```typescript
+<brickclay-pill
+  [label]="'Custom Styled'"
+  [customClass]="'my-custom-class font-bold'">
+</brickclay-pill>
+```
+
+#### Styling
+
+The pill component supports predefined size classes:
+
+- **Extra Small**: `xsm`
+- **Small**: `sm`
+- **Medium**: `md` - Default
+- **Large**: `lg`
+
+The component includes built-in styles for:
+
+- All variant styles (Light, Solid, Outline, Transparent)
+- All color schemes (Gray, Primary, Error, Warning, Success, Purple, Cyan)
+- Dot indicators (left and right positions)
+- Remove button styling
+- Hover states
+- Smooth transitions
+
+## 🏷️ Badge
+
+A flexible badge component for displaying labels, tags, or status indicators. Perfect for categorizing content, showing status, or creating removable tag lists. Supports multiple visual variants, color schemes, sizes, and optional dot indicators.
+
+### BadgeComponent
+
+A standalone badge component that displays text labels with customizable styling and optional removal functionality.
+
+#### Basic Example
+
+```typescript
+import { BadgeComponent } from '@brickclay/ui';
+
+@Component({
+  template: `
+    <brickclay-badge
+      [label]="'New'"
+      [variant]="'Solid'"
+      [color]="'Primary'"
+      [size]="'md'"
+      (clicked)="onBadgeRemoved($event)"
+    >
+    </brickclay-badge>
+  `,
+  imports: [BadgeComponent],
+})
+export class MyComponent {
+  onBadgeRemoved(label: string) {
+    console.log('Badge removed:', label);
+  }
+}
+```
+
+#### Component Selector
+
+`<brickclay-badge>`
+
+#### Inputs
+
+| Input        | Type                                    | Default   | Description                                                          |
+| ------------ | --------------------------------------- | --------- | -------------------------------------------------------------------- |
+| `label`      | `string`                                | `''`      | The text content displayed in the badge                              |
+| `variant`    | `'Light' \| 'Solid' \| 'Outline' \| 'Transparent'` | `'Light'` | Visual style variant                                                 |
+| `color`      | `'Gray' \| 'Primary' \| 'Error' \| 'Warning' \| 'Success' \| 'Purple' \| 'Cyan'` | `'Gray'` | Color scheme for the badge                                           |
+| `size`       | `'xsm' \| 'sm' \| 'md' \| 'lg'`         | `'md'`    | Size variant of the badge                                            |
+| `dot`        | `'left' \| 'right' \| 'none'`          | `'none'`  | Position of optional dot indicator (left, right, or none)            |
+| `removable`  | `boolean`                               | `false`   | Whether to show a remove button                                      |
+| `customClass`| `string`                                | `''`      | Additional CSS classes for custom styling                            |
+
+#### Outputs
+
+| Output   | Type                     | Description                                           |
+| -------- | ------------------------ | ----------------------------------------------------- |
+| `clicked`| `EventEmitter<string>`   | Emitted when the remove button is clicked (returns label) |
+
+#### Features
+
+- ✅ **Multiple Variants** - Light, Solid, Outline, and Transparent styles
+- ✅ **Color Options** - Gray, Primary, Error, Warning, Success, Purple, and Cyan
+- ✅ **Size Variants** - Extra Small (`xsm`), Small (`sm`), Medium (`md`), Large (`lg`)
+- ✅ **Dot Indicators** - Optional dot indicator on left or right side
+- ✅ **Removable** - Optional remove button with click event
+- ✅ **Custom Styling** - Additional CSS classes for custom appearance
+- ✅ **Event Handling** - `clicked` event for remove button interactions
+
+#### Usage Examples
+
+**Basic Badge:**
+
+```typescript
+import { BadgeComponent } from '@brickclay/ui';
+
+@Component({
+  template: `
+    <brickclay-badge [label]="'New'" [color]="'Success'"> </brickclay-badge>
+  `,
+  imports: [BadgeComponent],
+})
+export class MyComponent {}
+```
+
+**Different Variants:**
+
+```typescript
+<!-- Light variant -->
+<brickclay-badge
+  [label]="'Light Badge'"
+  [variant]="'Light'"
+  [color]="'Primary'">
+</brickclay-badge>
+
+<!-- Solid variant -->
+<brickclay-badge
+  [label]="'Solid Badge'"
+  [variant]="'Solid'"
+  [color]="'Primary'">
+</brickclay-badge>
+
+<!-- Outline variant -->
+<brickclay-badge
+  [label]="'Outline Badge'"
+  [variant]="'Outline'"
+  [color]="'Primary'">
+</brickclay-badge>
+
+<!-- Transparent variant -->
+<brickclay-badge
+  [label]="'Transparent Badge'"
+  [variant]="'Transparent'"
+  [color]="'Primary'">
+</brickclay-badge>
+```
+
+**Different Colors:**
+
+```typescript
+<brickclay-badge [label]="'Gray'" [color]="'Gray'"> </brickclay-badge>
+<brickclay-badge [label]="'Primary'" [color]="'Primary'"> </brickclay-badge>
+<brickclay-badge [label]="'Error'" [color]="'Error'"> </brickclay-badge>
+<brickclay-badge [label]="'Warning'" [color]="'Warning'"> </brickclay-badge>
+<brickclay-badge [label]="'Success'" [color]="'Success'"> </brickclay-badge>
+<brickclay-badge [label]="'Purple'" [color]="'Purple'"> </brickclay-badge>
+<brickclay-badge [label]="'Cyan'" [color]="'Cyan'"> </brickclay-badge>
+```
+
+**Different Sizes:**
+
+```typescript
+<!-- Extra Small -->
+<brickclay-badge [label]="'XSM'" [size]="'xsm'"> </brickclay-badge>
+
+<!-- Small -->
+<brickclay-badge [label]="'SM'" [size]="'sm'"> </brickclay-badge>
+
+<!-- Medium -->
+<brickclay-badge [label]="'MD'" [size]="'md'"> </brickclay-badge>
+
+<!-- Large -->
+<brickclay-badge [label]="'LG'" [size]="'lg'"> </brickclay-badge>
+```
+
+**With Dot Indicators:**
+
+```typescript
+<!-- Dot on left -->
+<brickclay-badge
+  [label]="'Active'"
+  [dot]="'left'"
+  [color]="'Success'">
+</brickclay-badge>
+
+<!-- Dot on right -->
+<brickclay-badge
+  [label]="'Pending'"
+  [dot]="'right'"
+  [color]="'Warning'">
+</brickclay-badge>
+```
+
+**Removable Badge:**
+
+```typescript
+@Component({
+  template: `
+    <brickclay-badge
+      [label]="'Removable Tag'"
+      [removable]="true"
+      (clicked)="onRemoveTag($event)">
+    </brickclay-badge>
+  `,
+})
+export class MyComponent {
+  onRemoveTag(label: string) {
+    console.log('Removed:', label);
+    // Remove from list, update state, etc.
+  }
+}
+```
+
+**Dynamic Badge List:**
+
+```typescript
+@Component({
+  template: `
+    <div>
+      <brickclay-badge
+        *ngFor="let tag of tags"
+        [label]="tag"
+        [removable]="true"
+        [color]="getTagColor(tag)"
+        (clicked)="removeTag(tag)">
+      </brickclay-badge>
+    </div>
+  `,
+})
+export class MyComponent {
+  tags = ['Angular', 'TypeScript', 'RxJS', 'NgRx'];
+
+  removeTag(tag: string) {
+    this.tags = this.tags.filter((t) => t !== tag);
+  }
+
+  getTagColor(tag: string): 'Primary' | 'Success' | 'Warning' {
+    // Custom logic to determine color
+    return 'Primary';
+  }
+}
+```
+
+**With Custom Classes:**
+
+```typescript
+<brickclay-badge
+  [label]="'Custom Styled'"
+  [customClass]="'my-custom-class font-bold'">
+</brickclay-badge>
+```
+
+#### Styling
+
+The badge component supports predefined size classes:
+
+- **Extra Small**: `xsm`
+- **Small**: `sm`
+- **Medium**: `md` - Default
+- **Large**: `lg`
+
+The component includes built-in styles for:
+
+- All variant styles (Light, Solid, Outline, Transparent)
+- All color schemes (Gray, Primary, Error, Warning, Success, Purple, Cyan)
+- Dot indicators (left and right positions)
+- Remove button styling
+- Hover states
+- Smooth transitions
+
 ## 📐 TypeScript Interfaces
 
 ### CalendarRange
@@ -1393,6 +1873,20 @@ For issues, feature requests, or contributions, please visit our [GitHub reposit
   - Disabled state support
   - Full keyboard navigation support
   - Complete accessibility features
+- ✅ Pill component
+  - Multiple visual variants (Light, Solid, Outline, Transparent)
+  - Seven color options (Gray, Primary, Error, Warning, Success, Purple, Cyan)
+  - Four size variants (xsm, sm, md, lg)
+  - Optional dot indicators (left, right, none)
+  - Removable functionality with click events
+  - Custom CSS class support
+- ✅ Badge component
+  - Multiple visual variants (Light, Solid, Outline, Transparent)
+  - Seven color options (Gray, Primary, Error, Warning, Success, Purple, Cyan)
+  - Four size variants (xsm, sm, md, lg)
+  - Optional dot indicators (left, right, none)
+  - Removable functionality with click events
+  - Custom CSS class support
 - ✅ TypeScript definitions
 - ✅ Comprehensive documentation
 
