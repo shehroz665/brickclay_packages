@@ -18,3 +18,7 @@ export * from './lib/toggle/toggle';
 export * from './lib/checkbox/checkbox';
 //Radio-Button
 export * from './lib/radio/radio'
+//Pill
+export * from './lib/pill/pill'
+//Badge
+export * from './lib/badge/badge'

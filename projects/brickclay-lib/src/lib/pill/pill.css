@@ -1,0 +1,77 @@
+/* --- BASE --- */
+.pill {
+  @apply inline-flex items-center justify-center font-medium border transition-colors duration-200 cursor-default gap-1.5 rounded-full;
+}
+
+
+
+/* --- SIZES --- */
+.pill-xsm { @apply px-2 py-0.5 text-[10px] leading-[14px]; }
+.pill-sm  { @apply px-2 py-0.5 text-xs leading-[18px]; }
+.pill-md  { @apply px-2 py-0.5 text-sm; }
+.pill-lg  { @apply px-3 py-1 text-sm; }
+
+
+/* --- DYNAMIC ELEMENTS (Dots & Close) --- */
+
+/* OPTIMIZATION: 'bg-current' makes the dot the same color as the text.
+   This works for Solids (Text is white -> Dot is white)
+   and Outlines (Text is Blue -> Dot is Blue).
+*/
+.dot {
+  @apply rounded-full size-1.5 flex-shrink-0 flex-grow-0 bg-current;
+}
+
+/* Inherit text color for the SVG stroke */
+.pill-close {
+  @apply flex items-center justify-center rounded-full text-inherit transition-colors;
+}
+
+/* Sizes for close button based on parent size */
+.pill-xsm .pill-close { @apply w-3 h-3; }
+.pill-sm .pill-close  { @apply w-3 h-3; }
+.pill-md .pill-close,
+.pill-lg .pill-close  { @apply w-3.5 h-3.5; }
+
+
+/* --- VARIANTS: SOLID --- */
+.Gray-Solid    { @apply bg-[#6B7080] border-[#6B7080] text-white; }
+.Primary-Solid { @apply bg-[#294FFF] border-[#294FFF] text-white; }
+.Error-Solid   { @apply bg-[#FA727A] border-[#FA727A] text-[#4C0513]; }
+.Warning-Solid { @apply bg-[#FA9E3A] border-[#FA9E3A] text-[#461C04]; }
+/* Fixed Custom Dot color for Success Solid if you want it darker than text, otherwise remove next line */
+.Success-Solid { @apply bg-[#57D175] border-[#57D175] text-[#461C04]; }
+.Success-Solid .dot { @apply bg-[#082B13]; } /* Override bg-current only here */
+
+.Purple-Solid  { @apply bg-[#CE8EF2] border-[#CE8EF2] text-[#461C04]; }
+.Cyan-Solid    { @apply bg-[#3FC2F1] border-[#3FC2F1] text-[#461C04]; }
+
+
+/* --- VARIANTS: LIGHT --- */
+.Gray-Light    { @apply bg-[#F4F4F6] border-transparent text-[#363C51]; }
+.Primary-Light { @apply bg-[#E5F3FF] border-transparent text-[#1434CB]; }
+.Error-Light   { @apply bg-[#FFF1F1] border-transparent text-[#CB1432]; }
+.Warning-Light { @apply bg-[#FFEED7] border-transparent text-[#A04C02]; }
+.Success-Light { @apply bg-[#F1FCF3] border-transparent text-[#1E7735]; }
+.Purple-Light  { @apply bg-[#F6EAFD] border-transparent text-[#9130C0]; }
+.Cyan-Light    { @apply bg-[#F1FAFE] border-transparent text-[#096E9B]; }
+
+
+/* --- VARIANTS: OUTLINE --- */
+.Gray-Outline    { @apply bg-[#F4F4F6] border-[#BBBDC5] text-[#363C51]; }
+.Primary-Outline { @apply bg-[#E5F3FF] border-[#3F71FF] text-[#1434CB]; }
+.Error-Outline   { @apply bg-[#FFF1F1] border-[#FA727A] text-[#CB1432]; }
+.Warning-Outline { @apply bg-[#FFEED7] border-[#FBAE58] text-[#A04C02]; }
+.Success-Outline { @apply bg-[#F1FCF3] border-[#57D175] text-[#1E7735]; }
+.Purple-Outline  { @apply bg-[#F6EAFD] border-[#CE8EF2] text-[#9130C0]; }
+.Cyan-Outline    { @apply bg-[#F1FAFE] border-[#3FC2F1] text-[#096E9B]; }
+
+
+/* --- VARIANTS: TRANSPARENT --- */
+.Gray-Transparent    { @apply bg-transparent border-[#BBBDC5] text-[#363C51]; }
+.Primary-Transparent { @apply bg-transparent border-[#3F71FF] text-[#1434CB]; }
+.Error-Transparent   { @apply bg-transparent border-[#FA727A] text-[#CB1432]; }
+.Warning-Transparent { @apply bg-transparent border-[#FBAE58] text-[#A04C02]; }
+.Success-Transparent { @apply bg-transparent border-[#57D175] text-[#1E7735]; }
+.Purple-Transparent  { @apply bg-transparent border-[#CE8EF2] text-[#9130C0]; }
+.Cyan-Transparent    { @apply bg-transparent border-[#3FC2F1] text-[#096E9B]; }
