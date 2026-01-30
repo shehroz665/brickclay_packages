@@ -28,3 +28,5 @@ export * from './lib/spinner/spinner'
 export * from './lib/ui-button/ui-button'
 export * from './lib/ui-icon-button/ui-icon-button'
 export * from './lib/button-group/button-group'
+//Text-Area
+export * from './lib/textarea/textarea'

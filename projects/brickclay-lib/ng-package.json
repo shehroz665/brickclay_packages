@@ -10,6 +10,15 @@
     "src/styles.css",
     "src/lib/toggle/toggle.css",
     "src/lib/checkbox/checkbox.css",
-    "src/lib/radio/radio.css"
+    "src/lib/radio/radio.css",
+    "src/lib/pill/pill.css",
+    "src/lib/badge/badge.css",
+    "src/lib/spinner/spinner.css",
+    "src/lib/ui-button/ui-button.css",
+    "src/lib/ui-icon-button/ui-icon-button.css",
+    "src/lib/button-group/button-group.css",
+    "src/lib/textarea/textarea.css"
   ]
 }
+
+
