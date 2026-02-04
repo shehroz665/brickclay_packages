@@ -3,7 +3,7 @@ import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'brickclay-textarea',
+  selector: 'bk-textarea',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './textarea.html'

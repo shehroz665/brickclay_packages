@@ -30,3 +30,6 @@ export * from './lib/ui-icon-button/ui-icon-button'
 export * from './lib/button-group/button-group'
 //Text-Area
 export * from './lib/textarea/textarea'
+//Table
+export * from './lib/grid/components/grid/grid';
+export * from './lib/grid/models/grid.model';

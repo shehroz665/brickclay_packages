@@ -94,7 +94,7 @@
       <div *ngIf="enableTimepicker" class="timepicker-section">
         <div class="timepicker-label">Time</div>
         <div class="timepicker-controls">
-          <brickclay-time-picker
+          <bk-time-picker
             pickerId="single-time"
             [label]="''"
             [value]="getSingleTimePickerDisplay()"
@@ -102,7 +102,7 @@
             (timeChange)="onSingleTimePickerChange($event)"
             (pickerOpened)="onTimePickerOpened($event)"
             (pickerClosed)="onTimePickerClosed($event)">
-          </brickclay-time-picker>
+          </bk-time-picker>
         </div>
       </div>
     </div>
@@ -150,7 +150,7 @@
         <div *ngIf="enableTimepicker" class="timepicker-section">
           <div class="timepicker-label">Start Time</div>
           <div class="timepicker-controls">
-            <brickclay-time-picker
+            <bk-time-picker
               pickerId="dual-start"
               [label]="''"
               [value]="getDualTimePickerDisplay(true)"
@@ -158,7 +158,7 @@
               (timeChange)="onDualTimePickerChange($event, true)"
               (pickerOpened)="onTimePickerOpened($event)"
               (pickerClosed)="onTimePickerClosed($event)">
-            </brickclay-time-picker>
+            </bk-time-picker>
           </div>
         </div>
       </div>
@@ -204,7 +204,7 @@
         <div *ngIf="enableTimepicker" class="timepicker-section">
           <div class="timepicker-label">End Time</div>
           <div class="timepicker-controls">
-            <brickclay-time-picker
+            <bk-time-picker
               pickerId="dual-end"
               [label]="''"
               [value]="getDualTimePickerDisplay(false)"
@@ -212,7 +212,7 @@
               (timeChange)="onDualTimePickerChange($event, false)"
               (pickerOpened)="onTimePickerOpened($event)"
               (pickerClosed)="onTimePickerClosed($event)">
-            </brickclay-time-picker>
+            </bk-time-picker>
           </div>
         </div>
       </div>

@@ -1,10 +1,11 @@
 {
   "name": "@brickclay-org/ui",
-  "version": "0.0.17",
+  "version": "0.0.20",
   "peerDependencies": {
     "@angular/common": ">=17.0.0 <=21.0.0",
     "@angular/core": ">=17.0.0 <=21.0.0",
-    "moment": "^2.29.0"
+    "moment": "^2.29.0",
+    "@angular/cdk": "^20.2.14"
   },
   "dependencies": {
     "tslib": "^2.3.0"

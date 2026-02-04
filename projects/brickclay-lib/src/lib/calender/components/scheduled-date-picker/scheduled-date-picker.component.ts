@@ -31,7 +31,7 @@ export interface ScheduledDateSelection {
 }
 
 @Component({
-  selector: 'brickclay-scheduled-date-picker',
+  selector: 'bk-scheduled-date-picker',
   standalone: true,
   imports: [CommonModule, FormsModule, CustomCalendarComponent, TimePickerComponent],
   templateUrl: './scheduled-date-picker.component.html',

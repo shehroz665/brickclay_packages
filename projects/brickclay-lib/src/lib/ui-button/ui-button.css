@@ -19,7 +19,7 @@
   disabled:opacity-90 disabled:cursor-not-allowed disabled:bg-[#242424];
 }
 .btn-primary.xxl {
-  @apply gap-3
+  @apply gap-3;
 }
 
 .btn-secondary {

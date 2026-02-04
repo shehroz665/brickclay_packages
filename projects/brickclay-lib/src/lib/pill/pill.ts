@@ -3,8 +3,8 @@ export type PillVariant = 'Light' | 'Solid' | 'Outline' | 'Transparent';
 export type PillColor = 'Gray' | 'Primary' | 'Error' | 'Warning' | 'Success' | 'Purple' | 'Cyan';
 export type PillSize = 'xsm' |'sm' | 'md' | 'lg';
 @Component({
-  selector: 'brickclay-pill',
-  imports: [],
+  selector: 'bk-pill',
+  standalone: true,
   templateUrl: './pill.html',
   styleUrl: './pill.css',
 })

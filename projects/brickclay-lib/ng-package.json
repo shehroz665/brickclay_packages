@@ -17,7 +17,8 @@
     "src/lib/ui-button/ui-button.css",
     "src/lib/ui-icon-button/ui-icon-button.css",
     "src/lib/button-group/button-group.css",
-    "src/lib/textarea/textarea.css"
+    "src/lib/textarea/textarea.css",
+    "src/lib/bk-grid/components/bk-grid/bk-grid.css"
   ]
 }
 

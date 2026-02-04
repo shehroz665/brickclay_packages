@@ -9,7 +9,7 @@ export interface GroupItem {
 export type GroupMode = 'single' | 'multiple';
 
 @Component({
-  selector: 'brickclay-button-group',
+  selector: 'bk-button-group',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './button-group.html',

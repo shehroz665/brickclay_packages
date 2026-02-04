@@ -5,7 +5,7 @@ export type IconButtonSize = 'xxsm' | 'xsm' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
 export type IconButtonVariant = 'primary' | 'secondary';
 
 @Component({
-  selector: 'brickclay-icon-button',
+  selector: 'bk-icon-button',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './ui-icon-button.html',

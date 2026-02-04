@@ -14,7 +14,7 @@ import {
 } from '@angular/forms';
 
 @Component({
-  selector: 'brickclay-radio-button',
+  selector: 'bk-radio-button',
   standalone: true,
   imports: [CommonModule, FormsModule],
   encapsulation: ViewEncapsulation.None,

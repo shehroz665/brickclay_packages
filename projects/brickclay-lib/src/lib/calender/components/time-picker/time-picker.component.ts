@@ -3,7 +3,7 @@ import { Component, Input, Output, EventEmitter, OnInit, OnChanges, AfterViewIni
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'brickclay-time-picker',
+  selector: 'bk-time-picker',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './time-picker.component.html',

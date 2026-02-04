@@ -1,0 +1,97 @@
+<div
+  #tableScrollContainer
+  cdkScrollable
+  class="h-[calc(100vh-260px)] overflow-y-auto">
+
+  <table class="min-w-full text-sm text-left text-gray-800 table-auto border-collapse">
+
+    <!-- ================= HEADER ================= -->
+  <thead>
+    <tr>
+      @for (col of columns; track col.header;let i=$index;) {
+        @if (isColumnVisible(col)) {
+          <th
+            class="table-header sticky top-0 cursor-pointer"
+            [class.action-sticky]="col.sticky"
+            [class.z-10]="col.sticky"
+            [ngClass]="col.headerClass"
+            [ngClass]="col.cellClass"
+            (click)="sort(col,i)"
+          >
+            <span class="flex items-center gap-1"
+              [ngClass]="sortColumn === col.field
+                ? (sortDirection === 'asc' ? 'asc' : 'desc')
+                : ''">
+              {{ col.header }}
+              @if (col.sortable) {
+                <span class="sort-icon"></span>
+              }
+            </span>
+          </th>
+        }
+      }
+
+      @if (actions.length) {
+        <th class="table-header sticky top-0 action-sticky z-10 !bg-[#FBFBFC] w-20">
+          Action
+        </th>
+      }
+    </tr>
+  </thead>
+
+    <!-- ================= BODY ================= -->
+    <tbody
+      cdkDropList
+      [cdkDropListDisabled]="!draggable"
+      [cdkDropListData]="result || []"
+      (cdkDropListDropped)="dropList($event)">
+
+      @for (row of result; track row; let rowIndex = $index) {
+        <tr
+          cdkDrag
+          cdkDragLockAxis="y"
+          [cdkDragDisabled]="!draggable"
+          (cdkDragStarted)="onDragStart($event)"
+          (cdkDragMoved)="onDragMoved($event)"
+          class="" [ngClass]="{ 'cursor-move ': draggable }">
+
+          @for (col of columns; track col.header; let colIndex = $index) {
+            @if (isColumnVisible(col)) {
+              <td class="table-cell text-nowrap" [ngClass]="col.cellClass">
+                @if (draggable && colIndex === firstVisibleColumnIndex) {
+                  <span cdkDragHandle class="mr-2 text-gray-400" [ngClass]="{ 'cursor-move': draggable }">☰</span>
+                }
+                {{ getCellValue(row, col) }}
+              </td>
+            }
+          }
+
+       @if (actions.length) {
+          <td class="table-cell action-sticky text-center">
+            <div class="flex items-center justify-center gap-1.5">
+              @for (action of actions; track action.name) {
+                @if (action.hasPermission) {
+                     <!-- appTooltip="{{ action.tooltip }}"
+                    appTooltipPosition="top" -->
+                  <button
+                    class="size-6 flex items-center justify-center rounded hover:bg-[#F8F8FA]"
+                    (click)="emitAction(action, row)"
+
+                  >
+                    <img
+                      [src]="action.icon"
+                      width="14"
+                      height="14"
+                      alt="action-icon"
+                    />
+                  </button>
+                }
+              }
+            </div>
+          </td>
+        }
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

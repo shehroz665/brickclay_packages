@@ -18,7 +18,7 @@ export interface CalendarSelection {
 }
 
 @Component({
-  selector: 'brickclay-custom-calendar',
+  selector: 'bk-custom-calendar',
   standalone: true,
   imports: [CommonModule, FormsModule, TimePickerComponent],
   templateUrl: './custom-calendar.component.html',

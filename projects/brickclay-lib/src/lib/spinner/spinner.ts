@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 export type SpinnerSize = 'xsm' | 'sm' | 'md' | 'lg' | 'xl';
 
 @Component({
-  selector: 'brickclay-spinner',
+  selector: 'bk-spinner',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './spinner.html',

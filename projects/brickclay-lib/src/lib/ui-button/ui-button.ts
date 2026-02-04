@@ -5,7 +5,7 @@ export type ButtonSize = 'xxsm' | 'xsm' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
 export type ButtonVariant = 'primary' | 'secondary';
 
 @Component({
-  selector: 'brickclay-button',
+  selector: 'bk-button',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './ui-button.html',

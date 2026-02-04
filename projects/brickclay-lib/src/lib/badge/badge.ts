@@ -6,7 +6,7 @@ export type BadgeColor = 'Gray' | 'Primary' | 'Error' | 'Warning' | 'Success' | 
 export type BadgeSize = 'xsm' |'sm' | 'md' | 'lg';
 
 @Component({
-  selector: 'brickclay-badge',
+  selector: 'bk-badge',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './badge.html',

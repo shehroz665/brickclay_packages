@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
-  selector: 'brickclay-toggle',
+  selector: 'bk-toggle',
   standalone: true,
   imports: [CommonModule],
   encapsulation:ViewEncapsulation.None,
