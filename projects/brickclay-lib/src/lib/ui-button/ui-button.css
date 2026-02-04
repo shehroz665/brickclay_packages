@@ -40,33 +40,33 @@
 /* --- SIZES --- */
 /* These classes define padding, text size, AND icon/spinner size */
 
-.xxsm { @apply px-2 py-1 text-xs leading-[18px]; }
-.xsm  { @apply px-3 py-2 text-xs leading-[18px]; }
-.sm   { @apply px-[14px] py-2 text-sm; }
-.md   { @apply px-4 py-2.5 text-sm; }
-.lg   { @apply px-[18px] py-2.5 text-base; }
-.xl   { @apply px-5 py-3 text-base; }
-.xxl  { @apply px-7 py-4 text-lg leading-[26px]; }
+.btn.xxsm { @apply px-2 py-1 text-xs leading-[18px]; }
+.btn.xsm  { @apply px-3 py-2 text-xs leading-[18px]; }
+.btn.sm   { @apply px-[14px] py-2 text-sm; }
+.btn.md   { @apply px-4 py-2.5 text-sm; }
+.btn.lg   { @apply px-[18px] py-2.5 text-base; }
+.btn.xl   { @apply px-5 py-3 text-base; }
+.btn.xxl  { @apply px-7 py-4 text-lg leading-[26px]; }
 
 /* --- ICON SIZING (Nested) --- */
-.xxsm .icon { @apply size-[11px]; }
-.xsm .icon  { @apply size-[15px]; }
-.sm .icon   { @apply size-4; }
-.md .icon   { @apply size-4; }
-.lg .icon   { @apply size-4; }
-.xl .icon   { @apply size-4; }
-.xxl .icon  { @apply size-5; }
+.btn.xxsm .icon { @apply size-[11px]; }
+.btn.xsm .icon  { @apply size-[15px]; }
+.btn.sm .icon   { @apply size-4; }
+.btn.md .icon   { @apply size-4; }
+.btn.lg .icon   { @apply size-4; }
+.btn.xl .icon   { @apply size-4; }
+.btn.xxl .icon  { @apply size-5; }
 
 /* --- SPINNER --- */
-.spinner {
+.btn.spinner {
   @apply shrink-0 border-t-transparent rounded-full animate-spin border-current;
 }
 
 /* Spinner sizing per button size */
-.xxsm .spinner { @apply size-[14px] border-[1.5px]; }
-.xsm .spinner  { @apply size-[15px] border-[1.5px]; }
-.sm .spinner   { @apply size-[15px] border-[1.5px]; }
-.md .spinner   { @apply size-[15px] border-[1.5px]; }
-.lg .spinner   { @apply size-[15px] border-[1.5px]; }
-.xl .spinner   { @apply size-[15px] border-[1.5px]; }
-.xxl .spinner  { @apply size-[24px] border-[2.34px]; }
+.btn.xxsm .spinner { @apply size-[14px] border-[1.5px]; }
+.btn.xsm .spinner  { @apply size-[15px] border-[1.5px]; }
+.btn.sm .spinner   { @apply size-[15px] border-[1.5px]; }
+.btn.md .spinner   { @apply size-[15px] border-[1.5px]; }
+.btn.lg .spinner   { @apply size-[15px] border-[1.5px]; }
+.btn.xl .spinner   { @apply size-[15px] border-[1.5px]; }
+.btn.xxl .spinner  { @apply size-[24px] border-[2.34px]; }

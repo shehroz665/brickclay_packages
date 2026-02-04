@@ -11,7 +11,7 @@
       @for (col of columns; track col.header;let i=$index;) {
         @if (isColumnVisible(col)) {
           <th
-            class="table-header sticky top-0 cursor-pointer"
+            class="grid-header sticky top-0 cursor-pointer"
             [class.action-sticky]="col.sticky"
             [class.z-10]="col.sticky"
             [ngClass]="col.headerClass"
@@ -20,11 +20,11 @@
           >
             <span class="flex items-center gap-1"
               [ngClass]="sortColumn === col.field
-                ? (sortDirection === 'asc' ? 'asc' : 'desc')
+                ? (sortDirection === 'asc' ? 'grid-asc' : 'grid-desc')
                 : ''">
               {{ col.header }}
               @if (col.sortable) {
-                <span class="sort-icon"></span>
+                <span class="grid-sort-icon"></span>
               }
             </span>
           </th>
@@ -32,7 +32,7 @@
       }
 
       @if (actions.length) {
-        <th class="table-header sticky top-0 action-sticky z-10 !bg-[#FBFBFC] w-20">
+        <th class="grid-header sticky top-0 action-sticky z-10 !bg-[#FBFBFC] w-20">
           Action
         </th>
       }
@@ -57,7 +57,7 @@
 
           @for (col of columns; track col.header; let colIndex = $index) {
             @if (isColumnVisible(col)) {
-              <td class="table-cell text-nowrap" [ngClass]="col.cellClass">
+              <td class="grid-cell text-nowrap" [ngClass]="col.cellClass">
                 @if (draggable && colIndex === firstVisibleColumnIndex) {
                   <span cdkDragHandle class="mr-2 text-gray-400" [ngClass]="{ 'cursor-move': draggable }">☰</span>
                 }
@@ -67,12 +67,12 @@
           }
 
        @if (actions.length) {
-          <td class="table-cell action-sticky text-center">
+          <td class="grid-cell action-sticky text-center">
             <div class="flex items-center justify-center gap-1.5">
               @for (action of actions; track action.name) {
                 @if (action.hasPermission) {
-                     <!-- appTooltip="{{ action.tooltip }}"
-                    appTooltipPosition="top" -->
+                    <!-- appTooltip="{{ action.tooltip }}"
+                    appTooltipPosition="top"                   -->
                   <button
                     class="size-6 flex items-center justify-center rounded hover:bg-[#F8F8FA]"
                     (click)="emitAction(action, row)"

@@ -1,4 +1,4 @@
-import { Component, Input, Optional, Self } from '@angular/core';
+import { Component, EventEmitter, Input, Optional, Output, Self } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -21,7 +21,10 @@ export class Textarea implements ControlValueAccessor {
   @Input() errorMessage: string = '';
   @Input() trimWhiteSpaces: boolean = false;
   @Input() eventType: 'input' | 'change' | 'blur' = 'input';
-
+  @Output() input = new EventEmitter<Event>();
+  @Output() change = new EventEmitter<Event>();
+  @Output() blur = new EventEmitter<Event>();
+  @Output() focus = new EventEmitter<Event>();
   value: string = '';
   isDisabled: boolean = false;
 
@@ -59,7 +62,6 @@ export class Textarea implements ControlValueAccessor {
   }
 
   get showError(): boolean {
-    debugger;
   if (this.hasError) return true;
   if (!this.control) return false;
 
@@ -96,6 +98,12 @@ export class Textarea implements ControlValueAccessor {
 
     // Always mark as touched on blur/focus
     if (event.type === 'blur' || event.type === 'focus') this.onTouched();
+    // ---- Emit component outputs ----
+    if (event.type === 'input') this.input.emit(event);
+    if (event.type === 'change') this.change.emit(event);
+    if (event.type === 'blur') this.blur.emit(event);
+    if (event.type === 'focus') this.focus.emit(event);
+
   }
 
   writeValue(value: any): void {

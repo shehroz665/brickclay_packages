@@ -3,16 +3,6 @@
   @apply inline-flex items-center justify-center font-medium border transition-colors duration-200 cursor-default gap-1.5 rounded-[4px];
 }
 
-/* --- SHAPES --- */
-.isBadge {
-  @apply rounded-[4px]; /* ≈ 4px */
-}
-
-.isPill {
-  @apply rounded-full;
-}
-
-
 /* --- SIZES --- */
 .badge-xsm { @apply px-2 py-0.5 text-[10px] leading-[14px]; }
 .badge-sm  { @apply px-2 py-0.5 text-xs leading-[18px]; }

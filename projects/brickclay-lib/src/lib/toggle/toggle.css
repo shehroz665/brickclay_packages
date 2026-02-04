@@ -72,3 +72,20 @@
 
 
 
+/* ... Your existing CSS ... */
+
+/* --- VISUAL SIMULATION CLASSES (For Gallery/Documentation) --- */
+
+/* Force Hover Appearance */
+.simulate-hover.toggle-off {
+  @apply bg-[#A1A3AE]; /* Matches the hover color defined in .toggle-off */
+}
+
+.simulate-hover.toggle-on {
+  @apply bg-[#1E7735]; /* Matches the hover color defined in .toggle-on */
+}
+
+/* Force Focus Appearance (Blue Ring) */
+.simulate-focus {
+  @apply ring-2 ring-[#1336EF] ring-offset-2;
+}

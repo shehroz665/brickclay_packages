@@ -1,39 +1,39 @@
 /*---- Checkbox Sizes Class ---- */
-.xsm {
+.radio.xsm {
   @apply size-[14px];
 }
-.sm {
+.radio.sm {
   @apply size-[16px];
 }
-.md {
+.radio.md {
   @apply size-[18px];
 }
-.lg {
+.radio.lg {
   @apply size-[19px];
 }
 /*---- Dot Sizes Class ---- */
-.xsm .dot {
+.radio.xsm .dot {
   @apply size-[6px];
 }
-.sm .dot {
+.radio.sm .dot {
   @apply size-[8px];
 }
-.md .dot {
+.radio.md .dot {
   @apply size-[10px];
 }
-.lg .dot {
+.radio.lg .dot {
   @apply size-[11px];
 }
 /*---- Tick Sizes Class ---- */
-.xsm .tick {
-  @apply size-[8px];
-}
-.sm .tick {
+.radio.xsm .tick {
   @apply size-[9px];
 }
-.md .tick {
+.radio.sm .tick {
+  @apply size-[10px];
+}
+.radio.md .tick {
   @apply size-[12px];
 }
-.lg .tick {
-  @apply size-[13px];
+.radio.lg .tick {
+  @apply size-[14px];
 }

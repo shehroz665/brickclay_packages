@@ -4,16 +4,10 @@ import {
   Output,
   EventEmitter,
   forwardRef,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  ControlValueAccessor,
-  NG_VALUE_ACCESSOR,
-  FormsModule
-} from '@angular/forms';
-
-@Component({
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';@Component({
   selector: 'bk-radio-button',
   standalone: true,
   imports: [CommonModule, FormsModule],
@@ -24,9 +18,9 @@ import {
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => RadioComponent),
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
 export class RadioComponent implements ControlValueAccessor {
 
