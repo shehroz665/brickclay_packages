@@ -18,7 +18,8 @@
     "src/lib/ui-icon-button/ui-icon-button.css",
     "src/lib/button-group/button-group.css",
     "src/lib/textarea/textarea.css",
-    "src/lib/grid/components/grid/grid.css"
+    "src/lib/grid/components/grid/grid.css",
+    "src/lib/bk-select/bk-select.css"
   ]
 }
 

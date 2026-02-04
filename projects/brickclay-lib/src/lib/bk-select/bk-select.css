@@ -1,0 +1,128 @@
+/* Container */
+.ng-select-container {
+  @apply relative w-full box-border;
+}
+
+/* Control */
+.ng-select-control {
+  @apply flex items-center justify-between gap-2 w-full bg-white border border-[#E3E3E7] rounded transition-all duration-200 px-3 py-[9.2px] cursor-pointer;
+
+  &.focused { @apply border-[#6B7080] shadow-none z-10; }
+  &.disabled { @apply bg-[#F4F4F6] cursor-not-allowed opacity-60; }
+}
+
+/* Value Container */
+.ng-value-container {
+  @apply flex flex-1 items-center flex-wrap gap-1 relative overflow-hidden h-full;
+}
+
+.ng-placeholder {
+  @apply text-[#6B7080] font-normal text-sm truncate w-full pointer-events-none;
+}
+.ng-value-label-single{
+  @apply font-normal text-sm text-[#141414] truncate w-full;
+}
+
+/* --- NEW: Single Value --- */
+.ng-value-label-single {
+  @apply font-normal text-sm text-[#141414] truncate w-full;
+}
+/* --- NEW: Multi Select Chips --- */
+.ng-value-chips {
+  @apply flex flex-wrap gap-1 w-full;
+}
+
+.ng-value-chip {
+  @apply flex items-center bg-gray-100 border border-gray-200 rounded px-2 py-0.5 max-w-full;
+}
+
+.ng-value-chip .ng-value-label {
+  @apply text-[#15191E] truncate max-w-[150px];
+}
+
+.ng-value-chip .ng-value-icon {
+  @apply ml-1 text-gray-500 hover:text-red-500 cursor-pointer text-base font-bold leading-none px-1;
+}
+
+/* Actions */
+.ng-actions {
+  @apply flex items-center gap-0.5 flex-shrink-0;
+}
+.ng-clear-wrapper { @apply text-gray-400 hover:text-red-500 cursor-pointer; }
+.ng-arrow-wrapper { @apply text-gray-400 transition-transform duration-200; &.open { @apply rotate-180; }}
+
+/* Dropdown */
+.custom-ng-dropdown-panel {
+  @apply absolute left-0 w-full bg-white border border-[#E3E3E7] rounded-xl shadow-lg z-[99] overflow-hidden cursor-default;
+}
+
+.ng-dropdown-search { @apply px-2 pt-2;}
+.ng-search-wrapper { @apply flex items-center border border-[#E3E3E7] rounded-md px-3 py-[7px] bg-white transition-colors focus-within:border-[#E3E3E7]; }
+.ng-search-input { @apply w-full outline-none font-normal text-sm text-[#141414] placeholder-[#A1A3AE] bg-transparent;}
+
+.ng-options-list { @apply max-h-60 overflow-auto relative p-2.5 mb-3.5;  }
+
+/* Options */
+.ng-option {
+  @apply flex items-center p-2.5 cursor-pointer transition-colors font-normal text-sm text-[#141414];
+  &:hover, &.marked { @apply bg-[#F8F8F8] rounded-md;}
+  &.selected { @apply bg-[#F8F8F8] rounded-md; }
+}
+
+.ng-option-disabled { @apply px-3 py-2 text-gray-400 cursor-default; }
+
+
+
+/* ... Previous styles ... */
+
+.ng-value-chip.remaining-count {
+  @apply bg-gray-200 text-gray-600 font-semibold cursor-default;
+}
+
+/* Select All Row (Sticky Top) */
+.select-all-option {
+  @apply sticky top-0 z-20 flex items-center px-3 py-2 cursor-pointer border-b border-[#E3E6EE] bg-gray-50 text-[#15191E];
+
+  &:hover {
+    @apply bg-gray-100;
+  }
+}
+
+.custom-ng-dropdown-panel[data-position="top"] {
+  margin-top: 0;
+  margin-bottom: 4px;
+}
+
+.input-label {
+  @apply text-sm font-medium text-[#141414] tracking-[-0.28px] mb-1.5 inline-block;
+}
+
+.input-label-required {
+  @apply text-[#E7000B];
+}
+
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 8px;
+  width: 8px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #D6D7DC;
+  border-radius: 8px;
+  transition: 0.3s ease-in-out;
+
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #909090;
+}
