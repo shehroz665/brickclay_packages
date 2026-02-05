@@ -12,12 +12,12 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => ToggleComponent),
+      useExisting: forwardRef(() => BkToggle),
       multi: true
     }
   ]
 })
-export class ToggleComponent implements ControlValueAccessor {
+export class BkToggle implements ControlValueAccessor {
 
   @Input() label: string = '';
   @Input() disabled: boolean = false;

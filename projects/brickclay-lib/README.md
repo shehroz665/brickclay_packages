@@ -59,7 +59,7 @@ _More components coming soon..._
 ## Installation
 
 ```bash
-npm i @brickclay-org/ui@0.0.17
+npm i @brickclay-org/ui@0.0.26
 ```
 
 ### Peer Dependencies
@@ -106,14 +106,14 @@ This configuration copies the library's assets (SVG icons, etc.) to your applica
 
 ```typescript
 import { Component } from '@angular/core';
-import { CustomCalendarComponent, CalendarSelection } from '@brickclay/ui';
+import { BkCustomCalendar, CalendarSelection } from '@brickclay/ui';
 
 @Component({
   standalone: true,
   selector: 'app-my-component',
-  imports: [CustomCalendarComponent],
+  imports: [BkCustomCalendar],
   template: `
-    <brickclay-custom-calendar (selected)="onDateSelected($event)"> </brickclay-custom-calendar>
+    <bk-custom-calendar (selected)="onDateSelected($event)"> </bk-custom-calendar>
   `,
 })
 export class MyComponent {
@@ -142,22 +142,22 @@ The calendar components provide a complete solution for date and time selection 
 
 ### Components Overview
 
-1. **CustomCalendarComponent** (`brickclay-custom-calendar`) - Main calendar component with support for single date, date range, and multiple date selection
-2. **ScheduledDatePickerComponent** (`brickclay-scheduled-date-picker`) - Advanced scheduling component with time configuration for events
-3. **TimePickerComponent** (`brickclay-time-picker`) - Standalone time selection component with scrollable pickers
+1. **BkCustomCalendar** (`brickclay-custom-calendar`) - Main calendar component with support for single date, date range, and multiple date selection
+2. **BkScheduledDatePicker** (`brickclay-scheduled-date-picker`) - Advanced scheduling component with time configuration for events
+3. **BkTimePicker** (`brickclay-time-picker`) - Standalone time selection component with scrollable pickers
 
-### CustomCalendarComponent
+### BkCustomCalendar
 
 A versatile calendar component that supports single date, date range, and multiple date selection modes.
 
 #### Basic Example
 
 ```typescript
-import { CustomCalendarComponent, CalendarSelection } from '@brickclay/ui';
+import { BkCustomCalendar, CalendarSelection } from '@brickclay/ui';
 
 @Component({
   template: `
-    <brickclay-custom-calendar
+    <bk-custom-calendar
       [singleDatePicker]="false"
       [dualCalendar]="true"
       [enableTimepicker]="true"
@@ -165,7 +165,7 @@ import { CustomCalendarComponent, CalendarSelection } from '@brickclay/ui';
       [placeholder]="'Select date range'"
       (selected)="onDateSelected($event)"
     >
-    </brickclay-custom-calendar>
+    </bk-custom-calendar>
   `,
 })
 export class MyComponent {
@@ -178,7 +178,7 @@ export class MyComponent {
 
 #### Component Selector
 
-`<brickclay-custom-calendar>`
+`<bk-custom-calendar>`
 
 #### Inputs
 
@@ -216,43 +216,43 @@ export class MyComponent {
 **Single Date Selection:**
 
 ```typescript
-<brickclay-custom-calendar
+<bk-custom-calendar
   [singleDatePicker]="true"
   [placeholder]="'Select a date'"
   (selected)="onDateSelected($event)">
-</brickclay-custom-calendar>
+</bk-custom-calendar>
 ```
 
 **Date Range with Time Picker:**
 
 ```typescript
-<brickclay-custom-calendar
+<bk-custom-calendar
   [dualCalendar]="true"
   [enableTimepicker]="true"
   [enableSeconds]="true"
   (selected)="onRangeSelected($event)">
-</brickclay-custom-calendar>
+</bk-custom-calendar>
 ```
 
 **Multiple Date Selection:**
 
 ```typescript
-<brickclay-custom-calendar
+<bk-custom-calendar
   [multiDateSelection]="true"
   [inline]="true"
   (selected)="onMultipleDatesSelected($event)">
-</brickclay-custom-calendar>
+</bk-custom-calendar>
 ```
 
 **Inline Calendar:**
 
 ```typescript
-<brickclay-custom-calendar
+<bk-custom-calendar
   [inline]="true"
   [dualCalendar]="false"
   [showRanges]="false"
   (selected)="onDateSelected($event)">
-</brickclay-custom-calendar>
+</bk-custom-calendar>
 ```
 
 **Custom Date Ranges:**
@@ -271,21 +271,21 @@ const customRanges: Record<string, CalendarRange> = {
   }
 };
 
-<brickclay-custom-calendar
+<bk-custom-calendar
   [customRanges]="customRanges"
   [showRanges]="true"
   (selected)="onDateSelected($event)">
-</brickclay-custom-calendar>
+</bk-custom-calendar>
 ```
 
 **Date Constraints:**
 
 ```typescript
-<brickclay-custom-calendar
+<bk-custom-calendar
   [minDate]="new Date(2024, 0, 1)"
   [maxDate]="new Date(2024, 11, 31)"
   (selected)="onDateSelected($event)">
-</brickclay-custom-calendar>
+</bk-custom-calendar>
 ```
 
 **Pre-selected Values:**
@@ -305,25 +305,25 @@ export class MyComponent {
   }
 }
 
-<brickclay-custom-calendar
+<bk-custom-calendar
   [selectedValue]="selectedValue"
   (selected)="onDateSelected($event)">
-</brickclay-custom-calendar>
+</bk-custom-calendar>
 ```
 
-### ScheduledDatePickerComponent
+### BkScheduledDatePicker
 
 A comprehensive date and time scheduling component with three modes: single date, multiple dates, and date range, each with time configuration.
 
 #### Basic Example
 
 ```typescript
-import { ScheduledDatePickerComponent, ScheduledDateSelection } from '@brickclay/ui';
+import { BkScheduledDatePicker, ScheduledDateSelection } from '@brickclay/ui';
 
 @Component({
   template: `
-    <brickclay-scheduled-date-picker [timeFormat]="12" (scheduled)="onScheduled($event)">
-    </brickclay-scheduled-date-picker>
+    <bk-scheduled-date-picker [timeFormat]="12" (scheduled)="onScheduled($event)">
+    </bk-scheduled-date-picker>
   `,
 })
 export class MyComponent {
@@ -340,7 +340,7 @@ export class MyComponent {
 
 #### Component Selector
 
-`<brickclay-scheduled-date-picker>`
+`<bk-scheduled-date-picker>`
 
 #### Inputs
 
@@ -364,24 +364,24 @@ export class MyComponent {
 - **All Day Toggle**: Mark dates as all-day events
 - **Time Configuration**: Individual time pickers for each date/range
 
-### TimePickerComponent
+### BkTimePicker
 
 A standalone time picker component with scrollable hour, minute, and AM/PM selectors.
 
 #### Basic Example
 
 ```typescript
-import { TimePickerComponent } from '@brickclay/ui';
+import { BkTimePicker } from '@brickclay/ui';
 
 @Component({
   template: `
-    <brickclay-time-picker
+    <bk-time-picker
       [value]="selectedTime"
       [label]="'Start Time'"
       [timeFormat]="12"
       (timeChange)="onTimeChange($event)"
     >
-    </brickclay-time-picker>
+    </bk-time-picker>
   `,
 })
 export class MyComponent {
@@ -396,7 +396,7 @@ export class MyComponent {
 
 #### Component Selector
 
-`<brickclay-time-picker>`
+`<bk-time-picker>`
 
 #### Inputs
 
@@ -450,26 +450,26 @@ value = '23:45';
 
 A versatile toggle/switch component that integrates seamlessly with Angular forms. Supports both template-driven forms (`ngModel`) and reactive forms, with full accessibility features and keyboard navigation.
 
-### ToggleComponent
+### BkToggle
 
 A standalone toggle component that implements `ControlValueAccessor` for seamless Angular forms integration.
 
 #### Basic Example
 
 ```typescript
-import { ToggleComponent } from '@brickclay/ui';
+import { BkToggle } from '@brickclay/ui';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   template: `
-    <brickclay-toggle
+    <bk-toggle
       [(ngModel)]="isEnabled"
       [label]="'Enable notifications'"
       (change)="onToggleChange($event)"
     >
-    </brickclay-toggle>
+    </bk-toggle>
   `,
-  imports: [ToggleComponent, FormsModule],
+  imports: [BkToggle, FormsModule],
 })
 export class MyComponent {
   isEnabled = false;
@@ -482,7 +482,7 @@ export class MyComponent {
 
 #### Component Selector
 
-`<brickclay-toggle>`
+`<bk-toggle>`
 
 #### Inputs
 
@@ -512,14 +512,14 @@ export class MyComponent {
 **Basic Toggle with ngModel:**
 
 ```typescript
-import { ToggleComponent } from '@brickclay/ui';
+import { BkToggle } from '@brickclay/ui';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   template: `
-    <brickclay-toggle [(ngModel)]="isActive" [label]="'Active Status'"> </brickclay-toggle>
+    <bk-toggle [(ngModel)]="isActive" [label]="'Active Status'"> </bk-toggle>
   `,
-  imports: [ToggleComponent, FormsModule],
+  imports: [BkToggle, FormsModule],
 })
 export class MyComponent {
   isActive = true;
@@ -529,33 +529,33 @@ export class MyComponent {
 **Different Sizes:**
 
 ```typescript
-<brickclay-toggle
+<bk-toggle
   [(ngModel)]="value1"
   [toggleClass]="'toggle-sm'"
   [label]="'Small Toggle'">
-</brickclay-toggle>
+</bk-toggle>
 
-<brickclay-toggle
+<bk-toggle
   [(ngModel)]="value2"
   [toggleClass]="'toggle-md'"
   [label]="'Medium Toggle'">
-</brickclay-toggle>
+</bk-toggle>
 
-<brickclay-toggle
+<bk-toggle
   [(ngModel)]="value3"
   [toggleClass]="'toggle-lg'"
   [label]="'Large Toggle'">
-</brickclay-toggle>
+</bk-toggle>
 ```
 
 **Disabled State:**
 
 ```typescript
-<brickclay-toggle
+<bk-toggle
   [ngModel]="true"
   [disabled]="true"
   [label]="'Disabled Toggle'">
-</brickclay-toggle>
+</bk-toggle>
 ```
 
 **With Event Handler:**
@@ -563,12 +563,12 @@ export class MyComponent {
 ```typescript
 @Component({
   template: `
-    <brickclay-toggle
+    <bk-toggle
       [(ngModel)]="notificationsEnabled"
       [label]="'Email Notifications'"
       (change)="onNotificationToggle($event)"
     >
-    </brickclay-toggle>
+    </bk-toggle>
   `,
 })
 export class MyComponent {
@@ -588,18 +588,18 @@ export class MyComponent {
 
 ```typescript
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ToggleComponent } from '@brickclay/ui';
+import { BkToggle } from '@brickclay/ui';
 
 @Component({
   template: `
     <form [formGroup]="settingsForm">
-      <brickclay-toggle formControlName="darkMode" [label]="'Dark Mode'"> </brickclay-toggle>
+      <bk-toggle formControlName="darkMode" [label]="'Dark Mode'"> </bk-toggle>
 
-      <brickclay-toggle formControlName="notifications" [label]="'Push Notifications'">
-      </brickclay-toggle>
+      <bk-toggle formControlName="notifications" [label]="'Push Notifications'">
+      </bk-toggle>
     </form>
   `,
-  imports: [ToggleComponent, ReactiveFormsModule],
+  imports: [BkToggle, ReactiveFormsModule],
 })
 export class SettingsComponent {
   settingsForm: FormGroup;
@@ -616,10 +616,10 @@ export class SettingsComponent {
 **Without Label:**
 
 ```typescript
-<brickclay-toggle
+<bk-toggle
   [(ngModel)]="isEnabled"
   [toggleClass]="'toggle-md'">
-</brickclay-toggle>
+</bk-toggle>
 ```
 
 #### Styling
@@ -653,26 +653,26 @@ The toggle component includes:
 
 A fully accessible checkbox component that integrates seamlessly with Angular forms. Supports both template-driven forms (`ngModel`) and reactive forms, with customizable styling and comprehensive accessibility features.
 
-### CheckboxComponent
+### BkCheckbox
 
 A standalone checkbox component that implements `ControlValueAccessor` for seamless Angular forms integration.
 
 #### Basic Example
 
 ```typescript
-import { CheckboxComponent } from '@brickclay/ui';
+import { BkCheckbox } from '@brickclay/ui';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   template: `
-    <brickclay-checkbox
+    <bk-checkbox
       [(ngModel)]="isAccepted"
       [label]="'I agree to the terms and conditions'"
       (change)="onCheckboxChange($event)"
     >
-    </brickclay-checkbox>
+    </bk-checkbox>
   `,
-  imports: [CheckboxComponent, FormsModule],
+  imports: [BkCheckbox, FormsModule],
 })
 export class MyComponent {
   isAccepted = false;
@@ -685,7 +685,7 @@ export class MyComponent {
 
 #### Component Selector
 
-`<brickclay-checkbox>`
+`<bk-checkbox>`
 
 #### Inputs
 
@@ -717,14 +717,14 @@ export class MyComponent {
 **Basic Checkbox with ngModel:**
 
 ```typescript
-import { CheckboxComponent } from '@brickclay/ui';
+import { BkCheckbox } from '@brickclay/ui';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   template: `
-    <brickclay-checkbox [(ngModel)]="isChecked" [label]="'Accept terms'"> </brickclay-checkbox>
+    <bk-checkbox [(ngModel)]="isChecked" [label]="'Accept terms'"> </bk-checkbox>
   `,
-  imports: [CheckboxComponent, FormsModule],
+  imports: [BkCheckbox, FormsModule],
 })
 export class MyComponent {
   isChecked = false;
@@ -735,43 +735,43 @@ export class MyComponent {
 
 ```typescript
 <!-- Extra Small checkbox -->
-<brickclay-checkbox
+<bk-checkbox
   [(ngModel)]="value1"
   [checkboxClass]="'xsm'"
   [label]="'Extra Small Checkbox'">
-</brickclay-checkbox>
+</bk-checkbox>
 
 <!-- Small checkbox -->
-<brickclay-checkbox
+<bk-checkbox
   [(ngModel)]="value2"
   [checkboxClass]="'sm'"
   [label]="'Small Checkbox'">
-</brickclay-checkbox>
+</bk-checkbox>
 
 <!-- Medium checkbox -->
-<brickclay-checkbox
+<bk-checkbox
   [(ngModel)]="value3"
   [checkboxClass]="'md'"
   [label]="'Medium Checkbox'">
-</brickclay-checkbox>
+</bk-checkbox>
 
 <!-- Large checkbox with custom label styling -->
-<brickclay-checkbox
+<bk-checkbox
   [(ngModel)]="value4"
   [checkboxClass]="'lg'"
   [labelClass]="'text-lg font-bold'"
   [label]="'Large Checkbox'">
-</brickclay-checkbox>
+</bk-checkbox>
 ```
 
 **Disabled State:**
 
 ```typescript
-<brickclay-checkbox
+<bk-checkbox
   [ngModel]="true"
   [disabled]="true"
   [label]="'Disabled Checkbox'">
-</brickclay-checkbox>
+</bk-checkbox>
 ```
 
 **With Event Handler:**
@@ -779,12 +779,12 @@ export class MyComponent {
 ```typescript
 @Component({
   template: `
-    <brickclay-checkbox
+    <bk-checkbox
       [(ngModel)]="newsletterSubscribed"
       [label]="'Subscribe to newsletter'"
       (change)="onNewsletterToggle($event)"
     >
-    </brickclay-checkbox>
+    </bk-checkbox>
   `,
 })
 export class MyComponent {
@@ -804,22 +804,22 @@ export class MyComponent {
 
 ```typescript
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CheckboxComponent } from '@brickclay/ui';
+import { BkCheckbox } from '@brickclay/ui';
 
 @Component({
   template: `
     <form [formGroup]="registrationForm">
-      <brickclay-checkbox
+      <bk-checkbox
         formControlName="acceptTerms"
         [label]="'I accept the terms and conditions'"
       >
-      </brickclay-checkbox>
+      </bk-checkbox>
 
-      <brickclay-checkbox formControlName="receiveUpdates" [label]="'Receive product updates'">
-      </brickclay-checkbox>
+      <bk-checkbox formControlName="receiveUpdates" [label]="'Receive product updates'">
+      </bk-checkbox>
     </form>
   `,
-  imports: [CheckboxComponent, ReactiveFormsModule],
+  imports: [BkCheckbox, ReactiveFormsModule],
 })
 export class RegistrationComponent {
   registrationForm: FormGroup;
@@ -836,10 +836,10 @@ export class RegistrationComponent {
 **Without Label:**
 
 ```typescript
-<brickclay-checkbox
+<bk-checkbox
   [(ngModel)]="isSelected"
   [checkboxClass]="'md'">
-</brickclay-checkbox>
+</bk-checkbox>
 ```
 
 **Multiple Checkboxes:**
@@ -848,13 +848,13 @@ export class RegistrationComponent {
 @Component({
   template: `
     <div>
-      <brickclay-checkbox
+      <bk-checkbox
         *ngFor="let option of options"
         [(ngModel)]="option.selected"
         [label]="option.label"
         (change)="onOptionChange(option)"
       >
-      </brickclay-checkbox>
+      </bk-checkbox>
     </div>
   `,
 })
@@ -905,30 +905,30 @@ The checkbox component includes:
 
 A fully accessible radio button component that integrates seamlessly with Angular forms. Supports both template-driven forms (`ngModel`) and reactive forms, with two visual variants (dot and tick) and comprehensive accessibility features.
 
-### RadioComponent
+### BkRadioButton
 
 A standalone radio button component that implements `ControlValueAccessor` for seamless Angular forms integration. Radio buttons are used when only one option can be selected from a group.
 
 #### Basic Example
 
 ```typescript
-import { RadioComponent } from '@brickclay/ui';
+import { BkRadioButton } from '@brickclay/ui';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   template: `
-    <brickclay-radio-button
+    <bk-radio-button
       [(ngModel)]="selectedOption"
       [value]="'option1'"
       [label]="'Option 1'"
       (change)="onRadioChange($event)"
     >
-    </brickclay-radio-button>
+    </bk-radio-button>
 
-    <brickclay-radio-button [(ngModel)]="selectedOption" [value]="'option2'" [label]="'Option 2'">
-    </brickclay-radio-button>
+    <bk-radio-button [(ngModel)]="selectedOption" [value]="'option2'" [label]="'Option 2'">
+    </bk-radio-button>
   `,
-  imports: [RadioComponent, FormsModule],
+  imports: [BkRadioButton, FormsModule],
 })
 export class MyComponent {
   selectedOption = 'option1';
@@ -941,7 +941,7 @@ export class MyComponent {
 
 #### Component Selector
 
-`<brickclay-radio-button>`
+`<bk-radio-button>`
 
 #### Inputs
 
@@ -977,25 +977,25 @@ export class MyComponent {
 **Basic Radio Group with ngModel:**
 
 ```typescript
-import { RadioComponent } from '@brickclay/ui';
+import { BkRadioButton } from '@brickclay/ui';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   template: `
-    <brickclay-radio-button
+    <bk-radio-button
       [(ngModel)]="selectedPayment"
       [value]="'credit'"
       [label]="'Credit Card'"
     >
-    </brickclay-radio-button>
+    </bk-radio-button>
 
-    <brickclay-radio-button [(ngModel)]="selectedPayment" [value]="'debit'" [label]="'Debit Card'">
-    </brickclay-radio-button>
+    <bk-radio-button [(ngModel)]="selectedPayment" [value]="'debit'" [label]="'Debit Card'">
+    </bk-radio-button>
 
-    <brickclay-radio-button [(ngModel)]="selectedPayment" [value]="'paypal'" [label]="'PayPal'">
-    </brickclay-radio-button>
+    <bk-radio-button [(ngModel)]="selectedPayment" [value]="'paypal'" [label]="'PayPal'">
+    </bk-radio-button>
   `,
-  imports: [RadioComponent, FormsModule],
+  imports: [BkRadioButton, FormsModule],
 })
 export class MyComponent {
   selectedPayment = 'credit';
@@ -1005,71 +1005,71 @@ export class MyComponent {
 **Dot Variant (Default):**
 
 ```typescript
-<brickclay-radio-button
+<bk-radio-button
   [(ngModel)]="selectedOption"
   [value]="'option1'"
   [variant]="'dot'"
   [label]="'Option with Dot'">
-</brickclay-radio-button>
+</bk-radio-button>
 ```
 
 **Tick Variant:**
 
 ```typescript
-<brickclay-radio-button
+<bk-radio-button
   [(ngModel)]="selectedOption"
   [value]="'option2'"
   [variant]="'tick'"
   [label]="'Option with Tick'">
-</brickclay-radio-button>
+</bk-radio-button>
 ```
 
 **Different Sizes:**
 
 ```typescript
 <!-- Extra Small radio -->
-<brickclay-radio-button
+<bk-radio-button
   [(ngModel)]="selectedOption"
   [value]="'xsm'"
   [radioClass]="'xsm'"
   [label]="'Extra Small Radio'">
-</brickclay-radio-button>
+</bk-radio-button>
 
 <!-- Small radio -->
-<brickclay-radio-button
+<bk-radio-button
   [(ngModel)]="selectedOption"
   [value]="'sm'"
   [radioClass]="'sm'"
   [label]="'Small Radio'">
-</brickclay-radio-button>
+</bk-radio-button>
 
 <!-- Medium radio -->
-<brickclay-radio-button
+<bk-radio-button
   [(ngModel)]="selectedOption"
   [value]="'md'"
   [radioClass]="'md'"
   [label]="'Medium Radio'">
-</brickclay-radio-button>
+</bk-radio-button>
 
 <!-- Large radio with custom label styling -->
-<brickclay-radio-button
+<bk-radio-button
   [(ngModel)]="selectedOption"
   [value]="'lg'"
   [radioClass]="'lg'"
   [labelClass]="'text-lg font-bold'"
   [label]="'Large Radio'">
-</brickclay-radio-button>
+</bk-radio-button>
 ```
 
 **Disabled State:**
 
 ```typescript
-<brickclay-radio-button
+<bk-radio-button
   [(ngModel)]="selectedOption"
   [value]="'disabled-option'"
   [disabled]="true"
   [label]="'Disabled Option'">
-</brickclay-radio-button>
+</bk-radio-button>
 ```
 
 **With Event Handler:**
@@ -1077,14 +1077,14 @@ export class MyComponent {
 ```typescript
 @Component({
   template: `
-    <brickclay-radio-button
+    <bk-radio-button
       *ngFor="let option of options"
       [(ngModel)]="selectedOption"
       [value]="option.value"
       [label]="option.label"
       (change)="onOptionChange($event)"
     >
-    </brickclay-radio-button>
+    </bk-radio-button>
   `,
 })
 export class MyComponent {
@@ -1105,22 +1105,22 @@ export class MyComponent {
 
 ```typescript
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RadioComponent } from '@brickclay/ui';
+import { BkRadioButton } from '@brickclay/ui';
 
 @Component({
   template: `
     <form [formGroup]="surveyForm">
-      <brickclay-radio-button formControlName="rating" [value]="'excellent'" [label]="'Excellent'">
-      </brickclay-radio-button>
+      <bk-radio-button formControlName="rating" [value]="'excellent'" [label]="'Excellent'">
+      </bk-radio-button>
 
-      <brickclay-radio-button formControlName="rating" [value]="'good'" [label]="'Good'">
-      </brickclay-radio-button>
+      <bk-radio-button formControlName="rating" [value]="'good'" [label]="'Good'">
+      </bk-radio-button>
 
-      <brickclay-radio-button formControlName="rating" [value]="'fair'" [label]="'Fair'">
-      </brickclay-radio-button>
+      <bk-radio-button formControlName="rating" [value]="'fair'" [label]="'Fair'">
+      </bk-radio-button>
     </form>
   `,
-  imports: [RadioComponent, ReactiveFormsModule],
+  imports: [BkRadioButton, ReactiveFormsModule],
 })
 export class SurveyComponent {
   surveyForm: FormGroup;
@@ -1136,11 +1136,11 @@ export class SurveyComponent {
 **Without Label:**
 
 ```typescript
-<brickclay-radio-button
+<bk-radio-button
   [(ngModel)]="selectedOption"
   [value]="'option1'"
   [radioClass]="'md'">
-</brickclay-radio-button>
+</bk-radio-button>
 ```
 
 **Dynamic Radio Group:**
@@ -1149,14 +1149,14 @@ export class SurveyComponent {
 @Component({
   template: `
     <div>
-      <brickclay-radio-button
+      <bk-radio-button
         *ngFor="let item of items"
         [(ngModel)]="selectedItem"
         [value]="item.id"
         [label]="item.name"
         [variant]="item.variant || 'dot'"
       >
-      </brickclay-radio-button>
+      </bk-radio-button>
     </div>
   `,
 })
@@ -1210,27 +1210,27 @@ Radio buttons are automatically grouped when they share the same `ngModel` bindi
 
 A versatile pill component for displaying labels, tags, or status indicators. Perfect for categorizing content, showing status, or creating removable tag lists. Supports multiple visual variants, color schemes, sizes, and optional dot indicators.
 
-### PillComponent
+### BkPill
 
 A standalone pill component that displays text labels with customizable styling and optional removal functionality.
 
 #### Basic Example
 
 ```typescript
-import { PillComponent } from '@brickclay/ui';
+import { BkPill } from '@brickclay/ui';
 
 @Component({
   template: `
-    <brickclay-pill
+    <bk-pill
       [label]="'New Feature'"
       [variant]="'Solid'"
       [color]="'Primary'"
       [size]="'md'"
       (clicked)="onPillRemoved($event)"
     >
-    </brickclay-pill>
+    </bk-pill>
   `,
-  imports: [PillComponent],
+  imports: [BkPill],
 })
 export class MyComponent {
   onPillRemoved(label: string) {
@@ -1241,7 +1241,7 @@ export class MyComponent {
 
 #### Component Selector
 
-`<brickclay-pill>`
+`<bk-pill>`
 
 #### Inputs
 
@@ -1276,13 +1276,13 @@ export class MyComponent {
 **Basic Pill:**
 
 ```typescript
-import { PillComponent } from '@brickclay/ui';
+import { BkPill } from '@brickclay/ui';
 
 @Component({
   template: `
-    <brickclay-pill [label]="'Status'" [color]="'Success'"> </brickclay-pill>
+    <bk-pill [label]="'Status'" [color]="'Success'"> </bk-pill>
   `,
-  imports: [PillComponent],
+  imports: [BkPill],
 })
 export class MyComponent {}
 ```
@@ -1291,78 +1291,78 @@ export class MyComponent {}
 
 ```typescript
 <!-- Light variant -->
-<brickclay-pill
+<bk-pill
   [label]="'Light Pill'"
   [variant]="'Light'"
   [color]="'Primary'">
-</brickclay-pill>
+</bk-pill>
 
 <!-- Solid variant -->
-<brickclay-pill
+<bk-pill
   [label]="'Solid Pill'"
   [variant]="'Solid'"
   [color]="'Primary'">
-</brickclay-pill>
+</bk-pill>
 
 <!-- Outline variant -->
-<brickclay-pill
+<bk-pill
   [label]="'Outline Pill'"
   [variant]="'Outline'"
   [color]="'Primary'">
-</brickclay-pill>
+</bk-pill>
 
 <!-- Transparent variant -->
-<brickclay-pill
+<bk-pill
   [label]="'Transparent Pill'"
   [variant]="'Transparent'"
   [color]="'Primary'">
-</brickclay-pill>
+</bk-pill>
 ```
 
 **Different Colors:**
 
 ```typescript
-<brickclay-pill [label]="'Gray'" [color]="'Gray'"> </brickclay-pill>
-<brickclay-pill [label]="'Primary'" [color]="'Primary'"> </brickclay-pill>
-<brickclay-pill [label]="'Error'" [color]="'Error'"> </brickclay-pill>
-<brickclay-pill [label]="'Warning'" [color]="'Warning'"> </brickclay-pill>
-<brickclay-pill [label]="'Success'" [color]="'Success'"> </brickclay-pill>
-<brickclay-pill [label]="'Purple'" [color]="'Purple'"> </brickclay-pill>
-<brickclay-pill [label]="'Cyan'" [color]="'Cyan'"> </brickclay-pill>
+<bk-pill [label]="'Gray'" [color]="'Gray'"> </bk-pill>
+<bk-pill [label]="'Primary'" [color]="'Primary'"> </bk-pill>
+<bk-pill [label]="'Error'" [color]="'Error'"> </bk-pill>
+<bk-pill [label]="'Warning'" [color]="'Warning'"> </bk-pill>
+<bk-pill [label]="'Success'" [color]="'Success'"> </bk-pill>
+<bk-pill [label]="'Purple'" [color]="'Purple'"> </bk-pill>
+<bk-pill [label]="'Cyan'" [color]="'Cyan'"> </bk-pill>
 ```
 
 **Different Sizes:**
 
 ```typescript
 <!-- Extra Small -->
-<brickclay-pill [label]="'XSM'" [size]="'xsm'"> </brickclay-pill>
+<bk-pill [label]="'XSM'" [size]="'xsm'"> </bk-pill>
 
 <!-- Small -->
-<brickclay-pill [label]="'SM'" [size]="'sm'"> </brickclay-pill>
+<bk-pill [label]="'SM'" [size]="'sm'"> </bk-pill>
 
 <!-- Medium -->
-<brickclay-pill [label]="'MD'" [size]="'md'"> </brickclay-pill>
+<bk-pill [label]="'MD'" [size]="'md'"> </bk-pill>
 
 <!-- Large -->
-<brickclay-pill [label]="'LG'" [size]="'lg'"> </brickclay-pill>
+<bk-pill [label]="'LG'" [size]="'lg'"> </bk-pill>
 ```
 
 **With Dot Indicators:**
 
 ```typescript
 <!-- Dot on left -->
-<brickclay-pill
+<bk-pill
   [label]="'Active'"
   [dot]="'left'"
   [color]="'Success'">
-</brickclay-pill>
+</bk-pill>
 
 <!-- Dot on right -->
-<brickclay-pill
+<bk-pill
   [label]="'Pending'"
   [dot]="'right'"
   [color]="'Warning'">
-</brickclay-pill>
+</bk-pill>
 ```
 
 **Removable Pill:**
@@ -1370,11 +1370,11 @@ export class MyComponent {}
 ```typescript
 @Component({
   template: `
-    <brickclay-pill
+    <bk-pill
       [label]="'Removable Tag'"
       [removable]="true"
       (clicked)="onRemoveTag($event)">
-    </brickclay-pill>
+    </bk-pill>
   `,
 })
 export class MyComponent {
@@ -1391,13 +1391,13 @@ export class MyComponent {
 @Component({
   template: `
     <div>
-      <brickclay-pill
+      <bk-pill
         *ngFor="let tag of tags"
         [label]="tag"
         [removable]="true"
         [color]="getTagColor(tag)"
         (clicked)="removeTag(tag)">
-      </brickclay-pill>
+      </bk-pill>
     </div>
   `,
 })
@@ -1418,10 +1418,10 @@ export class MyComponent {
 **With Custom Classes:**
 
 ```typescript
-<brickclay-pill
+<bk-pill
   [label]="'Custom Styled'"
   [customClass]="'my-custom-class font-bold'">
-</brickclay-pill>
+</bk-pill>
 ```
 
 #### Styling
@@ -1453,20 +1453,20 @@ A standalone badge component that displays text labels with customizable styling
 #### Basic Example
 
 ```typescript
-import { BadgeComponent } from '@brickclay/ui';
+import { BkBadge } from '@brickclay/ui';
 
 @Component({
   template: `
-    <brickclay-badge
+    <bk-badge
       [label]="'New'"
       [variant]="'Solid'"
       [color]="'Primary'"
       [size]="'md'"
       (clicked)="onBadgeRemoved($event)"
     >
-    </brickclay-badge>
+    </bk-badge>
   `,
-  imports: [BadgeComponent],
+  imports: [BkBadge],
 })
 export class MyComponent {
   onBadgeRemoved(label: string) {
@@ -1477,7 +1477,7 @@ export class MyComponent {
 
 #### Component Selector
 
-`<brickclay-badge>`
+`<bk-badge>`
 
 #### Inputs
 
@@ -1512,13 +1512,13 @@ export class MyComponent {
 **Basic Badge:**
 
 ```typescript
-import { BadgeComponent } from '@brickclay/ui';
+import { BkBadge } from '@brickclay/ui';
 
 @Component({
   template: `
-    <brickclay-badge [label]="'New'" [color]="'Success'"> </brickclay-badge>
+    <bk-badge [label]="'New'" [color]="'Success'"> </bk-badge>
   `,
-  imports: [BadgeComponent],
+  imports: [BkBadge],
 })
 export class MyComponent {}
 ```
@@ -1527,78 +1527,78 @@ export class MyComponent {}
 
 ```typescript
 <!-- Light variant -->
-<brickclay-badge
+<bk-badge
   [label]="'Light Badge'"
   [variant]="'Light'"
   [color]="'Primary'">
-</brickclay-badge>
+</bk-badge>
 
 <!-- Solid variant -->
-<brickclay-badge
+<bk-badge
   [label]="'Solid Badge'"
   [variant]="'Solid'"
   [color]="'Primary'">
-</brickclay-badge>
+</bk-badge>
 
 <!-- Outline variant -->
-<brickclay-badge
+<bk-badge
   [label]="'Outline Badge'"
   [variant]="'Outline'"
   [color]="'Primary'">
-</brickclay-badge>
+</bk-badge>
 
 <!-- Transparent variant -->
-<brickclay-badge
+<bk-badge
   [label]="'Transparent Badge'"
   [variant]="'Transparent'"
   [color]="'Primary'">
-</brickclay-badge>
+</bk-badge>
 ```
 
 **Different Colors:**
 
 ```typescript
-<brickclay-badge [label]="'Gray'" [color]="'Gray'"> </brickclay-badge>
-<brickclay-badge [label]="'Primary'" [color]="'Primary'"> </brickclay-badge>
-<brickclay-badge [label]="'Error'" [color]="'Error'"> </brickclay-badge>
-<brickclay-badge [label]="'Warning'" [color]="'Warning'"> </brickclay-badge>
-<brickclay-badge [label]="'Success'" [color]="'Success'"> </brickclay-badge>
-<brickclay-badge [label]="'Purple'" [color]="'Purple'"> </brickclay-badge>
-<brickclay-badge [label]="'Cyan'" [color]="'Cyan'"> </brickclay-badge>
+<bk-badge [label]="'Gray'" [color]="'Gray'"> </bk-badge>
+<bk-badge [label]="'Primary'" [color]="'Primary'"> </bk-badge>
+<bk-badge [label]="'Error'" [color]="'Error'"> </bk-badge>
+<bk-badge [label]="'Warning'" [color]="'Warning'"> </bk-badge>
+<bk-badge [label]="'Success'" [color]="'Success'"> </bk-badge>
+<bk-badge [label]="'Purple'" [color]="'Purple'"> </bk-badge>
+<bk-badge [label]="'Cyan'" [color]="'Cyan'"> </bk-badge>
 ```
 
 **Different Sizes:**
 
 ```typescript
 <!-- Extra Small -->
-<brickclay-badge [label]="'XSM'" [size]="'xsm'"> </brickclay-badge>
+<bk-badge [label]="'XSM'" [size]="'xsm'"> </bk-badge>
 
 <!-- Small -->
-<brickclay-badge [label]="'SM'" [size]="'sm'"> </brickclay-badge>
+<bk-badge [label]="'SM'" [size]="'sm'"> </bk-badge>
 
 <!-- Medium -->
-<brickclay-badge [label]="'MD'" [size]="'md'"> </brickclay-badge>
+<bk-badge [label]="'MD'" [size]="'md'"> </bk-badge>
 
 <!-- Large -->
-<brickclay-badge [label]="'LG'" [size]="'lg'"> </brickclay-badge>
+<bk-badge [label]="'LG'" [size]="'lg'"> </bk-badge>
 ```
 
 **With Dot Indicators:**
 
 ```typescript
 <!-- Dot on left -->
-<brickclay-badge
+<bk-badge
   [label]="'Active'"
   [dot]="'left'"
   [color]="'Success'">
-</brickclay-badge>
+</bk-badge>
 
 <!-- Dot on right -->
-<brickclay-badge
+<bk-badge
   [label]="'Pending'"
   [dot]="'right'"
   [color]="'Warning'">
-</brickclay-badge>
+</bk-badge>
 ```
 
 **Removable Badge:**
@@ -1606,11 +1606,11 @@ export class MyComponent {}
 ```typescript
 @Component({
   template: `
-    <brickclay-badge
+    <bk-badge
       [label]="'Removable Tag'"
       [removable]="true"
       (clicked)="onRemoveTag($event)">
-    </brickclay-badge>
+    </bk-badge>
   `,
 })
 export class MyComponent {
@@ -1627,13 +1627,13 @@ export class MyComponent {
 @Component({
   template: `
     <div>
-      <brickclay-badge
+      <bk-badge
         *ngFor="let tag of tags"
         [label]="tag"
         [removable]="true"
         [color]="getTagColor(tag)"
         (clicked)="removeTag(tag)">
-      </brickclay-badge>
+      </bk-badge>
     </div>
   `,
 })
@@ -1654,10 +1654,10 @@ export class MyComponent {
 **With Custom Classes:**
 
 ```typescript
-<brickclay-badge
+<bk-badge
   [label]="'Custom Styled'"
   [customClass]="'my-custom-class font-bold'">
-</brickclay-badge>
+</bk-badge>
 ```
 
 #### Styling
@@ -1739,7 +1739,7 @@ interface ScheduledDateSelection {
 
 ```typescript
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CustomCalendarComponent } from '@brickclay/ui';
+import { BkCustomCalendar } from '@brickclay/ui';
 
 export class BookingFormComponent {
   bookingForm: FormGroup;
@@ -1763,10 +1763,10 @@ export class BookingFormComponent {
 ### Reactive Forms
 
 ```typescript
-<brickclay-custom-calendar
+<bk-custom-calendar
   [selectedValue]="form.get('dateRange')?.value"
   (selected)="form.patchValue({ dateRange: $event })">
-</brickclay-custom-calendar>
+</bk-custom-calendar>
 ```
 
 ### Date Filtering
@@ -1813,7 +1813,7 @@ node_modules/@brickclay/ui/assets/calender/* → your-app/public/assets/calender
 
 ### CalendarManagerService
 
-A service that manages multiple calendar instances, ensuring only one calendar is open at a time when not in inline mode. Used internally by `CustomCalendarComponent`.
+A service that manages multiple calendar instances, ensuring only one calendar is open at a time when not in inline mode. Used internally by `BkCustomCalendar`.
 
 ## 🌐 Browser Support
 

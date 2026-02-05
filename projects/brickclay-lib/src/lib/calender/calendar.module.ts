@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CustomCalendarComponent } from './components/custom-calendar/custom-calendar.component';
-import { ScheduledDatePickerComponent } from './components/scheduled-date-picker/scheduled-date-picker.component';
-import { TimePickerComponent } from './components/time-picker/time-picker.component';
+import { BkCustomCalendar } from './components/custom-calendar/custom-calendar.component';
+import { BkScheduledDatePicker } from './components/scheduled-date-picker/scheduled-date-picker.component';
+import { BkTimePicker } from './components/time-picker/time-picker.component';
 
 
 
@@ -20,14 +20,14 @@ import { TimePickerComponent } from './components/time-picker/time-picker.compon
 @NgModule({
   imports: [
     CommonModule,
-    CustomCalendarComponent,
-    ScheduledDatePickerComponent,
-    TimePickerComponent
+    BkCustomCalendar,
+    BkScheduledDatePicker,
+    BkTimePicker
   ],
   exports: [
-    CustomCalendarComponent,
-    ScheduledDatePickerComponent,
-    TimePickerComponent
+    BkCustomCalendar,
+    BkScheduledDatePicker,
+    BkTimePicker
   ]
 })
 export class CalendarModule {}

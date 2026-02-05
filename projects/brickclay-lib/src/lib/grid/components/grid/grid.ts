@@ -11,7 +11,7 @@ export type SortDirection = 'asc' | 'desc';
   templateUrl: './grid.html',
   styleUrl: './grid.css',
 })
-export class GridComponent<T = any> {
+export class BkGrid<T = any> {
   @Input() draggable: boolean = false;
   @Input() columns: TableColumn<T>[] = [];
   @Input() result!: T[];

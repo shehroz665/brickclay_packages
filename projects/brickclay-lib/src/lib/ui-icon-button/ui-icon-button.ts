@@ -11,7 +11,7 @@ export type IconButtonVariant = 'primary' | 'secondary';
   templateUrl: './ui-icon-button.html',
   styleUrl: './ui-icon-button.css',
 })
-export class UiIconButton {
+export class BkIconButton {
   // --- Inputs ---
   @Input() icon!: string; // Required icon path
   @Input() alt: string = 'icon';

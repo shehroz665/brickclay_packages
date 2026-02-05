@@ -1,8 +1,8 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CustomCalendarComponent, CalendarSelection } from '../custom-calendar/custom-calendar.component';
-import { TimePickerComponent } from '../time-picker/time-picker.component';
+import { BkCustomCalendar, CalendarSelection } from '../custom-calendar/custom-calendar.component';
+import { BkTimePicker } from '../time-picker/time-picker.component';
 
 export interface TimeConfiguration {
   date: Date;
@@ -33,11 +33,11 @@ export interface ScheduledDateSelection {
 @Component({
   selector: 'bk-scheduled-date-picker',
   standalone: true,
-  imports: [CommonModule, FormsModule, CustomCalendarComponent, TimePickerComponent],
+  imports: [CommonModule, FormsModule, BkCustomCalendar, BkTimePicker],
   templateUrl: './scheduled-date-picker.component.html',
   styleUrls: ['./scheduled-date-picker.component.css']
 })
-export class ScheduledDatePickerComponent implements OnInit {
+export class BkScheduledDatePicker implements OnInit {
   @Input() timeFormat: 12 | 24 = 12;
   @Input() enableSeconds = false;
 

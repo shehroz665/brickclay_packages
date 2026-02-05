@@ -60,7 +60,7 @@
 .ng-search-wrapper { @apply flex items-center border border-[#E3E3E7] rounded-md px-3 py-[7px] bg-white transition-colors focus-within:border-[#E3E3E7]; }
 .ng-search-input { @apply w-full outline-none font-normal text-sm text-[#141414] placeholder-[#A1A3AE] bg-transparent;}
 
-.ng-options-list { @apply max-h-60 overflow-auto relative p-2.5 mb-3.5;  }
+.ng-options-list { @apply max-h-60 overflow-auto relative p-2.5 mb-3.5 flex flex-col gap-0.5;  }
 
 /* Options */
 .ng-option {

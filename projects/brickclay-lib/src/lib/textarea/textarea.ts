@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule, FormsModule],
   templateUrl: './textarea.html'
 })
-export class Textarea implements ControlValueAccessor {
+export class BkTextarea implements ControlValueAccessor {
   @Input() name!: string;
   @Input() id?: string;
   @Input() label: string = '';

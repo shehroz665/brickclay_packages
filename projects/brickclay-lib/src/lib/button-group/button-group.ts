@@ -15,7 +15,7 @@ export type GroupMode = 'single' | 'multiple';
   templateUrl: './button-group.html',
   styleUrl: './button-group.css',
 })
-export class ButtonGroup {
+export class BkButtonGroup {
   // --- Inputs ---
   @Input() items: GroupItem[] = [];
   @Input() mode: GroupMode = 'single';

@@ -11,7 +11,7 @@ export type SpinnerSize = 'xsm' | 'sm' | 'md' | 'lg' | 'xl';
   templateUrl: './spinner.html',
   styleUrl: './spinner.css',
 })
-export class Spinner {
+export class BkSpinner {
   @Input() size: SpinnerSize = 'md';
   @Input() show = true;
   @Input() color = 'text-blue-600'; // default

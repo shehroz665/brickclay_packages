@@ -12,7 +12,7 @@ export type BadgeSize = 'xsm' |'sm' | 'md' | 'lg';
   templateUrl: './badge.html',
   styleUrls: ['./badge.css'],
 })
-export class BadgeComponent {
+export class BkBadge {
   @Input() label: string = '';
   @Input() variant: BadgeVariant = 'Light';
   @Input() color: BadgeColor = 'Gray';

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CalendarManagerService } from '../../services/calendar-manager.service';
 import { Subscription } from 'rxjs';
-import { TimePickerComponent } from '../time-picker/time-picker.component';
+import { BkTimePicker } from '../time-picker/time-picker.component';
 import moment from 'moment';
 import { BrickclayIcons } from '../../../assets/icons';
 export interface CalendarRange {
@@ -20,11 +20,11 @@ export interface CalendarSelection {
 @Component({
   selector: 'bk-custom-calendar',
   standalone: true,
-  imports: [CommonModule, FormsModule, TimePickerComponent],
+  imports: [CommonModule, FormsModule, BkTimePicker],
   templateUrl: './custom-calendar.component.html',
   styleUrls: ['./custom-calendar.component.css']
 })
-export class CustomCalendarComponent implements OnInit, OnDestroy, OnChanges {
+export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges {
 
   // Basic Options
   @Input() enableTimepicker = false;
@@ -938,7 +938,7 @@ export class CustomCalendarComponent implements OnInit, OnDestroy, OnChanges {
     return `${this.selectedHour.toString().padStart(2, '0')}:${this.selectedMinute.toString().padStart(2, '0')}`;
   }
 
-  // NEW: Helper to build display value for TimePickerComponent (single calendar)
+  // NEW: Helper to build display value for BkTimePicker (single calendar)
   getSingleTimePickerDisplay(): string {
     const hour = this.selectedHour || 12;
     const minuteStr = this.selectedMinute.toString().padStart(2, '0');
@@ -946,7 +946,7 @@ export class CustomCalendarComponent implements OnInit, OnDestroy, OnChanges {
     return `${hour}:${minuteStr} ${ampm}`;
   }
 
-  // NEW: Helper to build display value for TimePickerComponent (dual calendar)
+  // NEW: Helper to build display value for BkTimePicker (dual calendar)
   getDualTimePickerDisplay(isStart = true): string {
     const hour = isStart ? (this.startHour || 12) : (this.endHour || 12);
     const minute = isStart ? this.startMinute : this.endMinute;
@@ -955,7 +955,7 @@ export class CustomCalendarComponent implements OnInit, OnDestroy, OnChanges {
     return `${hour}:${minuteStr} ${ampm}`;
   }
 
-  // Coordination helpers for embedded TimePickerComponent instances
+  // Coordination helpers for embedded BkTimePicker instances
   onTimePickerOpened(pickerId: string) {
     // Close previously open picker inside this calendar
     if (this.openTimePickerId && this.openTimePickerId !== pickerId) {
@@ -977,7 +977,7 @@ export class CustomCalendarComponent implements OnInit, OnDestroy, OnChanges {
     return this.closePickerCounter[pickerId] || 0;
   }
 
-  // NEW: Parse "H:MM AM/PM" (or "HH:MM" 24h) from TimePickerComponent
+  // NEW: Parse "H:MM AM/PM" (or "HH:MM" 24h) from BkTimePicker
   private parsePickerTimeString(timeStr: string): { hour12: number; minute: number; ampm: 'AM' | 'PM' } {
     if (!timeStr) {
       return { hour12: 12, minute: 0, ampm: 'AM' };
@@ -1009,7 +1009,7 @@ export class CustomCalendarComponent implements OnInit, OnDestroy, OnChanges {
     return { hour12: hour, minute, ampm: ampmPart as 'AM' | 'PM' };
   }
 
-  // NEW: Handle TimePickerComponent change for single calendar
+  // NEW: Handle BkTimePicker change for single calendar
   onSingleTimePickerChange(time: string) {
     const { hour12, minute, ampm } = this.parsePickerTimeString(time);
 
@@ -1026,7 +1026,7 @@ export class CustomCalendarComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  // NEW: Handle TimePickerComponent change for dual calendar
+  // NEW: Handle BkTimePicker change for dual calendar
   onDualTimePickerChange(time: string, isStart = true) {
     const { hour12, minute, ampm } = this.parsePickerTimeString(time);
 

@@ -177,7 +177,7 @@ When you build an Angular library, **only TypeScript/JavaScript code is bundled 
   styleUrls: ['./toggle.css'], // ✅ This gets bundled
   templateUrl: './toggle.html', // ✅ This gets bundled
 })
-export class ToggleComponent {}
+export class BkToggle {}
 ```
 
 But if you have:
@@ -1488,7 +1488,7 @@ Tell Node.js how to resolve subpaths in your package.
 **What it does:**
 
 ```typescript
-import { ToggleComponent } from 'minahil';
+import { BkToggle } from 'minahil';
 //       ↓
 // Resolves to: node_modules/minahil/fesm2022/minahil.mjs
 ```
@@ -2200,7 +2200,7 @@ export class DatePickerComponent { }
 public getValue() { }  // Removed!
 
 // Renaming component
-// Was: ToggleComponent
+// Was: BkToggle
 // Now: SwitchComponent
 ```
 
@@ -2329,7 +2329,7 @@ All notable changes to this project will be documented in this file.
 #### **1. Unit Tests**
 
 ```typescript
-describe('ToggleComponent', () => {
+describe('BkToggle', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });

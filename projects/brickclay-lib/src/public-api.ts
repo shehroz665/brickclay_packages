@@ -34,4 +34,4 @@ export * from './lib/textarea/textarea'
 export * from './lib/grid/components/grid/grid';
 export * from './lib/grid/models/grid.model';
 //Single Select
-export * from './lib/bk-select/bk-select';
+export * from './lib/select/select';

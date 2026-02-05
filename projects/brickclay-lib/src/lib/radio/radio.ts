@@ -7,7 +7,8 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';@Component({
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
+@Component({
   selector: 'bk-radio-button',
   standalone: true,
   imports: [CommonModule, FormsModule],
@@ -17,12 +18,12 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/f
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => RadioComponent),
+      useExisting: forwardRef(() => BkRadioButton),
       multi: true,
     },
   ],
 })
-export class RadioComponent implements ControlValueAccessor {
+export class BkRadioButton implements ControlValueAccessor {
 
   @Input() radioClass = '';
   @Input() label = '';

@@ -1,7 +1,7 @@
-import { CheckboxComponent } from './../../projects/brickclay-lib/src/lib/checkbox/checkbox';
-import { RadioComponent } from './../../projects/brickclay-lib/src/lib/radio/radio';
+import { BkCheckbox } from './../../projects/brickclay-lib/src/lib/checkbox/checkbox';
+import { BkRadioButton } from './../../projects/brickclay-lib/src/lib/radio/radio';
 import { FormsModule } from '@angular/forms';
-import { ToggleComponent } from './../../projects/brickclay-lib/src/lib/toggle/toggle';
+import { BkToggle } from './../../projects/brickclay-lib/src/lib/toggle/toggle';
 import { CalendarModule } from './../../projects/brickclay-lib/src/lib/calender/calendar.module';
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
@@ -9,7 +9,7 @@ import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [CalendarModule, ToggleComponent, FormsModule, RadioComponent, CheckboxComponent],
+  imports: [CalendarModule, BkToggle, FormsModule, BkRadioButton, BkCheckbox],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

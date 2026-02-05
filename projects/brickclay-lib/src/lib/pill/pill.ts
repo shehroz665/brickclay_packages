@@ -8,7 +8,7 @@ export type PillSize = 'xsm' |'sm' | 'md' | 'lg';
   templateUrl: './pill.html',
   styleUrl: './pill.css',
 })
-export class PillComponent {
+export class BkPill {
   @Input() label: string = '';
   @Input() variant: PillVariant = 'Light';
   @Input() color: PillColor = 'Gray';

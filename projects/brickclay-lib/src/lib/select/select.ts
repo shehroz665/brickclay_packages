@@ -21,8 +21,8 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/f
   selector: 'bk-select',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './bk-select.html',
-  styleUrls: ['./bk-select.css'],
+  templateUrl: './select.html',
+  styleUrls: ['./select.css'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -162,7 +162,7 @@ export class BkSelect implements ControlValueAccessor {
     }
 
     this.isOpen.set(true);
-    this.markedIndex.set(0);
+    // this.markedIndex.set(0);
     this.open.emit();
     this.focus.emit();
     setTimeout(() => this.searchInput?.nativeElement.focus());
@@ -183,7 +183,7 @@ export class BkSelect implements ControlValueAccessor {
     }
 
     // NOT appendToBody
-    return this.dropdownPosition() === 'bottom' ? '100%' : null;
+    return this.dropdownPosition() === 'bottom' ? '105%' : null;
   }
 
   getBottom(): string | null {
@@ -192,7 +192,7 @@ export class BkSelect implements ControlValueAccessor {
     }
 
     // NOT appendToBody
-    return this.dropdownPosition() === 'top' ? '100%' : null;
+    return this.dropdownPosition() === 'top' ? '105%' : null;
   }
 
 

@@ -11,7 +11,7 @@ export type ButtonVariant = 'primary' | 'secondary';
   templateUrl: './ui-button.html',
   styleUrl: './ui-button.css',
 })
-export class UiButton {
+export class BkButton {
   // --- Inputs ---
 
   // 1. Style & Size Inputs

@@ -90,7 +90,7 @@
         @if (loading()) { <div class="ng-option-disabled">{{ loadingText() }}</div> }
         @else {
           @for (item of filteredItems(); track $index) {
-            <div #optionsRef class="ng-option" [class.selected]="isItemSelected(item)" [class.marked]="$index === markedIndex()" (mousedown)="handleSelection(item, $event)" (mouseenter)="markedIndex.set($index)">
+            <div #optionsRef class="ng-option" [class.selected]="isItemSelected(item)" [class.marked]="$index === markedIndex()" (click)="handleSelection(item, $event)" (click)="markedIndex.set($index)">
               @if (multiple()) {
                 <div class="mr-2 flex items-center justify-center w-4 h-4 border border-gray-300 rounded bg-white" [class.bg-blue-600]="isItemSelected(item)" [class.border-blue-600]="isItemSelected(item)">
                   @if(isItemSelected(item)){ <svg class="text-white w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><polyline points="20 6 9 17 4 12"/></svg> }

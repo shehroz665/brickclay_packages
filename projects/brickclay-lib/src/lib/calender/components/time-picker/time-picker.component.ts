@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './time-picker.component.html',
   styleUrls: ['./time-picker.component.css']
 })
-export class TimePickerComponent implements OnInit, OnChanges, AfterViewInit {
+export class BkTimePicker implements OnInit, OnChanges, AfterViewInit {
   @Input() value: string = '1:00 AM'; // Time in format "H:MM AM/PM"
   @Input() label: string = 'Time';
   @Input() placeholder: string = 'Select time';
