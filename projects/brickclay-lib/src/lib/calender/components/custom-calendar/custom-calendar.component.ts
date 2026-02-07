@@ -12,9 +12,9 @@ export interface CalendarRange {
 }
 
 export interface CalendarSelection {
-  startDate: Date | null;
-  endDate: Date | null;
-  selectedDates?: Date[]; // For multi-date selection
+  startDate: string | null;
+  endDate: string | null;
+  selectedDates?: string[]; // For multi-date selection
 }
 
 @Component({
@@ -661,14 +661,27 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges {
     }
   }
 
+  // emitSelection() {
+  //   const selection: CalendarSelection = {
+  //     startDate: this.startDate,
+  //     endDate: this.endDate
+  //   };
+  //   if (this.multiDateSelection) {
+  //     selection.selectedDates = [...this.selectedDates];
+  //   }
+  //   this.selected.emit(selection);
+  // }
+
   emitSelection() {
     const selection: CalendarSelection = {
-      startDate: this.startDate,
-      endDate: this.endDate
+      startDate: this.startDate ? this.formatDateToString(this.startDate) : null,
+      endDate: this.endDate ? this.formatDateToString(this.endDate) : null,
     };
-    if (this.multiDateSelection) {
-      selection.selectedDates = [...this.selectedDates];
+
+    if (this.multiDateSelection && this.selectedDates.length > 0) {
+      selection.selectedDates = this.selectedDates.map(d => this.formatDateToString(d));
     }
+
     this.selected.emit(selection);
   }
 
@@ -1530,5 +1543,12 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges {
         }
       }
     });
+  }
+
+  formatDateToString(date: Date): string {
+    const yyyy = date.getFullYear();
+    const mm = (date.getMonth() + 1).toString().padStart(2, '0'); // month is 0-based
+    const dd = date.getDate().toString().padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
   }
 }

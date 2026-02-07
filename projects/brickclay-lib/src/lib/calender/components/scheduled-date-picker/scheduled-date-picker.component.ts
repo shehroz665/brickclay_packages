@@ -152,7 +152,8 @@ export class BkScheduledDatePicker implements OnInit {
       const newDates: TimeConfiguration[] = [];
 
       event.selectedDates.forEach(date => {
-        const dateStr = this.getDateString(date);
+        // const dateStr = this.getDateString(date);
+         const dateStr = date;
         const existing = this.multipleDates.find(d => this.getDateString(d.date) === dateStr);
 
         if (existing) {
