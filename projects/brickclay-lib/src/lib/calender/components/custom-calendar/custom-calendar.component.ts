@@ -77,8 +77,8 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges {
   rightYear!: number;
   leftCalendar: { day: number, currentMonth: boolean }[][] = [];
   rightCalendar: { day: number, currentMonth: boolean }[][] = [];
-  startDate: Date | null = null;
-  endDate: Date | null = null;
+  @Input() startDate: Date | null = null;
+  @Input() endDate: Date | null = null;
   selectedDates: Date[] = []; // NEW: For multi-date selection
   disableHighlight = false;
   hoveredDate: Date | null = null; // For hover preview
