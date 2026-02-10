@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Optional, Output, Self } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-export type AutoComplete =
+export type BkTextAreaAutoComplete =
   | 'on'
   | 'off'
   | 'name'
@@ -56,7 +56,7 @@ export type AutoComplete =
   | 'url'
   | 'photo';
 
-export type AutoCapitalize =
+export type BkTextAreaAutoCapitalize =
   | 'off'
   | 'none'
   | 'on'
@@ -64,7 +64,7 @@ export type AutoCapitalize =
   | 'words'
   | 'characters';
 
-export type InputMode =
+export type BkTextAreaInputMode =
   | 'none'
   | 'text'
   | 'tel'
@@ -80,7 +80,7 @@ export type InputMode =
   templateUrl: './textarea.html'
 })
 export class BkTextarea implements ControlValueAccessor {
-  @Input() autoComplete : AutoComplete = 'off';
+  @Input() autoComplete : BkTextAreaAutoComplete = 'off';
   @Input() name!: string;
   @Input() id!: string;
   @Input() label: string = '';
@@ -95,8 +95,8 @@ export class BkTextarea implements ControlValueAccessor {
   @Input() errorMessage: string = '';
   @Input() tabIndex: number | null = null;
   @Input() readOnly: boolean = false;
-  @Input() autoCapitalize: AutoCapitalize | null = null;
-  @Input() inputMode: InputMode | null = null;
+  @Input() autoCapitalize: BkTextAreaAutoCapitalize | null = null;
+  @Input() inputMode: BkTextAreaInputMode | null = null;
   @Output() input = new EventEmitter<Event>();
   @Output() change = new EventEmitter<Event>();
   @Output() blur = new EventEmitter<Event>();

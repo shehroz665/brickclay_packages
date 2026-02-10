@@ -18,14 +18,15 @@ import {
   NG_VALUE_ACCESSOR
 } from '@angular/forms';
 
-export type InputType =
+
+export type BkInputType =
   | 'text'
   | 'email'
   | 'password'
   | 'number'
   | 'url'
   | 'tel';
-export type AutoComplete =
+export type BkInputAutoComplete =
   | 'on'
   | 'off'
   | 'name'
@@ -80,7 +81,7 @@ export type AutoComplete =
   | 'url'
   | 'photo';
 
-export type AutoCapitalize =
+export type BkInputAutoCapitalize =
   | 'off'
   | 'none'
   | 'on'
@@ -88,7 +89,7 @@ export type AutoCapitalize =
   | 'words'
   | 'characters';
 
-export type InputMode =
+export type BkInputMode =
   | 'none'
   | 'text'
   | 'tel'
@@ -126,20 +127,20 @@ export class BkInput implements OnInit, OnDestroy, ControlValueAccessor {
   @Input() id!: string ;
   @Input() name!: string ;
   @Input() mask: string | null= null;
-  @Input() autoComplete : AutoComplete = 'off';
+  @Input() autoComplete : BkInputAutoComplete = 'off';
   @Input() label: string = 'Label';
   @Input() placeholder: string = 'stephend@i2cinc.com';
   @Input() hint: string = 'This is a hint text to help user.';
   @Input() required: boolean = false;
-  @Input() type: InputType = 'text';
+  @Input() type: BkInputType = 'text';
   @Input() value: string = '';
   @Input() hasError: boolean = false;
   @Input() errorMessage: string = '';
   @Input() disabled: boolean = false;
   @Input() tabIndex: number | null = null;
   @Input() readOnly: boolean = false;
-  @Input() autoCapitalize: AutoCapitalize | null = null;
-  @Input() inputMode: InputMode | null = null;
+  @Input() autoCapitalize: BkInputAutoComplete | null = null;
+  @Input() inputMode: BkInputMode | null = null;
   @Input() icon: boolean = false;
   @Input() iconSrc?: string;
   @Input() iconAlt: string = 'icon';
