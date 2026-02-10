@@ -80,6 +80,24 @@ export type AutoComplete =
   | 'url'
   | 'photo';
 
+export type AutoCapitalize =
+  | 'off'
+  | 'none'
+  | 'on'
+  | 'sentences'
+  | 'words'
+  | 'characters';
+
+export type InputMode =
+  | 'none'
+  | 'text'
+  | 'tel'
+  | 'url'
+  | 'email'
+  | 'numeric'
+  | 'decimal'
+  | 'search';
+
 export interface CountryOption {
   code: string;
   name: string;
@@ -118,7 +136,10 @@ export class BkInput implements OnInit, OnDestroy, ControlValueAccessor {
   @Input() hasError: boolean = false;
   @Input() errorMessage: string = '';
   @Input() disabled: boolean = false;
-
+  @Input() tabIndex: number | null = null;
+  @Input() readOnly: boolean = false;
+  @Input() autoCapitalize: AutoCapitalize | null = null;
+  @Input() inputMode: InputMode | null = null;
   @Input() icon: boolean = false;
   @Input() iconSrc?: string;
   @Input() iconAlt: string = 'icon';
@@ -264,13 +285,6 @@ export class BkInput implements OnInit, OnDestroy, ControlValueAccessor {
     this.onChange(val);     // propagate to parent form
     this.input.emit(event); // emit raw event
   }
-  // handleInput(event: Event): void {
-  //   const val = (event.target as HTMLInputElement).value;
-  //   this.inputValue = val;
-  //   this.value = val;
-  //   this.onChange(val); // propagate to parent form
-  //   this.input.emit(event);
-  // }
 
   handleChange(event: Event) {
     this.change.emit(event); // emit raw change event

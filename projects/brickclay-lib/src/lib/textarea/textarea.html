@@ -2,7 +2,7 @@
 
   @if (label) {
     <label
-      class="text-sm font-medium text-[#141414] block" [attr.for]="effectiveId">
+      class="text-sm font-medium text-[#141414] block" [for]="id">
       {{ label }}
       @if (required) {
         <span class="text-[#E7000B] ml-0.5">*</span>
@@ -12,16 +12,25 @@
 
   <div class="relative">
     <textarea
-      [id]="effectiveId"
-      [attr.name]="name"
+      [id]="id"
+      [name]="name"
+      [disabled]="disabled"
+      [tabindex]="tabIndex"
+      [readOnly]="readOnly"
+      [maxLength]="maxlength"
+      [minLength]="minlength"
+      [autocomplete]="autoComplete"
+      [autocapitalize]="autoCapitalize"
+      [inputMode]="inputMode"
       [value]="value"
-      (input)="handleEvent($event)"
-      (change)="handleEvent($event)"
-      (blur)="handleEvent($event)"
-      (focus)="handleEvent($event)"
+      (input)="handleInput($event)"
+      (change)="handleChange($event)"
+      (blur)="handleBlur($event)"
+      (focus)="handleFocus($event)"
       [placeholder]="placeholder"
-      [disabled]="isDisabled"
-      [attr.maxlength]="maxLength"
+
+      [autocomplete]="autoComplete"
+
       rows="{{rows}}"
       class="
         w-full
@@ -34,11 +43,11 @@
         placeholder:text-[#6B7080]
       "
       [ngClass]="{
-        'border-[#FA727A] text-[#141414]': hasError && !isDisabled,
+        'border-[#FA727A] text-[#141414]': hasError && !disabled,
 
-        'focus:border-[#6B7080] text-[#141414]': !hasError && !isDisabled,
+        'focus:border-[#6B7080] text-[#141414]': !hasError && !disabled,
 
-        'bg-[#F4F4F6] text-[#A1A3AE] border-[#E3E3E7] cursor-not-allowed': isDisabled
+        'bg-[#F4F4F6] text-[#A1A3AE] border-[#E3E3E7] cursor-not-allowed': disabled
       }"
     ></textarea>
   </div>
@@ -46,7 +55,7 @@
   <div class="flex justify-between items-start font-normal text-sm">
 
     <div class="flex-1">
-      @if (showError) {
+      @if (hasError) {
         <span class="text-[#F34050]">
           {{ errorMessage }}
         </span>
@@ -57,11 +66,11 @@
       }
     </div>
 
-    @if (maxLength) {
+    @if (maxlength) {
       <div
         class="text-[#868997] tabular-nums flex-shrink-0"
       >
-        {{ value.length }}/{{ maxLength }}
+        {{ value.length }}/{{ maxlength }}
       </div>
     }
 

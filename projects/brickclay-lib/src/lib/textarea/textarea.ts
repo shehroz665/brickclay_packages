@@ -1,7 +1,78 @@
 import { Component, EventEmitter, Input, Optional, Output, Self } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NgControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+export type AutoComplete =
+  | 'on'
+  | 'off'
+  | 'name'
+  | 'honorific-prefix'
+  | 'given-name'
+  | 'additional-name'
+  | 'family-name'
+  | 'honorific-suffix'
+  | 'nickname'
+  | 'email'
+  | 'username'
+  | 'new-password'
+  | 'current-password'
+  | 'organization-title'
+  | 'organization'
+  | 'street-address'
+  | 'address-line1'
+  | 'address-line2'
+  | 'address-line3'
+  | 'address-level4'
+  | 'address-level3'
+  | 'address-level2'
+  | 'address-level1'
+  | 'country'
+  | 'country-name'
+  | 'postal-code'
+  | 'cc-name'
+  | 'cc-given-name'
+  | 'cc-additional-name'
+  | 'cc-family-name'
+  | 'cc-number'
+  | 'cc-exp'
+  | 'cc-exp-month'
+  | 'cc-exp-year'
+  | 'cc-csc'
+  | 'cc-type'
+  | 'transaction-currency'
+  | 'transaction-amount'
+  | 'language'
+  | 'bday'
+  | 'bday-day'
+  | 'bday-month'
+  | 'bday-year'
+  | 'sex'
+  | 'tel'
+  | 'tel-country-code'
+  | 'tel-national'
+  | 'tel-area-code'
+  | 'tel-local'
+  | 'tel-extension'
+  | 'impp'
+  | 'url'
+  | 'photo';
 
+export type AutoCapitalize =
+  | 'off'
+  | 'none'
+  | 'on'
+  | 'sentences'
+  | 'words'
+  | 'characters';
+
+export type InputMode =
+  | 'none'
+  | 'text'
+  | 'tel'
+  | 'url'
+  | 'email'
+  | 'numeric'
+  | 'decimal'
+  | 'search';
 @Component({
   selector: 'bk-textarea',
   standalone: true,
@@ -9,24 +80,29 @@ import { CommonModule } from '@angular/common';
   templateUrl: './textarea.html'
 })
 export class BkTextarea implements ControlValueAccessor {
+  @Input() autoComplete : AutoComplete = 'off';
   @Input() name!: string;
-  @Input() id?: string;
+  @Input() id!: string;
   @Input() label: string = '';
   @Input() placeholder: string = '';
   @Input() rows: number = 4;
   @Input() hint: string = '';
   @Input() required: boolean = false;
-  @Input() maxLength: number | null = null;
+  @Input() maxlength: number | null = null;
+  @Input() minlength: number | null = null;
   @Input() hasError: boolean | null = false;
+  @Input() disabled: boolean = false;
   @Input() errorMessage: string = '';
-  @Input() trimWhiteSpaces: boolean = false;
-  @Input() eventType: 'input' | 'change' | 'blur' = 'input';
+  @Input() tabIndex: number | null = null;
+  @Input() readOnly: boolean = false;
+  @Input() autoCapitalize: AutoCapitalize | null = null;
+  @Input() inputMode: InputMode | null = null;
   @Output() input = new EventEmitter<Event>();
   @Output() change = new EventEmitter<Event>();
   @Output() blur = new EventEmitter<Event>();
   @Output() focus = new EventEmitter<Event>();
   value: string = '';
-  isDisabled: boolean = false;
+
 
   // --- ControlValueAccessor ---
   onChange = (_: any) => {};
@@ -38,11 +114,7 @@ export class BkTextarea implements ControlValueAccessor {
     }
   }
 
-  // --- Computed ID ---
-  get effectiveId(): string {
-    const base = 'brickclay_textarea_';
-    return this.id ? `${base}${this.id}` : `${base}${this.label?.replace(/\s+/g, '_').toLowerCase()}`;
-  }
+
 
   // --- Expose FormControl state ---
   get control(): any {
@@ -61,50 +133,28 @@ export class BkTextarea implements ControlValueAccessor {
     return this.control?.errors;
   }
 
-  get showError(): boolean {
-  if (this.hasError) return true;
-  if (!this.control) return false;
 
-  return (
-    this.required && (this.control.dirty || this.control.touched) &&
-    this.control.invalid &&
-    this.control.errors?.['required']
-  );
-}
 
-  // --- Event handler ---
-  handleEvent(event: Event): void {
-    const input = event.target as HTMLTextAreaElement;
 
-    // Always update internal value for the counter
-    this.value = input.value;
-
-    // Trim spaces if needed
-    if (this.trimWhiteSpaces && this.eventType === 'input') {
-      setTimeout(() => {
-        this.value = this.value.trim();
-        input.value = this.value;
-        if (this.eventType === 'input') this.onChange(this.value);
-      }, 300); // small delay for input event
-    } else if (this.trimWhiteSpaces) {
-      this.value = this.value.trim();
-      input.value = this.value;
-    }
-
-    // Update ngModel depending on event type
-    if (this.eventType === 'input' && event.type === 'input') this.onChange(this.value);
-    if (this.eventType === 'change' && event.type === 'change') this.onChange(this.value);
-    if (this.eventType === 'blur' && event.type === 'blur') this.onChange(this.value);
-
-    // Always mark as touched on blur/focus
-    if (event.type === 'blur' || event.type === 'focus') this.onTouched();
-    // ---- Emit component outputs ----
-    if (event.type === 'input') this.input.emit(event);
-    if (event.type === 'change') this.change.emit(event);
-    if (event.type === 'blur') this.blur.emit(event);
-    if (event.type === 'focus') this.focus.emit(event);
-
+  handleFocus(event: Event): void {
+    this.focus.emit(event);
   }
+
+  handleBlur(event:Event): void {
+    this.onTouched();
+    this.blur.emit(event);
+  }
+  handleInput(event: Event): void {
+    const val = (event.target as HTMLInputElement).value;
+    this.value = val;       // update CVA value
+    this.onChange(val);     // propagate to parent form
+    this.input.emit(event); // emit raw event
+  }
+
+  handleChange(event: Event) {
+    this.change.emit(event); // emit raw change event
+  }
+
 
   writeValue(value: any): void {
     this.value = value ?? '';
@@ -118,7 +168,5 @@ export class BkTextarea implements ControlValueAccessor {
     this.onTouched = fn;
   }
 
-  setDisabledState(isDisabled: boolean): void {
-    this.isDisabled = isDisabled;
-  }
+
 }
