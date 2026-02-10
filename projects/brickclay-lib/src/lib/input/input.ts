@@ -85,6 +85,7 @@ export interface CountryOption {
   name: string;
   mask: string;
   prefix:string;
+  placeholder:string;
 }
 @Component({
   selector: 'bk-input',
@@ -124,14 +125,15 @@ export class BkInput implements OnInit, OnDestroy, ControlValueAccessor {
   @Input() phone: boolean = false;
   @Input() countryCode: string = 'US';
   @Input() countryOptions: CountryOption[] = [
-  { code: 'US', name: 'US', mask: '(000) 000-0000',prefix: '+1 ' },
-  { code: 'MT', name: 'MT', mask: '(000) 000-0000' ,prefix: '+356 '},
-  { code: 'PL', name: 'PL', mask: '(000) 000-0000'   ,prefix: '+48 '},
-  { code: 'CH', name: 'CH', mask: '(000) 000-0000', prefix: '+41 ' },
-  { code: 'TR', name: 'TR', mask: '(000) 000-0000', prefix: '+90 ' },
-  { code: 'UG', name: 'UG', mask: '(000) 000-0000', prefix: '+256 ' },
-  { code: 'ZM', name: 'ZM', mask: '(000) 000-0000', prefix: '+260 ' }
-  ];
+  { code: 'US', name: 'US', mask: '(000) 000-0000', prefix: '+1 ',placeholder:'(000) 000-0000' },
+  { code: 'MT', name: 'MT', mask: '(000) 000-0000', prefix: '+356 ',placeholder:'(000) 000-0000' },
+  { code: 'PL', name: 'PL', mask: '(000) 000-0000', prefix: '+48 ',placeholder:'(000) 000-0000' },
+  { code: 'CH', name: 'CH', mask: '(000) 000-0000', prefix: '+41 ' ,placeholder:'(000) 000-0000'},
+  { code: 'TR', name: 'TR', mask: '(000) 000-0000', prefix: '+90 ' ,placeholder:'(000) 000-0000'},
+  { code: 'UG', name: 'UG', mask: '(000) 000-0000', prefix: '+256 ',placeholder:'(000) 000-0000' },
+  { code: 'ZM', name: 'ZM', mask: '(000) 000-0000', prefix: '+260 ',placeholder:'(000) 000-0000' }
+];
+
   selectedCountry: CountryOption= this.countryOptions[0];
 
   @Input() searchLeft: boolean = false;
@@ -161,6 +163,14 @@ export class BkInput implements OnInit, OnDestroy, ControlValueAccessor {
   @Output() blur = new EventEmitter<Event>();
 
 
+  get placeHolderText(): string {
+   if (this.phone) {
+      const country = this.countryOptions.find(c => c.code === this.countryCode);
+      return country?.placeholder || '';
+    }
+    return this.placeholder;
+  }
+
    get maskValue(): string {
     if (this.mask) return this.mask;
     if (this.phone) {
@@ -172,7 +182,7 @@ export class BkInput implements OnInit, OnDestroy, ControlValueAccessor {
 
   get maskPrefixValue(): string {
     if (this.phone) {
-      debugger;
+
       const country = this.countryOptions.find(c => c.code === this.countryCode);
       return country?.prefix || '';
     }
@@ -210,7 +220,7 @@ export class BkInput implements OnInit, OnDestroy, ControlValueAccessor {
     if (this.password && this.type !== 'password') this.type = 'password';
     if (this.phone) {
       const country = this.countryOptions.find(c => c.code === this.countryCode);
-      debugger;
+
       if (country) this.selectedCountry = country;
       document.addEventListener('closeAllPhoneDropdowns', this.closeAllDropdownsHandler);
     }
@@ -249,7 +259,7 @@ export class BkInput implements OnInit, OnDestroy, ControlValueAccessor {
   }
   handleInput(event: Event): void {
     const val = (event.target as HTMLInputElement).value;
-    // this.inputValue = val;
+    this.inputValue = val;
     this.value = val;       // update CVA value
     this.onChange(val);     // propagate to parent form
     this.input.emit(event); // emit raw event
@@ -278,12 +288,47 @@ export class BkInput implements OnInit, OnDestroy, ControlValueAccessor {
     }
   }
 
-  selectCountry(country: CountryOption): void {
-    debugger;
-    this.selectedCountry = country;
-    this.countryCode = country.code;
-    this.isDropdownOpen = false;
+selectCountry(country: CountryOption): void {
+  const oldCountry = this.selectedCountry;
+  this.selectedCountry = country;
+  this.countryCode = country.code;
+  this.isDropdownOpen = false;
+
+  const currentRaw = this.inputField?.nativeElement?.value || this.inputValue;
+  let newPhone = '';
+
+  if (currentRaw && currentRaw.trim() !== '') {
+    // Input has some value → replace old prefix
+    if (oldCountry?.prefix && oldCountry.code !== country.code) {
+      const oldPrefixEscaped = oldCountry.prefix.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const regex = new RegExp(`^${oldPrefixEscaped}\\s?`);
+      const oldMaskedValue = currentRaw.replace(regex, '');
+      newPhone = country.prefix + oldMaskedValue;
+    } else {
+      newPhone = country.prefix + currentRaw;
+    }
+  } else {
+    // Input is empty → show only the new prefix OR empty
+    newPhone = ''; // optionally: newPhone = country.prefix;
   }
+
+  this.inputValue = newPhone;
+  this.value = newPhone;
+  this.onChange(newPhone);
+
+  setTimeout(() => {
+    if (this.inputField?.nativeElement) {
+      this.inputField.nativeElement.value = newPhone;
+      this.inputField.nativeElement.dispatchEvent(
+        new Event('input', { bubbles: true })
+      );
+    }
+  }, 0);
+}
+
+
+
+
 
   togglePasswordVisibility(event: Event): void {
     if (!this.disabled && this.password) {
