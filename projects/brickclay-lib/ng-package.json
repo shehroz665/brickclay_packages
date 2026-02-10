@@ -19,7 +19,8 @@
     "src/lib/button-group/button-group.css",
     "src/lib/textarea/textarea.css",
     "src/lib/grid/components/grid/grid.css",
-    "src/lib/select/select.css"
+    "src/lib/select/select.css",
+    "src/lib/input/input.css"
   ]
 }
 

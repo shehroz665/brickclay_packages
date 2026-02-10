@@ -1,6 +1,6 @@
 <div style="max-width: 300px;">
   <bk-custom-calendar
-            [startDate]="object.validFrom || null"
+            [startDate]="validFromDate"
             (selected)="onCalendarSelected($event, 'single-date')"
             [dualCalendar]="false"
             [singleDatePicker]="true"

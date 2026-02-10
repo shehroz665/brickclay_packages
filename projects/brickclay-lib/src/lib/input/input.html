@@ -1,0 +1,114 @@
+<div class="input-container">
+  <label [for]="id" class="input-label">
+    {{ label }}
+    @if(required){
+      <span class="input-label-required">*</span>
+    }
+  </label>
+
+  <div class="input-wrapper" [ngClass]="{
+    'input-wrapper--url': type === 'url',
+    'input-wrapper--icon': icon && iconSrc,
+    'input-wrapper--phone': phone,
+    'input-wrapper--search-left': searchLeft,
+    'input-wrapper--search-right': searchRight,
+    'input-wrapper--password': password
+  }">
+
+    <input
+      #inputField
+      [type]="currentInputType"
+      [id]="id"
+      [name]="name"
+      [placeholder]="placeholder"
+      [pattern]="pattern"
+      [autocomplete]="autoComplete"
+      [value]="inputValue"
+      [attr.max]="max"
+      [attr.min]="min"
+      [attr.step]="step"
+      [attr.maxlength]="maxlength"
+      [attr.minlength]="minlength"
+      [disabled]="disabled"
+      [mask]="maskValue"
+      [prefix]="maskPrefixValue"
+      [showMaskTyped]="false"
+      [dropSpecialCharacters]="false"
+      (change)="handleChange($event)"
+      (input)="handleInput($event)"
+      (focus)="handleFocus($event)"
+      (blur)="handleBlur($event)"
+      class="input-field"
+      [ngClass]="{
+        'input-field--url': type === 'url',
+        'input-field--icon': icon && iconSrc,
+        'input-field--phone': phone,
+        'input-field--search-left': searchLeft,
+        'input-field--search-right': searchRight,
+        'input-field--password': password,
+        'input-field--default': inputState === 'default',
+        'input-field--focused': inputState === 'focused',
+        'input-field--filled': inputState === 'filled',
+        'input-field--error': inputState === 'error',
+        'input-field--disabled': inputState === 'disabled'
+      }">
+
+    @if(searchLeft){
+      <img src="../../assets/images/icons/global/search-input.svg" alt="Search" class="input-search-icon input-search-icon--left">
+    }
+
+    @if(searchRight){
+      <img src="../../assets/images/icons/global/search-input.svg" alt="Search" class="input-search-icon input-search-icon--right">
+    }
+
+    @if(password){
+      <button type="button" (click)="togglePasswordVisibility($event)" class="input-password-toggle" [disabled]="disabled" tabindex="-1">
+        <img [src]="showPassword ? '../../assets/images/icons/global/eye-slash-icon.svg' : '../../assets/images/icons/global/eye-icon.svg'" [alt]="showPassword ? 'Hide password' : 'Show password'" class="input-password-icon">
+      </button>
+    }
+
+    @if(phone){
+      <div #selectRef class="input-phone-selector" [ngClass]="{
+        'input-phone-selector--default': inputState === 'default',
+        'input-phone-selector--focused': inputState === 'focused',
+        'input-phone-selector--filled': inputState === 'filled',
+        'input-phone-selector--error': inputState === 'error',
+        'input-phone-selector--disabled': inputState === 'disabled'
+      }" (click)="toggleDropdown($event)">
+        <span class="input-phone-selector-text">{{ selectedCountry.name }}</span>
+        <img src="../../assets/images/icons/global/input-arrow-down.svg" alt="Dropdown" class="input-phone-selector-arrow" [ngClass]="{'input-phone-selector-arrow--open': isDropdownOpen}">
+      </div>
+    }
+
+    @if(phone && isDropdownOpen){
+      <div #dropdownRef class="input-phone-dropdown" (click)="$event.stopPropagation()">
+        <button *ngFor="let country of countryOptions" type="button" class="input-phone-dropdown-item" [ngClass]="{'input-phone-dropdown-item--active': selectedCountry.code === country.code}" (click)="selectCountry(country); $event.stopPropagation()">
+          {{ country.name }}
+        </button>
+      </div>
+    }
+
+    @if(icon && iconSrc && !searchLeft){
+      <img [src]="iconSrc" [alt]="iconAlt" class="input-icon">
+    }
+
+    @if(type === 'url'){
+      <span class="input-url-prefix" [ngClass]="{
+        'input-url-prefix--default': inputState === 'default',
+        'input-url-prefix--focused': inputState === 'focused',
+        'input-url-prefix--filled': inputState === 'filled',
+        'input-url-prefix--error': inputState === 'error',
+        'input-url-prefix--disabled': inputState === 'disabled'
+      }">https</span>
+    }
+  </div>
+
+  @if(hasError){
+    @if (errorMessage) {
+      <p class="input-error">{{ errorMessage }}</p>
+    }
+  }
+  @if(!hasError){
+    <p class="input-hint">{{ hint }}</p>
+  }
+</div>

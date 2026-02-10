@@ -1,0 +1,231 @@
+/* Input container */
+.input-container {
+  @apply flex flex-col gap-1.5;
+}
+
+/* Label */
+.input-label {
+  @apply text-sm font-medium text-[#141414];
+}
+
+.input-label-required {
+  @apply text-[#E7000B] ml-0.5;
+}
+
+/* Input Wrapper */
+.input-wrapper {
+  @apply relative;
+}
+
+/* Input field base styles */
+.input-field {
+  @apply w-full py-2.5 px-3 text-sm border rounded-[4px] outline-none transition-all duration-200 bg-white;
+  height: 40px;
+  box-sizing: border-box;
+}
+
+/* Default/Initial State */
+.input-field--default {
+  @apply border-[#E3E3E7] text-[#141414] placeholder:text-[#6B7080];
+}
+
+/* Focused/Active State */
+.input-field--focused {
+  @apply border-[#6B7080] text-[#141414];
+}
+
+/* Filled State */
+.input-field--filled {
+  @apply border-[#E3E3E7] text-[#141414] bg-white;
+}
+
+/* Error State */
+.input-field--error {
+  @apply border-[#E7000B] text-[#141414];
+}
+
+/* Disabled State */
+.input-field--disabled {
+  @apply border-[#E3E3E7] bg-[#F4F4F6] text-[#A1A3AE] cursor-not-allowed;
+}
+
+/* Icon Input Field - Add padding-left for icon space */
+.input-field--icon {
+  @apply pl-[48px];
+}
+
+/* Phone Input Field - Add padding-left for selector space */
+.input-field--phone {
+  @apply pl-[80px];
+}
+
+/* URL Input Field - Add padding-left for prefix space */
+.input-field--url {
+  @apply pl-[72px];
+}
+
+/* Search Left - Add padding-left for search icon space */
+.input-field--search-left {
+  @apply pl-[48px];
+}
+
+/* Search Right - Add padding-right for search icon space */
+.input-field--search-right {
+  @apply pr-[48px];
+}
+
+/* Password - Add padding-right for password toggle icon space */
+.input-field--password {
+  @apply pr-[48px];
+}
+
+/* When both icon and URL are present, adjust padding */
+.input-field--icon.input-field--url {
+  @apply pl-[120px];
+}
+
+/* When phone and icon are present */
+.input-field--phone.input-field--icon {
+  @apply pl-[128px];
+}
+
+/* Phone Country Selector - Absolute Positioned */
+.input-phone-selector {
+  @apply absolute left-0 top-0 bottom-0 px-3 flex items-center gap-2 cursor-pointer border transition-colors duration-200;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.input-phone-selector-text {
+  @apply text-xs leading-[18px] text-[#A1A3AE] font-normal;
+}
+
+.input-phone-selector-arrow {
+  @apply w-4 h-4 transition-transform duration-200;
+}
+
+.input-phone-selector-arrow--open {
+  @apply rotate-180;
+}
+
+/* Phone Selector - State Specific Border Colors */
+.input-phone-selector--default {
+  @apply bg-white border-[#E3E3E7];
+}
+
+.input-phone-selector--focused {
+  @apply bg-white border-[#6B7080];
+}
+
+.input-phone-selector--filled {
+  @apply bg-white border-[#E3E3E7];
+}
+
+.input-phone-selector--error {
+  @apply bg-white border-[#E7000B];
+}
+
+.input-phone-selector--disabled {
+  @apply bg-[#F4F4F6] border-[#E3E3E7] cursor-not-allowed;
+}
+
+.input-phone-selector--disabled .input-phone-selector-text {
+  @apply text-[#A1A3AE];
+}
+
+/* Phone Dropdown Menu */
+.input-phone-dropdown {
+  @apply absolute left-0 top-full mt-1 w-[80px] bg-white border border-[#E3E3E7] rounded-[4px] shadow-lg z-50 max-h-48 overflow-y-auto;
+}
+
+.input-phone-dropdown-item {
+  @apply w-full px-5 py-2.5 text-center text-xs leading-[18px] text-[#6B7080] hover:bg-[#F9FAFA] transition-colors duration-200 border-none bg-transparent;
+}
+
+.input-phone-dropdown-item--active {
+  @apply bg-[#F9FAFA] text-[#141414];
+}
+
+/* Icon - Absolute Positioned Inside Input */
+.input-icon {
+  @apply absolute left-3 top-1/2 -translate-y-1/2 w-6 h-6 pointer-events-none size-6;
+}
+/* When phone selector is present, adjust icon position */
+.input-wrapper--phone .input-icon {
+  @apply left-[80px];
+}
+
+/* Search Icon - Absolute Positioned Inside Input */
+.input-search-icon {
+  @apply absolute top-1/2 -translate-y-1/2 w-5 h-5 pointer-events-none;
+}
+
+/* Search Icon Left */
+.input-search-icon--left {
+  @apply left-3;
+}
+
+/* Search Icon Right */
+.input-search-icon--right {
+  @apply right-3;
+}
+
+/* Password Toggle Button */
+.input-password-toggle {
+  @apply absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 p-0 border-0 bg-transparent cursor-pointer outline-none flex items-center justify-center;
+}
+
+.input-password-toggle:disabled {
+  @apply cursor-not-allowed opacity-50;
+}
+
+.input-password-toggle:hover:not(:disabled) {
+  @apply opacity-70;
+}
+
+/* Password Icon */
+.input-password-icon {
+  @apply w-5 h-5 pointer-events-none;
+}
+/* URL Prefix - Absolute Positioned Inside Input */
+.input-url-prefix {
+  @apply absolute left-0 top-0 bottom-0 py-2.5 px-3 text-sm text-[#6B7080] bg-white border flex items-center transition-colors duration-200 pointer-events-none;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+/* When icon is present, adjust URL prefix position */
+.input-wrapper--icon .input-url-prefix {
+  @apply left-[48px];
+}
+
+/* URL Prefix - State Specific Border Colors (matches input border) */
+.input-url-prefix--default {
+  @apply border-[#E3E3E7];
+}
+
+.input-url-prefix--focused {
+  @apply border-[#6B7080];
+}
+
+.input-url-prefix--filled {
+  @apply border-[#E3E3E7];
+}
+
+.input-url-prefix--error {
+  @apply border-[#E7000B];
+}
+
+.input-url-prefix--disabled {
+  @apply bg-[#F4F4F6] text-[#A1A3AE] border-r-[#E3E3E7];
+}
+
+/* Hint text */
+.input-hint {
+  @apply text-xs text-[#868997] font-normal;
+}
+
+/* Error message */
+.input-error {
+  @apply text-xs text-[#E7000B] font-normal;
+}
