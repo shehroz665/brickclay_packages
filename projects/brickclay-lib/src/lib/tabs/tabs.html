@@ -1,0 +1,28 @@
+<div class="tabs-container">
+  <ul class="tabs-list" role="tablist">
+    @for (tab of list; track tab.id; let i = $index) {
+      <li class="tabs-item" role="presentation">
+        <button
+          type="button"
+          [id]="'tab-' + tab.id"
+          [attr.aria-selected]="isActive(tab.id)"
+          [attr.aria-controls]="'panel-' + tab.id"
+          [disabled]="tab.disabled"
+          [class.tabs-button--active]="isActive(tab.id)"
+          [class.tabs-button--disabled]="disabled || tab.disabled"
+          [class.tabs-button--no-icon]="!getTabIcon(tab)"
+          class="tabs-button"
+          (click)="setActiveTab(tab)"
+          role="tab">
+          @if (getTabIcon(tab)) {
+            <img
+              [src]="getTabIcon(tab)"
+              [alt]="tab.iconAlt || tab.label"
+              class="tabs-icon">
+          }
+          <span class="tabs-label">{{ tab.label }}</span>
+        </button>
+      </li>
+    }
+  </ul>
+</div>

@@ -1,0 +1,56 @@
+/* Tabs Container */
+.tabs-container {
+  @apply w-full;
+}
+
+/* Tabs List */
+.tabs-list {
+  @apply flex gap-2 list-none m-0 p-0;
+}
+
+/* Tab Item */
+.tabs-item {
+  @apply flex-shrink-0;
+}
+
+/* Tab Button - Base Styles */
+.tabs-button {
+  @apply flex items-center gap-[6px] px-3 py-2 rounded-md border-0 bg-transparent cursor-pointer transition-all duration-200 outline-none;
+  @apply text-sm leading-[11px] font-medium text-[#141414] tracking-[-0.28];
+}
+
+/* Tab Button - No Icon Variant (adjust padding when no icon) */
+.tabs-button--no-icon {
+  @apply gap-0 px-3 py-[10.5px];
+}
+
+/* Tab Button - Hover State */
+/* .tabs-button:hover:not(:disabled):not(.tabs-button--active) {
+  @apply text-[#141414] bg-[#F9FAFA];
+} */
+
+/* Tab Button - Active State */
+.tabs-button--active {
+  @apply bg-[#141414] text-white;
+}
+
+/* Tab Button - Disabled State */
+.tabs-button--disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+/* .tabs-button--disabled:hover {
+  @apply text-[#6B7080] bg-transparent;
+} */
+
+/* Tab Icon - Base Styles */
+.tabs-icon {
+  @apply size-4 flex-shrink-0;
+  transition: opacity 0.2s ease;
+}
+
+/* Tab Label */
+.tabs-label {
+  @apply whitespace-nowrap;
+}
+
