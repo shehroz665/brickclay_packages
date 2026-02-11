@@ -99,6 +99,7 @@ export type BkInputMode =
   | 'decimal'
   | 'search';
 
+export type IconOrientation = 'left' | 'right';
 export interface CountryOption {
   code: string;
   name: string;
@@ -130,20 +131,21 @@ export class BkInput implements OnInit, OnDestroy, ControlValueAccessor {
   @Input() autoComplete : BkInputAutoComplete = 'off';
   @Input() label: string = 'Label';
   @Input() placeholder: string = 'stephend@i2cinc.com';
-  @Input() hint: string = 'This is a hint text to help user.';
+  @Input() hint: string = '';
   @Input() required: boolean = false;
   @Input() type: BkInputType = 'text';
   @Input() value: string = '';
   @Input() hasError: boolean = false;
+  @Input() showErrorIcon:boolean=false;
   @Input() errorMessage: string = '';
   @Input() disabled: boolean = false;
   @Input() tabIndex: number | null = null;
   @Input() readOnly: boolean = false;
   @Input() autoCapitalize: BkInputAutoComplete | null = null;
   @Input() inputMode: BkInputMode | null = null;
-  @Input() icon: boolean = false;
   @Input() iconSrc?: string;
   @Input() iconAlt: string = 'icon';
+  @Input() showIcon: boolean = true;
   @Input() phone: boolean = false;
   @Input() countryCode: string = 'US';
   @Input() countryOptions: CountryOption[] = [
@@ -157,10 +159,11 @@ export class BkInput implements OnInit, OnDestroy, ControlValueAccessor {
 ];
 
   selectedCountry: CountryOption= this.countryOptions[0];
+  @Input() iconOrientation: IconOrientation = 'left'
 
-  @Input() searchLeft: boolean = false;
-  @Input() searchRight: boolean = false;
   @Input() password: boolean = false;
+  @Input() showPassword: boolean = false;
+
   @Input() pattern?: string|null;
   @Input() max: number|null = null;
   @Input() min: number|null = null;
@@ -177,13 +180,13 @@ export class BkInput implements OnInit, OnDestroy, ControlValueAccessor {
   inputValue: string = '';
   isDropdownOpen: boolean = false;
 
-  showPassword: boolean = false;
+
   // =================== Output Emitter ===================
   @Output() input = new EventEmitter<Event>();
   @Output() change = new EventEmitter<Event>();
   @Output() focus = new EventEmitter<Event>();
   @Output() blur = new EventEmitter<Event>();
-
+  @Output() clicked = new EventEmitter<boolean>();
 
   get placeHolderText(): string {
    if (this.phone) {
@@ -287,6 +290,10 @@ export class BkInput implements OnInit, OnDestroy, ControlValueAccessor {
     this.input.emit(event); // emit raw event
   }
 
+  handleClicked():void {
+    this.clicked.emit(true);
+  }
+
   handleChange(event: Event) {
     this.change.emit(event); // emit raw change event
   }
@@ -352,6 +359,15 @@ selectCountry(country: CountryOption): void {
       this.showPassword = !this.showPassword;
       this.type = this.showPassword ? 'text' : 'password';
     }
+  }
+
+  handleIconClick(event: Event): void {
+    if (this.disabled || this.readOnly) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+    this.clicked.emit(true);
   }
 
   // =================== Getters ===================

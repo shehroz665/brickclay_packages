@@ -8,11 +8,9 @@
 
   <div class="input-wrapper" [ngClass]="{
     'input-wrapper--url': type === 'url',
-    'input-wrapper--icon': icon && iconSrc,
     'input-wrapper--phone': phone,
-    'input-wrapper--search-left': searchLeft,
-    'input-wrapper--search-right': searchRight,
-    'input-wrapper--password': password
+    'input-wrapper--password': password,
+    'input-wrapper--icon': iconSrc && showIcon
   }">
 
     <input
@@ -48,12 +46,12 @@
       (focus)="handleFocus($event)"
       (blur)="handleBlur($event)"
       class="input-field"
+
       [ngClass]="{
         'input-field--url': type === 'url',
-        'input-field--icon': icon && iconSrc,
         'input-field--phone': phone,
-        'input-field--search-left': searchLeft,
-        'input-field--search-right': searchRight,
+        'input-field--icon-left': iconSrc && showIcon && iconOrientation === 'left',
+        'input-field--icon-right': iconSrc && showIcon && iconOrientation === 'right',
         'input-field--password': password,
         'input-field--default': inputState === 'default',
         'input-field--focused': inputState === 'focused',
@@ -62,12 +60,16 @@
         'input-field--disabled': inputState === 'disabled'
       }">
 
-    @if(searchLeft){
-      <img src="../../assets/images/icons/global/search-input.svg" alt="Search" class="input-search-icon input-search-icon--left">
+    @if(iconSrc && showIcon){
+      <img (click)="handleIconClick($event)" [src]="iconSrc" [alt]="iconAlt" [ngClass]="{
+        'input-search-icon--left': iconOrientation === 'left',
+        'input-search-icon--right': iconOrientation === 'right',
+        'cursor-pointer': !disabled && !readOnly
+      }" class="input-search-icon">
     }
 
-    @if(searchRight){
-      <img src="../../assets/images/icons/global/search-input.svg" alt="Search" class="input-search-icon input-search-icon--right">
+    @if(showErrorIcon){
+       <img src="../../assets/images/icons/global/info-circle.svg" class="input-search-icon input-search-icon--right">
     }
 
     @if(password){
@@ -97,9 +99,7 @@
       </div>
     }
 
-    @if(icon && iconSrc && !searchLeft){
-      <img [src]="iconSrc" [alt]="iconAlt" class="input-icon">
-    }
+
 
     @if(type === 'url'){
       <span class="input-url-prefix" [ngClass]="{
@@ -118,6 +118,8 @@
     }
   }
   @if(!hasError){
-    <p class="input-hint">{{ hint }}</p>
+    @if(hint){
+      <p class="input-hint">{{ hint }}</p>
+    }
   }
 </div>

@@ -64,13 +64,13 @@
   @apply pl-[72px];
 }
 
-/* Search Left - Add padding-left for search icon space */
-.input-field--search-left {
+/* Icon Left - Add padding-left for icon space */
+.input-field--icon-left {
   @apply pl-[48px];
 }
 
-/* Search Right - Add padding-right for search icon space */
-.input-field--search-right {
+/* Icon Right - Add padding-right for icon space */
+.input-field--icon-right {
   @apply pr-[48px];
 }
 
@@ -157,7 +157,7 @@
 
 /* Search Icon - Absolute Positioned Inside Input */
 .input-search-icon {
-  @apply absolute top-1/2 -translate-y-1/2 w-5 h-5 pointer-events-none;
+  @apply absolute top-1/2 -translate-y-1/2 w-5 h-5;
 }
 
 /* Search Icon Left */
