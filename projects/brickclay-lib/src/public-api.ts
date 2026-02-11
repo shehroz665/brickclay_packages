@@ -36,4 +36,6 @@ export * from './lib/grid/models/grid.model';
 //Single Select
 export * from './lib/select/select';
 //Input
-export * from './lib/input/input'
+export * from './lib/input/input';
+//Input-Chips
+export * from './lib/chips/chips';

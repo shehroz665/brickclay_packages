@@ -1,0 +1,147 @@
+/* Input Badge Container */
+.input-badge-container {
+  @apply flex flex-col gap-1.5 w-full;
+}
+
+/* Label */
+.input-badge-label {
+  @apply text-sm font-medium text-[#141414] block;
+}
+
+.input-badge-label-required {
+  @apply text-[#E7000B] ml-0.5;
+}
+
+/* Input Badge Wrapper */
+.input-badge-wrapper {
+  @apply relative;
+}
+
+/* Input Badge Field Wrapper - Base Styles */
+.input-badge-field-wrapper {
+  @apply w-full px-3 py-2 text-sm border rounded-[4px] outline-none transition-colors duration-200 bg-white flex flex-wrap gap-2 items-start;
+  height: 40px;
+  box-sizing: border-box;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+/* Enable scroll only when content wraps (exceeds height) */
+.input-badge-field-wrapper--scrollable {
+  overflow-y: auto;
+  /* scrollbar-width: thin; */
+}
+
+/* .input-badge-field-wrapper--scrollable::-webkit-scrollbar {
+  width: 6px;
+}
+
+.input-badge-field-wrapper--scrollable::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.input-badge-field-wrapper--scrollable::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.input-badge-field-wrapper--scrollable::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+} */
+
+/* Default/Initial State */
+.input-badge-field-wrapper--default {
+  @apply border-[#E3E3E7] text-[#141414];
+}
+
+.input-badge-field-wrapper--default:focus-within {
+  @apply border-[#6B7080];
+}
+
+/* Focused/Active State */
+.input-badge-field-wrapper--focused {
+  @apply border-[#6B7080] text-[#141414];
+}
+
+/* Filled State */
+.input-badge-field-wrapper--filled {
+  @apply border-[#E3E3E7] text-[#141414] bg-white;
+}
+
+.input-badge-field-wrapper--filled:focus-within {
+  @apply border-[#6B7080];
+}
+
+/* Error State */
+.input-badge-field-wrapper--error {
+  @apply border-[#FA727A] text-[#141414];
+}
+
+/* Disabled State */
+.input-badge-field-wrapper--disabled {
+  @apply bg-[#F4F4F6] text-[#A1A3AE] border-[#E3E3E7] cursor-not-allowed;
+}
+
+/* Badge Item */
+.input-badge-item {
+  @apply inline-flex items-center gap-1 px-2 py-[2.5px] bg-white border border-[#E3E3E7] rounded-[4px];
+}
+
+.input-badge-item-text {
+  @apply text-sm leading-[18px] font-normal text-[#6B7080];
+}
+
+/* Badge Close Button */
+.input-badge-item-close {
+  @apply  cursor-pointer outline-none w-3 h-3;
+}
+
+/* .input-badge-item-close-icon {
+  @apply ;
+} */
+
+/* Input Field - Base Styles */
+.input-badge-input {
+  @apply flex-1 min-w-[120px] outline-none bg-transparent text-[#141414] placeholder:text-[#6B7080] h-auto;
+  flex-basis: 120px;
+}
+
+/* Input Field - State Variants */
+.input-badge-input--default {
+  @apply text-[#141414];
+}
+
+.input-badge-input--focused {
+  @apply text-[#141414];
+}
+
+.input-badge-input--filled {
+  @apply text-[#141414];
+}
+
+.input-badge-input--error {
+  @apply text-[#141414];
+}
+
+.input-badge-input--disabled {
+  @apply text-[#A1A3AE] cursor-not-allowed;
+}
+
+/* Footer */
+.input-badge-footer {
+  @apply flex justify-between items-start font-normal text-sm;
+}
+
+.input-badge-footer-content {
+  @apply flex-1;
+}
+
+/* Hint text */
+.input-badge-hint {
+  @apply text-xs text-[#868997] font-normal;
+}
+
+/* Error message */
+.input-badge-error {
+  @apply text-xs text-[#F34050] font-normal;
+}

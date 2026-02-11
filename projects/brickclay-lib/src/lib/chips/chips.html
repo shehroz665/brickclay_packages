@@ -1,0 +1,74 @@
+<div class="input-badge-container">
+  @if (label) {
+    <label
+      [for]="id"
+      class="input-badge-label">
+      {{ label }}
+      @if (required) {
+        <span class="input-badge-label-required">*</span>
+      }
+    </label>
+  }
+
+  <div class="input-badge-wrapper">
+    <div
+      #fieldWrapper
+      class="input-badge-field-wrapper"
+      [ngClass]="{
+        'input-badge-field-wrapper--default': inputState === 'default',
+        'input-badge-field-wrapper--focused': inputState === 'focused',
+        'input-badge-field-wrapper--filled': inputState === 'filled',
+        'input-badge-field-wrapper--error': inputState === 'error',
+        'input-badge-field-wrapper--disabled': inputState === 'disabled',
+        'input-badge-field-wrapper--scrollable': needsScroll
+      }"
+      (click)="focusInput()"
+    >
+      <!-- Badges -->
+      @for (badge of badges; track badge; let i = $index) {
+        <div class="input-badge-item">
+          <span class="input-badge-item-text">{{ badge }}</span>
+          @if (!disabled) {
+            <button type="button" (click)="removeBadge(i); $event.stopPropagation()"class="input-badge-item-close" >
+              <img src="../../../../assets/images/icons/global/badge-close.svg" alt="Remove" class="input-badge-item-close-icon"/>
+            </button>
+          }
+        </div>
+      }
+
+      <!-- Input Field -->
+      <input
+        #badgeInput
+        type="text"
+        [id]="id"
+        [name]="name"
+        [value]="inputValue"
+        (keydown)="onKeyDown($event)"
+        (input)="handleInput($event)"
+        (focus)="handleFocus($event)"
+        (blur)="handleBlur($event)"
+        [placeholder]="badges.length === 0 ? placeholder : ''"
+        [disabled]="disabled"
+        [readOnly]="readOnly"
+        class="input-badge-input"
+        [ngClass]="{
+          'input-badge-input--default': inputState === 'default',
+          'input-badge-input--focused': inputState === 'focused',
+          'input-badge-input--filled': inputState === 'filled',
+          'input-badge-input--error': inputState === 'error',
+          'input-badge-input--disabled': inputState === 'disabled'
+        }"
+      />
+    </div>
+  </div>
+
+  <div class="input-badge-footer">
+    <div class="input-badge-footer-content">
+      @if (hasError) {
+        <span class="input-badge-error"> {{ errorMessage }}</span>
+      } @else if (hint) {
+        <span class="input-badge-hint"> {{ hint }}</span>
+      }
+    </div>
+  </div>
+</div>
