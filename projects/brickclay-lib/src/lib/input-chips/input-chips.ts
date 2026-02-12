@@ -3,20 +3,20 @@ import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'bk-chips',
+  selector: 'bk-input-chips',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './chips.html',
-  styleUrl: './chips.css',
+  templateUrl: './input-chips.html',
+  styleUrl: './input-chips.css',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => BkChips),
+      useExisting: forwardRef(() => BkInputChips),
       multi: true
     }
   ]
 })
-export class BkChips implements ControlValueAccessor, AfterViewInit {
+export class BkInputChips implements ControlValueAccessor, AfterViewInit {
   @ViewChild('badgeInput') badgeInput!: ElementRef<HTMLInputElement>;
   @ViewChild('fieldWrapper') fieldWrapper!: ElementRef<HTMLDivElement>;
 

@@ -38,7 +38,7 @@ export * from './lib/select/select';
 //Input
 export * from './lib/input/input';
 //Input-Chips
-export * from './lib/chips/chips';
+export * from './lib/input-chips/input-chips';
 //Tabs
 export * from './lib/tabs/tabs';
 

@@ -40,9 +40,12 @@ export class BkSelect implements ControlValueAccessor {
   notFoundText = input<string>('No items found');
   loadingText = input<string>('Loading...');
   clearAllText = input<string>('Clear all');
+  groupBy = input<string>(''); // NEW
+  colorKey = input<string>(''); // e.g. "color"
+
   // iconSrc = input<string>('Clear all');
   @Input() iconAlt: string = 'icon';
-  @Input() label: string = 'Label';
+  @Input() label: string = '';
   @Input() required: Boolean = false;
 
 
@@ -52,6 +55,7 @@ export class BkSelect implements ControlValueAccessor {
   multiple = input<boolean>(false);
   maxLabels = input<number>(2);
   searchable = input<boolean>(true);
+  allSelect = input<boolean>(false);
   clearable = input<boolean>(true);
   readonly = input<boolean>(false);
   disabled = model<boolean>(false);
@@ -69,7 +73,7 @@ export class BkSelect implements ControlValueAccessor {
   focus = output<void>();
   blur = output<void>();
   search = output<{ term: string, items: any[] }>();
-  clear = output<void>();
+  clear = output<any>();
   change = output<any>();
   scrollToEnd = output<void>();
 
@@ -165,7 +169,15 @@ export class BkSelect implements ControlValueAccessor {
     // this.markedIndex.set(0);
     this.open.emit();
     this.focus.emit();
-    setTimeout(() => this.searchInput?.nativeElement.focus());
+    // this.markedIndex.set(0);
+    // setTimeout(() => this.searchInput?.nativeElement.focus());
+    setTimeout(() => {
+      if (this.searchable()) {
+        this.searchInput?.nativeElement.focus();
+      } else {
+        this.controlWrapper?.nativeElement.focus();
+      }
+    });
   }
 
   closeDropdown() {
@@ -279,7 +291,7 @@ export class BkSelect implements ControlValueAccessor {
   handleClear(event: Event) {
     event.stopPropagation();
     this.updateModel([]);
-    this.clear.emit();
+    this.clear.emit(null);
   }
 
   private updateModel(items: any[]) {
@@ -288,13 +300,13 @@ export class BkSelect implements ControlValueAccessor {
       const values = items.map(i => this.resolveValue(i));
       this._value = values;
       this.onChange(values);
-      this.change.emit(values);
+      this.change.emit(items);
     } else {
       const item = items[0] || null;
       const value = item ? this.resolveValue(item) : null;
       this._value = value;
       this.onChange(value);
-      this.change.emit(value);
+      this.change.emit(item);
     }
   }
 
@@ -397,5 +409,34 @@ export class BkSelect implements ControlValueAccessor {
     this.controlWrapper.nativeElement.focus();
     this.openDropdown();
   }
+
+  groupedItems = computed(() => {
+    const groupKey = this.groupBy();
+    const list = this.filteredItems();
+
+    if (!groupKey) {
+      return [{ group: null, items: list }];
+    }
+
+    const map = new Map<string, any[]>();
+
+    list.forEach(item => {
+      const key = item[groupKey] ?? 'Others';
+      if (!map.has(key)) map.set(key, []);
+      map.get(key)!.push(item);
+    });
+
+    return Array.from(map.entries()).map(([group, items]) => ({
+      group,
+      items
+    }));
+  });
+
+  resolveColor(item: any): string | null {
+    if (!item) return null;
+    const key = this.colorKey();
+    return key && typeof item === 'object' ? item[key] : null;
+  }
+
 
 }

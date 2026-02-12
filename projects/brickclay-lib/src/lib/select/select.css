@@ -5,7 +5,7 @@
 
 /* Control */
 .ng-select-control {
-  @apply flex items-center justify-between gap-2 w-full bg-white border border-[#E3E3E7] rounded transition-all duration-200 px-3 py-[9.2px] cursor-pointer;
+  @apply flex items-center justify-between gap-2 w-full bg-white border border-[#E3E3E7] rounded transition-all duration-200 px-3 py-2.5 cursor-pointer;
 
   &.focused { @apply border-[#6B7080] shadow-none z-10; }
   &.disabled { @apply bg-[#F4F4F6] cursor-not-allowed opacity-60; }
@@ -19,29 +19,26 @@
 .ng-placeholder {
   @apply text-[#6B7080] font-normal text-sm truncate w-full pointer-events-none;
 }
-.ng-value-label-single{
-  @apply font-normal text-sm text-[#141414] truncate w-full;
-}
+
 
 /* --- NEW: Single Value --- */
 .ng-value-label-single {
-  @apply font-normal text-sm text-[#141414] truncate w-full;
+  @apply font-normal text-sm leading-[18px] text-[#141414] truncate w-full;
 }
 /* --- NEW: Multi Select Chips --- */
-.ng-value-chips {
-  @apply flex flex-wrap gap-1 w-full;
+
+/* Badge Item */
+.multi-badge-item {
+  @apply inline-flex items-center gap-1.5 px-1.5 py-0.5 bg-white border border-[#E3E3E7] rounded-[4px];
 }
 
-.ng-value-chip {
-  @apply flex items-center bg-gray-100 border border-gray-200 rounded px-2 py-0.5 max-w-full;
+.multi-badge-item-text {
+  @apply text-[10px] leading-[14px] font-normal text-[#6B7080];
 }
 
-.ng-value-chip .ng-value-label {
-  @apply text-[#15191E] truncate max-w-[150px];
-}
-
-.ng-value-chip .ng-value-icon {
-  @apply ml-1 text-gray-500 hover:text-red-500 cursor-pointer text-base font-bold leading-none px-1;
+/* Badge Close Button */
+.multi-badge-close {
+  @apply  cursor-pointer outline-none w-3 h-3;
 }
 
 /* Actions */
@@ -53,14 +50,14 @@
 
 /* Dropdown */
 .custom-ng-dropdown-panel {
-  @apply absolute left-0 w-full bg-white border border-[#E3E3E7] rounded-xl shadow-lg z-[99] overflow-hidden cursor-default;
+  @apply absolute left-0 w-full bg-white border border-[#E3E3E7] rounded-xl shadow-lg z-[99] overflow-hidden cursor-default p-2.5;
 }
 
 .ng-dropdown-search { @apply px-2 pt-2;}
 .ng-search-wrapper { @apply flex items-center border border-[#E3E3E7] rounded-md px-3 py-[7px] bg-white transition-colors focus-within:border-[#E3E3E7]; }
 .ng-search-input { @apply w-full outline-none font-normal text-sm text-[#141414] placeholder-[#A1A3AE] bg-transparent;}
 
-.ng-options-list { @apply max-h-60 overflow-auto relative p-2.5 mb-3.5 flex flex-col gap-0.5;  }
+.ng-options-list { @apply max-h-60 overflow-auto relative flex flex-col gap-0.5;  }
 
 /* Options */
 .ng-option {
@@ -68,16 +65,15 @@
   &:hover, &.marked { @apply bg-[#F8F8F8] rounded-md;}
   &.selected { @apply bg-[#F8F8F8] rounded-md; }
 }
+.grouped .ng-option {
+  @apply ps-5;
+}
 
 .ng-option-disabled { @apply px-3 py-2 text-gray-400 cursor-default; }
 
 
 
 /* ... Previous styles ... */
-
-.ng-value-chip.remaining-count {
-  @apply bg-gray-200 text-gray-600 font-semibold cursor-default;
-}
 
 /* Select All Row (Sticky Top) */
 .select-all-option {
@@ -103,19 +99,19 @@
 
 
 /* width */
-::-webkit-scrollbar {
+.ng-options-list ::-webkit-scrollbar {
   width: 10px;
 }
 
 /* Track */
-::-webkit-scrollbar-track {
+.ng-options-list ::-webkit-scrollbar-track {
   background: transparent;
   border-radius: 8px;
   width: 8px;
 }
 
 /* Handle */
-::-webkit-scrollbar-thumb {
+.ng-options-list ::-webkit-scrollbar-thumb {
   background: #D6D7DC;
   border-radius: 8px;
   transition: 0.3s ease-in-out;
@@ -123,6 +119,16 @@
 }
 
 /* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
+.ng-options-list ::-webkit-scrollbar-thumb:hover {
   background: #909090;
 }
+
+
+.ng-option-group {
+  @apply px-2.5 py-1 font-bold text-[13px] leading-5 text-[#141414];
+}
+
+.ng-option-group:not(:first-child) {
+  @apply mt-4;
+}
+

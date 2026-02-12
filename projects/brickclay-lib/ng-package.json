@@ -21,7 +21,7 @@
     "src/lib/grid/components/grid/grid.css",
     "src/lib/select/select.css",
     "src/lib/input/input.css",
-    "src/lib/chips/chips.css",
+    "src/lib/input-chips/input-chips.css",
     "src/lib/tabs/tabs.css",
     "src/lib/dialog/dialog-container.css",
     "schematics/**/*.json",
