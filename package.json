@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "npm run build:schematics && ng build && npm run build:copy-schematics",
+    "build": "npm run build:schematics && ng build brickclay-lib && npm run build:copy-schematics",
     "build:schematics": "tsc -p projects/brickclay-lib/tsconfig.schematics.json",
     "build:copy-schematics": "node scripts/copy-schematics.js",
     "watch": "ng build --watch --configuration development",
