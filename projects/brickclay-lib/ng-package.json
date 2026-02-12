@@ -22,7 +22,10 @@
     "src/lib/select/select.css",
     "src/lib/input/input.css",
     "src/lib/chips/chips.css",
-    "src/lib/tabs/tabs.css"
+    "src/lib/tabs/tabs.css",
+    "src/lib/dialog/dialog-container.css",
+    "schematics/**/*.json",
+    "schematics/**/*.js"
   ]
 }
 

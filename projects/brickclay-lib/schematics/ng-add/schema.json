@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "$id": "NgAddBrickclaySchema",
+  "title": "Brickclay Library ng-add Schematic",
+  "type": "object",
+  "properties": {
+    "project": {
+      "type": "string",
+      "description": "",
+      "$default": {
+        "$source": "projectName"
+      }
+    }
+  }
+}

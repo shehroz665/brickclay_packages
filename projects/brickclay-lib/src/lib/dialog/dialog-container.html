@@ -1,0 +1,31 @@
+<!--
+  Dialog Container Template (CDK-based)
+
+  Architecture:
+  ─────────────
+  CDK Overlay manages the full overlay stack:
+
+  ┌─ .cdk-overlay-container (fixed, z-index managed by CDK) ──────┐
+  │  ┌─ .cdk-global-overlay-wrapper (flex-center) ──────────────┐ │
+  │  │  .cdk-overlay-backdrop (click → close, CDK transition)   │ │
+  │  │  ┌─ .cdk-overlay-pane (width/height from config) ──────┐ │ │
+  │  │  │  <bk-dialog-container>  ← this component (panel)     │ │ │
+  │  │  │    <ng-template cdkPortalOutlet />  ← user component  │ │ │
+  │  │  │      <UserDialogComponent>                            │ │ │
+  │  │  │        <h2 bk-dialog-title>Title</h2>                 │ │ │
+  │  │  │        <div bk-dialog-content>Scrollable body</div>   │ │ │
+  │  │  │        <div bk-dialog-actions>Pinned buttons</div>    │ │ │
+  │  │  │      </UserDialogComponent>                           │ │ │
+  │  │  │  </bk-dialog-container>                               │ │ │
+  │  │  └──────────────────────────────────────────────────────┘ │ │
+  │  └──────────────────────────────────────────────────────────┘ │
+  └──────────────────────────────────────────────────────────────┘
+
+  The host element IS the visible panel (background, radius, shadow).
+  CDK Portal projects the caller's component as a direct child.
+
+  Directives (BkDialogTitle, BkDialogContent, BkDialogActions, BkDialogClose)
+  apply the corresponding CSS classes and add accessibility features.
+-->
+
+<ng-template cdkPortalOutlet />

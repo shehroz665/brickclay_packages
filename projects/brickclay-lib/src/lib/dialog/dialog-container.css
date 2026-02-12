@@ -1,0 +1,102 @@
+/*
+ * Dialog Container Styles (CDK-based)
+ *
+ * All class names use the `bk-` prefix to avoid collisions when
+ * published as an npm package.
+ *
+ * CDK Overlay manages the overlay container, backdrop, pane sizing, and
+ * z-index stacking.  We only style:
+ *
+ *  1. The container host (`:host`) — this IS the visual panel.
+ *  2. `.bk-dialog-content` and `.bk-dialog-actions` — drop-in
+ *     replacements for `<mat-dialog-content>` and `<mat-dialog-actions>`.
+ */
+
+/* ══════════════════════════════════════════════════════════════════════
+   Panel — the container host IS the dialog box
+   ══════════════════════════════════════════════════════════════════════ */
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;                  /* fill the CDK overlay pane */
+  min-height: 0;
+  max-height: inherit;      /* respect CDK pane's max-height */
+
+  background: var(--bk-dialog-panel-bg, #ffffff);
+  border-radius: var(--bk-dialog-panel-radius, 8px);
+  box-shadow:
+    var(
+      --bk-dialog-panel-shadow,
+      0 11px 15px -7px rgba(0, 0, 0, 0.2),
+      0 24px 38px 3px rgba(0, 0, 0, 0.14),
+      0 9px 46px 8px rgba(0, 0, 0, 0.12)
+    );
+  outline: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  will-change: transform, opacity;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   Dynamic component host
+   ──────────────────────
+   CdkPortalOutlet creates the user's component as a direct child of
+   :host.  Angular's emulated view encapsulation prevents scoped CSS
+   from reaching dynamically-created elements, so we use ::ng-deep.
+   ══════════════════════════════════════════════════════════════════════ */
+
+:host ::ng-deep > :first-child {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   Drop-in replacements for Material dialog layout directives
+   ──────────────────────────────────────────────────────────
+   Use these CSS classes inside your dialog component templates:
+     <div class="bk-dialog-content">  →  replaces <mat-dialog-content>
+     <div class="bk-dialog-actions">  →  replaces <mat-dialog-actions>
+   ══════════════════════════════════════════════════════════════════════ */
+
+:host ::ng-deep .bk-dialog-content {
+  flex: 1 1 auto;
+  overflow: auto;                      /* ← only layer that scrolls */
+  min-height: 0;                       /* allow shrinking in flex col */
+  display: block;
+  -webkit-overflow-scrolling: touch;
+}
+
+:host ::ng-deep .bk-dialog-actions {
+  flex: 0 0 auto;                      /* ← never shrinks, pinned    */
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  min-height: 52px;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   Title — stays pinned at the top (like mat-dialog-title)
+   ══════════════════════════════════════════════════════════════════════ */
+
+:host ::ng-deep .bk-dialog-title {
+  flex: 0 0 auto;                      /* ← never shrinks, pinned    */
+  margin: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   Action alignment variants (set via BkDialogActions.align input)
+   ══════════════════════════════════════════════════════════════════════ */
+
+:host ::ng-deep .bk-dialog-actions-align-start {
+  justify-content: flex-start;
+}
+
+:host ::ng-deep .bk-dialog-actions-align-center {
+  justify-content: center;
+}
+
+/* align-end is the default (already flex-end above) */

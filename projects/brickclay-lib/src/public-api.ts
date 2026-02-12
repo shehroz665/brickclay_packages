@@ -41,3 +41,19 @@ export * from './lib/input/input';
 export * from './lib/chips/chips';
 //Tabs
 export * from './lib/tabs/tabs';
+
+//Dialog system
+export { BkDialogModule } from './lib/dialog/dialog.module';
+export { DialogService } from './lib/dialog/dialog.service';
+export { DialogRef } from './lib/dialog/dialog-ref';
+export { DIALOG_DATA, DIALOG_GLOBAL_CONFIG } from './lib/dialog/dialog.tokens';
+export type { DialogConfig, DialogPosition, DialogAnimation } from './lib/dialog/dialog-config';
+export { DEFAULT_DIALOG_CONFIG } from './lib/dialog/dialog-config';
+export {
+  BkDialogTitle,
+  BkDialogContent,
+  BkDialogActions,
+  BkDialogClose,
+} from './lib/dialog/dialog-content-directives';
+export type { AnimationKeyframes } from './lib/dialog/dialog-animations';
+export { getDialogPanelAnimation, getDialogBackdropAnimation } from './lib/dialog/dialog-animations';
