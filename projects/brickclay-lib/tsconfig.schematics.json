@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../out-tsc/schematics",
+    "rootDir": ".",
+    "module": "commonjs",
+    "types": ["node"],
+    "lib": ["es2020"]
+  },
+  "include": ["schematics/**/*.ts"],
+  "exclude": ["schematics/**/files/**"]
+}
