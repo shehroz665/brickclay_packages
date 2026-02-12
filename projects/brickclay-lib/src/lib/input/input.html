@@ -1,10 +1,12 @@
 <div class="input-container">
-  <label [for]="id" class="input-label">
-    {{ label }}
-    @if(required){
-      <span class="input-label-required">*</span>
-    }
-  </label>
+  @if(label){
+    <label [for]="id" class="input-label">
+      {{ label }}
+      @if(required){
+        <span class="input-label-required">*</span>
+      }
+    </label>
+  }
 
   <div class="input-wrapper" [ngClass]="{
     'input-wrapper--url': type === 'url',

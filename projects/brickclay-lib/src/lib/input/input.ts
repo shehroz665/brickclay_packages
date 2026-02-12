@@ -129,7 +129,7 @@ export class BkInput implements OnInit, OnDestroy, ControlValueAccessor {
   @Input() name!: string ;
   @Input() mask: string | null= null;
   @Input() autoComplete : BkInputAutoComplete = 'off';
-  @Input() label: string = 'Label';
+  @Input() label: string = '';
   @Input() placeholder: string = 'stephend@i2cinc.com';
   @Input() hint: string = '';
   @Input() required: boolean = false;
