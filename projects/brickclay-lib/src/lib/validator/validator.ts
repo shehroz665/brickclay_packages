@@ -3,6 +3,7 @@ import { NgModel } from '@angular/forms';
 
 @Component({
   selector: 'bk-validator',
+  standalone:true,
   imports: [],
   templateUrl: './validator.html',
 })
