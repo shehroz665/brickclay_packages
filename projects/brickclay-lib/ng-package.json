@@ -24,6 +24,7 @@
     "src/lib/input-chips/input-chips.css",
     "src/lib/tabs/tabs.css",
     "src/lib/dialog/dialog-container.css",
+    "src/lib/tooltip/tooltip-directive.css",
     "schematics/**/*.json",
     "schematics/**/*.js"
   ]

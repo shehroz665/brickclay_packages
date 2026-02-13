@@ -3,11 +3,12 @@ import { TableColumn, TableAction } from '../../models/grid.model';
 import { CdkDragDrop, moveItemInArray, CdkDragMove, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { BKTooltipDirective } from '../../../tooltip/tooltip.directive';
 export type SortDirection = 'asc' | 'desc';
 @Component({
   selector: 'bk-grid',
   standalone: true,
-  imports: [CommonModule,DragDropModule,ScrollingModule],
+  imports: [CommonModule,DragDropModule,ScrollingModule, BKTooltipDirective],
   templateUrl: './grid.html',
   styleUrl: './grid.css',
 })

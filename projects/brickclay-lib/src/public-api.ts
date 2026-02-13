@@ -57,3 +57,6 @@ export {
 } from './lib/dialog/dialog-content-directives';
 export type { AnimationKeyframes } from './lib/dialog/dialog-animations';
 export { getDialogPanelAnimation, getDialogBackdropAnimation } from './lib/dialog/dialog-animations';
+
+//Tooltip
+export * from './lib/tooltip/tooltip.directive';
