@@ -63,3 +63,6 @@ export * from './lib/tooltip/tooltip.directive';
 
 //Validator
 export * from './lib/validator/validator';
+
+//Avatar Profile
+export * from './lib/avatar-profile/avatar-profile';
