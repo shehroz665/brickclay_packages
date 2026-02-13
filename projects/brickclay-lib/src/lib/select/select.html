@@ -2,11 +2,11 @@
 
   @if(label){
   <label
-    class="input-label"
+    class="select-label"
     (click)="openFromLabel($event)">
     {{ label }}
     @if (required) {
-      <span class="input-label-required">*</span>
+      <span class="select-label-required">*</span>
     }
   </label>
   }
@@ -14,6 +14,8 @@
   <div
     #controlWrapper
     class="ng-select-control"
+    [ngClass]="{ 'has-error': hasError }"
+
     tabindex="0"
     (keydown)="onKeyDown($event)"
     [class.focused]="isOpen()"
@@ -153,4 +155,11 @@
 
     </div>
   }
+  @if(hasError){
+    @if (errorMessage) {
+      <p class="select-error">{{ errorMessage }}</p>
+    }
+  }
+
+
 </div>

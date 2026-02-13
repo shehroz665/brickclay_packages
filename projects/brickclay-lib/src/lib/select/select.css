@@ -1,6 +1,6 @@
 /* Container */
 .ng-select-container {
-  @apply relative w-full box-border;
+  @apply relative w-full box-border flex flex-col gap-1.5;;
 }
 
 /* Control */
@@ -10,6 +10,11 @@
   &.focused { @apply border-[#6B7080] shadow-none z-10; }
   &.disabled { @apply bg-[#F4F4F6] cursor-not-allowed opacity-60; }
 }
+
+.ng-select-control.has-error {
+  @apply border-[#d11e14];
+}
+
 
 /* Value Container */
 .ng-value-container {
@@ -89,11 +94,11 @@
   margin-bottom: 4px;
 }
 
-.input-label {
-  @apply text-sm font-medium text-[#141414] tracking-[-0.28px] mb-1.5 inline-block;
+.select-label {
+  @apply text-sm font-medium text-[#141414] tracking-[-0.28px] inline-block;
 }
 
-.input-label-required {
+.select-label-required {
   @apply text-[#E7000B];
 }
 
@@ -132,3 +137,17 @@
   @apply mt-4;
 }
 
+/* Error message */
+.select-error {
+  @apply text-xs text-[#E7000B] font-normal;
+}
+
+/* Hint text */
+.select-hint {
+  @apply text-xs text-[#868997] font-normal;
+}
+
+/* Error message */
+.select-error {
+  @apply text-xs text-[#E7000B] font-normal;
+}

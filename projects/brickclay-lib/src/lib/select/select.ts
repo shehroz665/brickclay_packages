@@ -62,6 +62,8 @@ export class BkSelect implements ControlValueAccessor {
   loading = input<boolean>(false);
   closeOnSelect = input<boolean>(true);
   dropdownPosition = input<'bottom' | 'top'>('bottom');
+  @Input() hasError: boolean = false;
+  @Input() errorMessage: string = '';
 
 
   // 1. NEW INPUT: Toggle append-to-body behavior
