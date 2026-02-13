@@ -1,0 +1,39 @@
+<span class="text-left font-medium text-xs leading-normal text-[#C10007] mt-0.5 h-[1px] block">
+  @if (control && control.invalid && (control.dirty || control.touched)) {
+    @if (control.errors?.['required']) {
+      <span>
+          {{ label }} is required.
+        </span>
+    }
+    @else if (control.errors?.['minlength']) {
+      <span>
+          {{ label }} must be at least
+        {{ control.errors?.['minlength']?.requiredLength }} characters long.
+        </span>
+    }
+    @else if (control.errors?.['maxlength']) {
+      <span>
+        {{ label }} cannot exceed
+        {{ control.errors?.['maxlength']?.requiredLength }} characters.
+      </span>
+    }
+    @else if (control.errors?.['pattern']) {
+      <span>
+          {{ label }} contains invalid characters.
+        </span>
+    } @else if (control.errors?.['min']) {
+      <span>
+          {{ label }} must be at least {{ control.errors?.['min'].min }}.
+        </span>
+    } @else if (control.errors?.['max']) {
+      <span>
+          {{ label }} cannot be greater than {{ control.errors?.['max'].max }}.
+        </span>
+    }
+
+  } @else if (showError) {
+    <span>
+       {{ errorMessage }}
+    </span>
+  }
+</span>

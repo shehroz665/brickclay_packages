@@ -60,3 +60,6 @@ export { getDialogPanelAnimation, getDialogBackdropAnimation } from './lib/dialo
 
 //Tooltip
 export * from './lib/tooltip/tooltip.directive';
+
+//Validator
+export * from './lib/validator/validator';
