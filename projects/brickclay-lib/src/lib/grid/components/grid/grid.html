@@ -71,12 +71,12 @@
             <div class="flex items-center justify-center gap-1.5">
               @for (action of actions; track action.name) {
                 @if (action.hasPermission) {
-                    <!-- appTooltip="{{ action.tooltip }}"
-                    appTooltipPosition="top"                   -->
-                  <button
+                                    
+                  <button 
+                    bkTooltip="{{ action.tooltip }}"
+                    bkTooltipPosition="top"  
                     class="size-6 flex items-center justify-center rounded hover:bg-[#F8F8FA]"
                     (click)="emitAction(action, row)"
-
                   >
                     <img
                       [src]="action.icon"
