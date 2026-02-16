@@ -28,7 +28,8 @@
     "src/lib/avatar-profile/avatar-profile.css",
     "schematics/**/*.json",
     "schematics/**/*.js",
-    "src/lib/hierarchical-select/hierarchical-select.css"
+    "src/lib/hierarchical-select/hierarchical-select.css",
+    "src/lib/toastr/toastr.css"
   ]
 }
 

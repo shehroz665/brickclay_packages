@@ -68,3 +68,7 @@ export * from './lib/validator/validator';
 export * from './lib/avatar-profile/avatar-profile';
 //Hierarchical Select
 export * from './lib/hierarchical-select/hierarchical-select';
+//Toastr
+export * from './lib/toastr/toastr';
+export * from './lib/toastr/toastr.service';
+

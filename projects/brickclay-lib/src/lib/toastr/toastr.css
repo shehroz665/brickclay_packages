@@ -1,0 +1,154 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   BkToastr – Tailwind @apply syntax
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Container ───────────────────────────────────────────────────────────── */
+.toast-container {
+  @apply fixed flex flex-col gap-3 max-w-[calc(100vw-2rem)];
+  /* Make sure nothing in the app sits above the toast + allow only toast items to capture clicks */
+  z-index: 2147483647 !important;
+  pointer-events: none;
+}
+
+/* ── Positions ── */
+.toast-container[data-position="top-right"]    { @apply top-4 right-4; }
+.toast-container[data-position="top-left"]     { @apply top-4 left-4; }
+.toast-container[data-position="top-center"]   { @apply top-4 left-1/2 -translate-x-1/2; }
+.toast-container[data-position="bottom-right"] { @apply bottom-4 right-4; }
+.toast-container[data-position="bottom-left"]  { @apply bottom-4 left-4; }
+.toast-container[data-position="bottom-center"]{ @apply bottom-4 left-1/2 -translate-x-1/2; }
+
+/* ─── Toast item (base) ───────────────────────────────────────────────────── */
+.toast-item {
+  @apply flex items-center justify-start gap-3 py-2 px-4 rounded-lg border;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.06);
+  pointer-events: auto;
+}
+
+/* ─── Severity – INFO (blue) ──────────────────────────────────────────────── */
+.toast-item[data-severity="info"] {
+  @apply bg-[#E5F3FF] border-[#E5F3FF];
+}
+.toast-item[data-severity="info"] .toast-icon path   { stroke: #1434CB; }
+.toast-item[data-severity="info"] .toast-summary     { @apply text-[#0D227F]; }
+.toast-item[data-severity="info"] .toast-action {
+  @apply bg-[#1434CB] text-white border border-[#1434CB];
+}
+/* .toast-item[data-severity="info"] .toast-action:hover { @apply bg-blue-800; } */
+.toast-item[data-severity="info"] .toast-close path   { stroke: #2563EB; }
+
+/* ─── Severity – DEFAULT (gray) ───────────────────────────────────────────── */
+.toast-item[data-severity="default"] {
+  @apply bg-white border-gray-200;
+}
+.toast-item[data-severity="default"] .toast-icon path   { stroke: #6B7080; }
+.toast-item[data-severity="default"] .toast-summary     { @apply text-[#363C51]; }
+/* .toast-item[data-severity="default"] .toast-detail      { @apply text-gray-600; } */
+.toast-item[data-severity="default"] .toast-action {
+  @apply bg-[#A1A3AE] text-white;
+}
+/* .toast-item[data-severity="default"] .toast-action:hover { @apply bg-gray-600; } */
+.toast-item[data-severity="default"] .toast-close path   { stroke: #6B7080; }
+
+/* ─── Severity – ERROR (red) ──────────────────────────────────────────────── */
+.toast-item[data-severity="error"] {
+  @apply bg-[#FFF1F1] border-[#FFF1F1];
+}
+.toast-item[data-severity="error"] .toast-icon path   { stroke: #CB1432; }
+.toast-item[data-severity="error"] .toast-summary     { @apply text-[#B41E32]; }
+/* .toast-item[data-severity="error"] .toast-detail      { @apply text-red-700; } */
+.toast-item[data-severity="error"] .toast-action {
+  @apply bg-[#CB1432] text-white;
+}
+/* .toast-item[data-severity="error"] .toast-action:hover { @apply bg-red-800; } */
+.toast-item[data-severity="error"] .toast-close path   { stroke: #CB1432; }
+
+/* ─── Severity – WARN (orange / amber) ────────────────────────────────────── */
+.toast-item[data-severity="warn"] {
+  @apply bg-[#FFEED7] border-[#FFEED7];
+}
+.toast-item[data-severity="warn"] .toast-icon path   { stroke: #F97C00; }
+.toast-item[data-severity="warn"] .toast-summary     { @apply text-[#A04C02]; }
+/* .toast-item[data-severity="warn"] .toast-detail      { @apply text-amber-700; } */
+.toast-item[data-severity="warn"] .toast-action {
+  @apply bg-[#CC6401] text-white;
+}
+/* .toast-item[data-severity="warn"] .toast-action:hover { @apply bg-amber-800; } */
+.toast-item[data-severity="warn"] .toast-close path   { stroke: #F97C00; }
+
+/* ─── Severity – SUCCESS (green) ──────────────────────────────────────────── */
+.toast-item[data-severity="success"] {
+  @apply bg-[#F1FCF3] border-[#F1FCF3];
+}
+.toast-item[data-severity="success"] .toast-icon path   { stroke: #22973F; }
+.toast-item[data-severity="success"] .toast-summary     { @apply text-[#1E7735]; }
+/* .toast-item[data-severity="success"] .toast-detail      { @apply text-green-700; } */
+.toast-item[data-severity="success"] .toast-action {
+  @apply bg-[#22973F] text-white;
+}
+.toast-item[data-severity="success"] .toast-action:hover { @apply bg-green-800; }
+.toast-item[data-severity="success"] .toast-close path   { stroke: #22973F; }
+
+/* ─── Summary / Detail / Action / Close (base) ───────────────────────────── */
+.toast-summary {
+  @apply text-sm font-medium;
+}
+
+/* .toast-detail {
+  @apply text-xs mt-0.5 leading-4;
+} */
+
+.toast-action {
+  @apply shrink-0 py-1 px-2 text-xs font-medium leading-[18px] rounded-lg cursor-pointer border-none transition-colors;
+  pointer-events: auto;
+}
+
+.toast-close {
+  @apply shrink-0 p-1 rounded cursor-pointer border-none bg-transparent transition-opacity;
+  pointer-events: auto;
+  position: relative;
+  z-index: 1;
+}
+.toast-close:hover {
+  @apply opacity-60;
+}
+
+/* Ensure SVG doesn't steal events/cursor from the button (fixes \"cursor not changing\" + click not firing) */
+.toast-close svg {
+  display: block;
+  pointer-events: none;
+}
+.toast-close * {
+  cursor: pointer;
+}
+
+/* ─── Animations ──────────────────────────────────────────────────────────── */
+.toast-enter {
+  animation: toastIn 0.3s ease-out forwards;
+}
+
+.toast-leave {
+  animation: toastOut 0.3s ease-in forwards;
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes toastOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.96);
+  }
+}
