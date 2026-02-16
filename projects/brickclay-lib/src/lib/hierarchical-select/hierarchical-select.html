@@ -1,0 +1,134 @@
+<div class="hierarchical-select-container">
+  @if (label()) {
+    <label
+      class="input-label"
+      (click)="openFromLabel($event)">
+      {{ label() }}
+      @if (required()) {
+        <span class="input-label-required">*</span>
+      }
+    </label>
+  }
+
+  <div
+    #controlWrapper
+    class="hierarchical-select-control"
+    tabindex="0"
+    [class.focused]="isOpen()"
+    [class.disabled]="isDisabled()"
+    (mousedown)="toggleDropdown($event)">
+    @if (iconSrc()) {
+      <img [src]="iconSrc()" [alt]="iconAlt()" class="shrink-0" />
+    }
+    <div class="hierarchical-value-container">
+      @if (!selected()) {
+        <div class="hierarchical-placeholder">{{ placeholder() }}</div>
+      } @else {
+        <div class="hierarchical-value-label" [style.color]="resolveColor(selected())">
+          @for (node of displayPath(); track getValue(node); let last = $last) {
+            <span>{{ getLabel(node) }}</span>
+
+            @if (!last) {
+              <svg
+                class="breadcrumb-separator"
+                width="5"
+                height="8"
+                viewBox="0 0 5 8"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M4.57142 4.00286C4.57185 3.92766 4.55744 3.85312 4.52901 3.78351C4.50057 3.71389 4.45868 3.65058 4.40572 3.59719L0.977497 0.169008C0.924381 0.115455 0.861186 0.0729493 0.79156 0.0439419C0.721933 0.0149346 0.647251 0 0.571824 0C0.496396 0 0.421714 0.0149346 0.352088 0.0439419C0.282461 0.0729493 0.219267 0.115455 0.16615 0.169008C0.059732 0.27606 0 0.420874 0 0.57182C0 0.722766 0.059732 0.867579 0.16615 0.974631L3.19442 4.00286L0.16615 7.02537C0.059732 7.13242 0 7.27723 0 7.42818C0 7.57913 0.059732 7.72394 0.16615 7.83099C0.219267 7.88454 0.282461 7.92705 0.352088 7.95606C0.421714 7.98507 0.496396 8 0.571824 8C0.647251 8 0.721933 7.98507 0.79156 7.95606C0.861186 7.92705 0.924381 7.88454 0.977497 7.83099L4.40572 4.40281C4.51128 4.29639 4.57079 4.15275 4.57142 4.00286Z"
+                  fill="#BBBDC5"/>
+              </svg>
+            }
+          }
+        </div>
+
+      }
+    </div>
+    <div class="hierarchical-actions">
+      @if (clearable() && selected() && !isDisabled()) {
+        <span class="hierarchical-clear-wrapper" (mousedown)="handleClear($event)" title="Clear">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </span>
+      }
+      <span class="hierarchical-arrow" [class.open]="isOpen()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m6 9 6 6 6-6"/>
+        </svg>
+      </span>
+    </div>
+  </div>
+
+  @if (isOpen()) {
+    <div
+      class="hierarchical-dropdown-panel"
+      [class.hierarchical-dropdown-panel-fixed]="appendToBody()"
+      [style.position]="appendToBody() ? 'fixed' : 'absolute'"
+      [style.top]="getDropdownTop()"
+      [style.left]="getDropdownLeft()"
+      [style.width]="getDropdownWidth() ?? (appendToBody() ? null : '100%')">
+      <div class="hierarchical-search">
+        <div class="hierarchical-search-wrapper">
+          <svg class="text-[#BBBDC5] mr-2" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+               viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+               stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input
+            #searchInput
+            type="text"
+            class="hierarchical-search-input"
+            [value]="searchTerm()"
+            [placeholder]="searchPlaceholder()"
+            (input)="onSearchInput($event)"
+            (click)="$event.stopPropagation()" />
+        </div>
+      </div>
+
+      @if (showBack()) {
+        <button
+          type="button"
+          class="hierarchical-back"
+          (click)="goBack(); $event.stopPropagation()">
+          <span>
+            <svg width="6" height="10" viewBox="0 0 6 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M4.59961 0.599976L0.599609 4.59998L4.59961 8.59998" stroke="#141414" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+          </span>
+          {{ backToMainText() }}
+        </button>
+      }
+
+      <div class="hierarchical-options-list">
+        @for (item of filteredItems(); track getValue(item)) {
+          <div
+            class="hierarchical-option"
+            [class.selected]="isSelected(item)"
+            (mousedown)="selectItem(item, $event)">
+            <span class="hierarchical-option-label" [style.color]="resolveColor(item)">{{ getLabel(item) }}</span>
+            @if (hasChildren(item)) {
+              <svg width="5" height="8" viewBox="0 0 5 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4.57142 4.00286C4.57185 3.92766 4.55744 3.85312 4.52901 3.78351C4.50057 3.71389 4.45868 3.65058 4.40572 3.59719L0.977497 0.169008C0.924381 0.115455 0.861186 0.0729493 0.79156 0.0439419C0.721933 0.0149346 0.647251 0 0.571824 0C0.496396 0 0.421714 0.0149346 0.352088 0.0439419C0.282461 0.0729493 0.219267 0.115455 0.16615 0.169008C0.059732 0.27606 0 0.420874 0 0.57182C0 0.722766 0.059732 0.867579 0.16615 0.974631L3.19442 4.00286L0.16615 7.02537C0.059732 7.13242 0 7.27723 0 7.42818C0 7.57913 0.059732 7.72394 0.16615 7.83099C0.219267 7.88454 0.282461 7.92705 0.352088 7.95606C0.421714 7.98507 0.496396 8 0.571824 8C0.647251 8 0.721933 7.98507 0.79156 7.95606C0.861186 7.92705 0.924381 7.88454 0.977497 7.83099L4.40572 4.40281C4.51128 4.29639 4.57079 4.15275 4.57142 4.00286Z" fill="#BBBDC5"/>
+              </svg>
+            } @else if (isSelected(item)) {
+              <svg width="10" height="7" viewBox="0 0 10 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3.72939 6.28273C3.64166 6.28324 3.55468 6.26642 3.47346 6.23324C3.39223 6.20007 3.31835 6.15118 3.25606 6.08939L0.196061 3.00273C0.0705253 2.87719 -1.32274e-09 2.70693 0 2.52939C1.32273e-09 2.35186 0.0705253 2.1816 0.196061 2.05606C0.321597 1.93053 0.49186 1.86 0.669394 1.86C0.846929 1.86 1.01719 1.93053 1.14273 2.05606L3.72939 4.64939L8.17606 0.196061C8.3016 0.0705253 8.47186 -3.49963e-09 8.64939 0C8.82693 3.49963e-09 8.99719 0.0705253 9.12273 0.196061C9.24826 0.321597 9.31879 0.49186 9.31879 0.669395C9.31879 0.846929 9.24826 1.01719 9.12273 1.14273L4.20273 6.06273C4.07921 6.19434 3.90963 6.27316 3.72939 6.28273V6.28273Z" fill="#141414"/>
+              </svg>
+            }
+          </div>
+        }
+        @if (filteredItems().length === 0) {
+          <div class="hierarchical-option-empty">No items found</div>
+        }
+      </div>
+    </div>
+  }
+</div>

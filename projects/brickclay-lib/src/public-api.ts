@@ -66,3 +66,5 @@ export * from './lib/validator/validator';
 
 //Avatar Profile
 export * from './lib/avatar-profile/avatar-profile';
+//Hierarchical Select
+export * from './lib/hierarchical-select/hierarchical-select';

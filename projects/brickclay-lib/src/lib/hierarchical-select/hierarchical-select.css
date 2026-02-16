@@ -1,0 +1,130 @@
+.hierarchical-select-container {
+  @apply relative w-full box-border;
+}
+
+.hierarchical-select-control {
+  @apply flex items-center justify-between gap-2 w-full bg-white border border-[#E3E3E7] rounded transition-all duration-200 px-3 py-2.5 cursor-pointer;
+}
+
+.hierarchical-select-control.focused {
+  @apply border-[#6B7080] shadow-none z-10;
+}
+
+.hierarchical-select-control.disabled {
+  @apply bg-[#F4F4F6] cursor-not-allowed opacity-60;
+}
+
+.hierarchical-value-container {
+  @apply flex flex-1 items-center flex-wrap gap-1 relative overflow-hidden h-full min-w-0;
+}
+
+.hierarchical-placeholder {
+  @apply text-[#6B7080] font-normal text-sm truncate w-full pointer-events-none;
+}
+
+.hierarchical-value-label {
+  @apply font-normal text-sm leading-[18px] text-[#141414] truncate w-full flex items-center;
+}
+
+.hierarchical-actions {
+  @apply flex items-center gap-2 flex-shrink-0;
+}
+
+.hierarchical-clear-wrapper {
+  @apply text-gray-400 hover:text-red-500 cursor-pointer;
+}
+
+.hierarchical-arrow {
+  @apply flex-shrink-0 text-gray-400 transition-transform duration-200;
+}
+
+.hierarchical-arrow.open {
+  @apply rotate-180;
+}
+
+.hierarchical-dropdown-panel {
+  @apply absolute left-0 top-[calc(100%+4px)] w-full min-w-[250px] max-w-[320px] bg-white border border-[#E3E3E7] rounded-xl shadow-lg z-[99] overflow-hidden cursor-default p-2.5;
+}
+
+.hierarchical-dropdown-panel-fixed {
+  z-index: 10050;
+}
+
+.hierarchical-search {
+  @apply px-2 pt-2;
+}
+
+.hierarchical-search-wrapper {
+  @apply flex items-center border border-[#E3E3E7] rounded-md px-3 py-[7px] bg-white transition-colors focus-within:border-[#6B7080];
+}
+
+.hierarchical-search-input {
+  @apply w-full outline-none font-normal text-sm text-[#141414] placeholder-[#A1A3AE] bg-transparent;
+}
+
+.hierarchical-back {
+  @apply w-full text-left px-2.5 py-2 text-sm text-[#141414] hover:bg-[#F8F8F8] rounded-md transition-colors mt-1 flex items-center gap-1.5;
+}
+
+.hierarchical-options-list {
+  @apply max-h-60 overflow-auto relative flex flex-col gap-0.5 mt-1;
+}
+
+.hierarchical-option {
+  @apply flex items-center justify-between gap-2 p-2.5 cursor-pointer transition-colors font-normal text-sm text-[#141414] rounded-md;
+}
+
+.hierarchical-option:hover,
+.hierarchical-option.selected {
+  @apply bg-[#F8F8F8];
+}
+
+.hierarchical-option-label {
+  @apply flex-1 truncate;
+}
+
+.hierarchical-option-chevron {
+  @apply flex-shrink-0 text-[#6B7080];
+}
+
+.hierarchical-option-check {
+  @apply flex-shrink-0 text-[#141414];
+}
+
+.hierarchical-option-empty {
+  @apply px-3 py-2 text-gray-400 cursor-default text-sm;
+}
+
+.input-label {
+  @apply text-sm font-medium text-[#141414] tracking-[-0.28px] mb-1.5 inline-block;
+}
+
+.input-label-required {
+  @apply text-[#E7000B];
+}
+
+.hierarchical-options-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.hierarchical-options-list::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 8px;
+  width: 8px;
+}
+
+.hierarchical-options-list::-webkit-scrollbar-thumb {
+  background: #D6D7DC;
+  border-radius: 8px;
+  transition: 0.3s ease-in-out;
+}
+
+.hierarchical-options-list::-webkit-scrollbar-thumb:hover {
+  background: #909090;
+}
+
+.breadcrumb-separator {
+  margin: 0 6px;
+  flex-shrink: 0;
+}
+
