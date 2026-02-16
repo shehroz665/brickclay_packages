@@ -3,14 +3,14 @@
  *
  * Architecture Decision:
  * ─────────────────────
- * Our `DialogConfig` mirrors the fields from CDK's `DialogConfig` that we
+ * Our `BkDialogConfig` mirrors the fields from CDK's `DialogConfig` that we
  * expose, plus adds custom animation properties powered by WAAPI.
  *
- * When `DialogService.open()` is called these values are:
+ * When `BkDialogService.open()` is called these values are:
  *  1. Merged with global defaults and per-call overrides.
  *  2. Mapped onto CDK's native `DialogConfig` for overlay, backdrop, scroll,
  *     position, ARIA, and focus-trap management.
- *  3. Passed to `DialogContainerComponent` via an internal token for
+ *  3. Passed to `BkDialogContainerComponent` via an internal token for
  *     animation playback and position offsets.
  *
  * CDK handles: unique IDs, z-index stacking, scroll blocking, focus trap,
@@ -26,7 +26,7 @@ import { ScrollStrategy } from '@angular/cdk/overlay';
  * Built-in WAAPI animation presets.
  * 'none' disables animation entirely.
  */
-export type DialogAnimation =
+export type BkDialogAnimation =
   | 'none'
   | 'fade'
   | 'zoom'
@@ -42,7 +42,7 @@ export type DialogAnimation =
  * When provided, the dialog shifts from the default centred position.
  * Internally this is mapped to CDK's `GlobalPositionStrategy`.
  */
-export interface DialogPosition {
+export interface BkDialogPosition {
   top?: string;
   bottom?: string;
   left?: string;
@@ -51,7 +51,7 @@ export interface DialogPosition {
 
 // ──── Main Config ────────────────────────────────────────────────────────
 
-export interface DialogConfig<D = unknown> {
+export interface BkDialogConfig<D = unknown> {
   // ── Identity ──────────────────────────────────────────────────────────
   /**
    * Unique dialog identifier.
@@ -108,7 +108,7 @@ export interface DialogConfig<D = unknown> {
 
   // ── Animation (WAAPI) ─────────────────────────────────────────────────
   /** Panel animation preset.  Default `'fade'`. */
-  animation?: DialogAnimation;
+  animation?: BkDialogAnimation;
   /** Enter animation duration in ms.  Default `200`. */
   animationDurationEnter?: number;
   /** Leave animation duration in ms.  Default `150`. */
@@ -116,7 +116,7 @@ export interface DialogConfig<D = unknown> {
 
   // ── Position ──────────────────────────────────────────────────────────
   /** Position offsets — moves the dialog from its default centred position. */
-  position?: DialogPosition;
+  position?: BkDialogPosition;
 
   // ── Accessibility ─────────────────────────────────────────────────────
   role?: 'dialog' | 'alertdialog';
@@ -140,7 +140,7 @@ export interface DialogConfig<D = unknown> {
 
 // ──── Defaults ───────────────────────────────────────────────────────────
 
-export const DEFAULT_DIALOG_CONFIG: DialogConfig = {
+export const BK_DEFAULT_DIALOG_CONFIG: BkDialogConfig = {
   id: undefined,
   width: undefined,
   height: undefined,

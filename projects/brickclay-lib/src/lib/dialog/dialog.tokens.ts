@@ -12,13 +12,13 @@
  *   as before.
  *
  * • `INTERNAL_DIALOG_CONFIG` — Internal-only token used to pass our
- *   full `DialogConfig` (including animation fields) to the custom
- *   `DialogContainerComponent`.  Not part of the public API.
+ *   full `BkDialogConfig` (including animation fields) to the custom
+ *   `BkDialogContainerComponent`.  Not part of the public API.
  */
 
 import { InjectionToken } from '@angular/core';
 import { DIALOG_DATA as CDK_DIALOG_DATA } from '@angular/cdk/dialog';
-import { DialogConfig } from './dialog-config';
+import { BkDialogConfig } from './dialog-config';
 
 // ──── Public ─────────────────────────────────────────────────────────────
 
@@ -31,10 +31,10 @@ import { DialogConfig } from './dialog-config';
  *
  * Usage inside a dialog component:
  * ```ts
- * constructor(@Inject(DIALOG_DATA) public data: MyDataType) {}
+ * constructor(@Inject(BK_DIALOG_DATA) public data: MyDataType) {}
  * ```
  */
-export const DIALOG_DATA = CDK_DIALOG_DATA;
+export const BK_DIALOG_DATA = CDK_DIALOG_DATA;
 
 /**
  * Optional token for providing global dialog defaults at the
@@ -43,22 +43,22 @@ export const DIALOG_DATA = CDK_DIALOG_DATA;
  * Usage in `app.config.ts` or a module's `providers` array:
  * ```ts
  * providers: [
- *   { provide: DIALOG_GLOBAL_CONFIG, useValue: { animation: 'zoom', width: '600px' } }
+ *   { provide: BK_DIALOG_GLOBAL_CONFIG, useValue: { animation: 'zoom', width: '600px' } }
  * ]
  * ```
  */
-export const DIALOG_GLOBAL_CONFIG = new InjectionToken<DialogConfig>(
-  'DIALOG_GLOBAL_CONFIG',
+export const BK_DIALOG_GLOBAL_CONFIG = new InjectionToken<BkDialogConfig>(
+  'BK_DIALOG_GLOBAL_CONFIG',
 );
 
 // ──── Internal ───────────────────────────────────────────────────────────
 
 /**
- * Internal token that carries our full `DialogConfig` (with animation
- * settings, position offsets, etc.) into the `DialogContainerComponent`.
+ * Internal token that carries our full `BkDialogConfig` (with animation
+ * settings, position offsets, etc.) into the `BkDialogContainerComponent`.
  *
  * @internal — not exported from the barrel; do not depend on it.
  */
-export const INTERNAL_DIALOG_CONFIG = new InjectionToken<DialogConfig>(
-  'INTERNAL_DIALOG_CONFIG',
+export const BK_INTERNAL_DIALOG_CONFIG = new InjectionToken<BkDialogConfig>(
+  'BK_INTERNAL_DIALOG_CONFIG',
 );

@@ -1,0 +1,86 @@
+<div class="avatar-profile-container" [ngClass]="sizeClasses">
+  @if (label) {
+    <label class="avatar-profile-label">
+      {{ label }}
+      @if (required) {
+        <span class="avatar-profile-label-required">*</span>
+      }
+    </label>
+  }
+
+  <div class="flex gap-4 justify-end">
+    <div
+    [ngClass]="containerClasses"
+    [bkTooltip]="name"
+    [bkTooltipPosition]="'top'"
+  >
+
+      <!-- Loading overlay -->
+      @if (loading) {
+        <div class="absolute inset-0 flex items-center justify-center z-10 rounded-full bg-white/60">
+          <div class="w-5 h-5 border-2 border-[#141414] border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      }
+
+      @if (displaySrc && !imageLoadFailed) {
+        <img
+          [src]="displaySrc"
+          [alt]="alt"
+          class="avatar-img"
+          (error)="onImageError()"
+        />
+      }
+
+      @else if (fallback === 'camera') {
+        <svg class="placeholder-icon" width="23" height="24" viewBox="0 0 23 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18.3843 4.66667C17.6726 4.66667 17.0193 4.25833 16.6926 3.62833L15.8526 1.93667C15.316 0.875 13.916 0 12.726 0H10.0543C8.85264 0 7.45264 0.875 6.91598 1.93667L6.07598 3.62833C5.74931 4.25833 5.09598 4.66667 4.38431 4.66667C1.85264 4.66667 -0.154023 6.80167 0.00931005 9.32167L0.615977 18.9583C0.755977 21.3617 2.05098 23.3333 5.27098 23.3333H17.4976C20.7176 23.3333 22.001 21.3617 22.1526 18.9583L22.7593 9.32167C22.9226 6.80167 20.916 4.66667 18.3843 4.66667ZM9.63431 6.125H13.1343C13.6126 6.125 14.0093 6.52167 14.0093 7C14.0093 7.47833 13.6126 7.875 13.1343 7.875H9.63431C9.15598 7.875 8.75931 7.47833 8.75931 7C8.75931 6.52167 9.15598 6.125 9.63431 6.125ZM11.3843 18.8067C9.21431 18.8067 7.44098 17.045 7.44098 14.8633C7.44098 12.6817 9.20264 10.92 11.3843 10.92C13.566 10.92 15.3276 12.6817 15.3276 14.8633C15.3276 17.045 13.5543 18.8067 11.3843 18.8067Z" fill="#6B7080"/>
+        </svg>
+      }
+
+      @else if (showInitials) {
+        <span class="avatar-text">
+      {{ initials }}
+    </span>
+      }
+
+      @else {
+        <svg class="placeholder-icon" viewBox="0 0 32 32" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" > <g clip-path="url(#clip0)"> <path d="M16 16c3.682 0 6.667-2.985 6.667-6.667S19.682 2.667 16 2.667 9.333 5.651 9.333 9.333 12.318 16 16 16Z" stroke="#363C51" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /> <path d="M27.453 29.333C27.453 24.173 22.32 20 16 20S4.547 24.173 4.547 29.333" stroke="#363C51" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /> </g> <defs> <clipPath id="clip0"> <rect width="32" height="32" fill="white" /> </clipPath> </defs> </svg>
+      }
+
+      <!-- Remove badge -->
+      @if (showRemoveButton) {
+        <button
+          type="button"
+          class="remove-badge"
+          (click)="onRemove()"
+          aria-label="Remove avatar"
+        >
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 1L9 9M9 1L1 9" stroke="#6B7080" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      }
+
+    </div>
+    <div class="flex flex-col gap-2 justify-end items-start">
+      @if (editable) {
+        <label class="upload-button cursor-pointer">
+          {{ uploadLabel }}
+          <input
+            type="file"
+            class="hidden"
+            [accept]="accept"
+            [disabled]="disabled"
+            (change)="onFileSelected($event)"
+          />
+        </label>
+      }
+      @if (!hasError && hint) {
+        <p class="profile-size">{{ hint }}</p>
+      }
+      @if (hasError && errorMessage) {
+        <p class="avatar-profile-error">{{ errorMessage }}</p>
+      }
+    </div>
+  </div>
+</div>

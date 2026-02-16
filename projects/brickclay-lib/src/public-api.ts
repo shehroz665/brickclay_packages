@@ -44,18 +44,18 @@ export * from './lib/tabs/tabs';
 
 //Dialog system
 export { BkDialogModule } from './lib/dialog/dialog.module';
-export { DialogService } from './lib/dialog/dialog.service';
-export { DialogRef } from './lib/dialog/dialog-ref';
-export { DIALOG_DATA, DIALOG_GLOBAL_CONFIG } from './lib/dialog/dialog.tokens';
-export type { DialogConfig, DialogPosition, DialogAnimation } from './lib/dialog/dialog-config';
-export { DEFAULT_DIALOG_CONFIG } from './lib/dialog/dialog-config';
+export { BkDialogService } from './lib/dialog/dialog.service';
+export { BkDialogRef } from './lib/dialog/dialog-ref';
+export { BK_DIALOG_DATA, BK_DIALOG_GLOBAL_CONFIG } from './lib/dialog/dialog.tokens';
+export type { BkDialogConfig, BkDialogPosition, BkDialogAnimation } from './lib/dialog/dialog-config';
+export { BK_DEFAULT_DIALOG_CONFIG } from './lib/dialog/dialog-config';
 export {
   BkDialogTitle,
   BkDialogContent,
   BkDialogActions,
   BkDialogClose,
 } from './lib/dialog/dialog-content-directives';
-export type { AnimationKeyframes } from './lib/dialog/dialog-animations';
+export type { BkAnimationKeyframes } from './lib/dialog/dialog-animations';
 export { getDialogPanelAnimation, getDialogBackdropAnimation } from './lib/dialog/dialog-animations';
 
 //Tooltip
@@ -63,3 +63,6 @@ export * from './lib/tooltip/tooltip.directive';
 
 //Validator
 export * from './lib/validator/validator';
+
+//Avatar Profile
+export * from './lib/avatar-profile/avatar-profile';

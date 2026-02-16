@@ -25,6 +25,7 @@
     "src/lib/tabs/tabs.css",
     "src/lib/dialog/dialog-container.css",
     "src/lib/tooltip/tooltip-directive.css",
+    "src/lib/avatar-profile/avatar-profile.css",
     "schematics/**/*.json",
     "schematics/**/*.js"
   ]

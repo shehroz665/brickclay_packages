@@ -11,13 +11,13 @@
  *  3. Future presets can be added without touching the component template.
  *
  * Each preset exports an `enter` and `leave` keyframe array plus a
- * recommended timing object. The DialogContainerComponent plays these
+ * recommended timing object. The BkDialogContainerComponent plays these
  * via `element.animate()`.
  */
 
-import { DialogAnimation } from './dialog-config';
+import { BkDialogAnimation } from './dialog-config';
 
-export interface AnimationKeyframes {
+export interface BkAnimationKeyframes {
   keyframes: Keyframe[];
   options: KeyframeAnimationOptions;
 }
@@ -26,10 +26,10 @@ export interface AnimationKeyframes {
  * Build enter/leave WAAPI keyframes for the dialog **panel** element.
  */
 export function getDialogPanelAnimation(
-  preset: DialogAnimation,
+  preset: BkDialogAnimation,
   enterDuration: number,
   leaveDuration: number
-): { enter: AnimationKeyframes; leave: AnimationKeyframes } {
+): { enter: BkAnimationKeyframes; leave: BkAnimationKeyframes } {
   const easeEnter = 'cubic-bezier(0.0, 0.0, 0.2, 1)'; // decelerate
   const easeLeave = 'cubic-bezier(0.4, 0.0, 1, 1)';    // accelerate
 
@@ -172,7 +172,7 @@ export function getDialogPanelAnimation(
 export function getDialogBackdropAnimation(
   enterDuration: number,
   leaveDuration: number
-): { enter: AnimationKeyframes; leave: AnimationKeyframes } {
+): { enter: BkAnimationKeyframes; leave: BkAnimationKeyframes } {
   return {
     enter: {
       keyframes: [{ opacity: 0 }, { opacity: 1 }],

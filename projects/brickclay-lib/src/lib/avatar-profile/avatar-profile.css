@@ -1,0 +1,80 @@
+/* =========================
+   Container
+========================= */
+.avatar-profile-container {
+  @apply flex flex-col gap-1.5;
+}
+
+/* =========================
+   Label
+========================= */
+.avatar-profile-label {
+  @apply text-sm font-medium text-[#141414];
+}
+
+.avatar-profile-label-required {
+  @apply text-[#E7000B] ml-0.5;
+}
+
+/* =========================
+   Error message
+========================= */
+.avatar-profile-error {
+  @apply text-xs text-[#E7000B] font-normal;
+}
+
+/* =========================
+   Base Avatar
+========================= */
+.avatar-profile {
+  @apply relative inline-flex items-center justify-center
+  rounded-full flex-shrink-0 select-none shadow-lg
+  transition-all duration-200 border-[3px] border-white bg-[#F9FAFA];
+}
+
+.avatar-profile .avatar-img {
+  @apply w-full h-full object-cover rounded-full;
+}
+.upload-button { @apply font-medium text-[#6B7080] border border-[#E3E3E7] rounded shadow-sm;}
+.sm .upload-button {  @apply text-[12px] leading-[18px] px-2 py-3;}
+.md .upload-button {  @apply text-[14px] leading-[20px] px-[10px] py-2.5;}
+.lg .upload-button {  @apply text-[16px] leading-[24px] px-[18px] py-2.5;}
+.xl .upload-button {  @apply text-[16px] leading-[24px] px-5 py-3;}
+
+.profile-size { @apply font-medium text-[#6B7080];}
+.sm .profile-size {  @apply text-[10px] leading-[14px];}
+.md .profile-size {  @apply text-[12px] leading-[18px] ;}
+.lg .profile-size {  @apply text-[14px] leading-[20px];}
+.xl .profile-size {  @apply text-[16px] leading-[24px] ;}
+
+
+.avatar-profile.sm .avatar-text {  @apply font-medium text-[30px] leading-[38px];}
+.avatar-profile.md .avatar-text {  @apply font-medium text-[36px] leading-[44px];}
+.avatar-profile.lg .avatar-text {  @apply font-medium text-[45px] leading-[55px];}
+.avatar-profile.xl .avatar-text {  @apply font-medium text-[60px] leading-[72px];}
+
+/* =========================
+   Sizes (container + text)
+========================= */
+.avatar-profile{ @apply font-medium text-[#6B7080];}
+.avatar-profile.sm  { @apply size-[72px] text-sm; }
+.avatar-profile.md  { @apply size-[96px] text-base; }
+.avatar-profile.lg  { @apply size-[120px] text-[18px] leading-[26px]; }
+.avatar-profile.xl  { @apply size-[160px] text-xl; }
+
+/* =========================
+   Placeholder Icon Sizes
+========================= */
+.avatar-profile.sm  .placeholder-icon { @apply size-[28px]; }
+.avatar-profile.md  .placeholder-icon { @apply size-[42px]; }
+.avatar-profile.lg  .placeholder-icon { @apply size-[52px]; }
+.avatar-profile.xl .placeholder-icon { @apply size-[65px]; }
+
+/* =========================
+   Remove Badge
+========================= */
+.remove-badge {
+  @apply absolute top-0 right-0 w-5 h-5 bg-white rounded-full shadow-md
+         flex items-center justify-center cursor-pointer
+         hover:bg-gray-50 transition z-20 border-0 p-0;
+}

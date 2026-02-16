@@ -36,8 +36,8 @@ import {
 } from '@angular/core';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 
-import { DialogRef } from './dialog-ref';
-import { DialogService } from './dialog.service';
+import { BkDialogRef } from './dialog-ref';
+import { BkDialogService } from './dialog.service';
 
 // ──── ID Generation ──────────────────────────────────────────────────────
 
@@ -46,7 +46,7 @@ let nextTitleId = 0;
 // ──── Helper ─────────────────────────────────────────────────────────────
 
 /**
- * Finds the closest `DialogRef` by walking up the DOM from the given
+ * Finds the closest `BkDialogRef` by walking up the DOM from the given
  * element to the nearest `bk-dialog-container` host, then matching its
  * `id` attribute against the currently open dialogs.
  *
@@ -58,8 +58,8 @@ let nextTitleId = 0;
  */
 function getClosestDialog(
   element: ElementRef<HTMLElement>,
-  openDialogs: readonly DialogRef[],
-): DialogRef | null {
+  openDialogs: readonly BkDialogRef[],
+): BkDialogRef | null {
   let parent = element.nativeElement.parentElement;
   while (parent && !parent.classList.contains('bk-dialog-container')) {
     parent = parent.parentElement;
@@ -72,16 +72,16 @@ function getClosestDialog(
 // ──── Base for Title / Actions ───────────────────────────────────────────
 
 /**
- * Shared abstract base that resolves the owning `DialogRef` (via DI or
+ * Shared abstract base that resolves the owning `BkDialogRef` (via DI or
  * DOM walk) and invokes `_onAdd()` / `_onRemove()` lifecycle hooks.
  *
  * Same pattern as Material's internal `MatDialogLayoutSection`.
  */
 @Directive({ standalone: true })
 abstract class BkDialogLayoutSection implements OnInit, OnDestroy {
-  protected _dialogRef: DialogRef | null = inject(DialogRef, { optional: true });
+  protected _dialogRef: BkDialogRef | null = inject(BkDialogRef, { optional: true });
   protected _elementRef = inject(ElementRef<HTMLElement>);
-  private _dialogService = inject(DialogService);
+  private _dialogService = inject(BkDialogService);
 
   ngOnInit(): void {
     if (!this._dialogRef) {
@@ -259,9 +259,9 @@ export class BkDialogActions extends BkDialogLayoutSection {
   },
 })
 export class BkDialogClose implements OnInit, OnChanges {
-  private _dialogRef: DialogRef | null = inject(DialogRef, { optional: true });
+  private _dialogRef: BkDialogRef | null = inject(BkDialogRef, { optional: true });
   private _elementRef = inject(ElementRef<HTMLElement>);
-  private _dialogService = inject(DialogService);
+  private _dialogService = inject(BkDialogService);
 
   /** Screen-reader label for the button. */
   @Input('aria-label') ariaLabel?: string;

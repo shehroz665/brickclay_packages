@@ -10,7 +10,7 @@
  *
  *  • All components/directives are **standalone**.
  *  • This module simply imports + re-exports them for convenience.
- *  • `DialogService` is `providedIn: 'root'`, so it does NOT need to
+ *  • `BkDialogService` is `providedIn: 'root'`, so it does NOT need to
  *    be listed in `providers` here — it is tree-shakeable and available
  *    app-wide automatically.
  *
@@ -41,7 +41,7 @@ import { DialogModule as CdkDialogModule } from '@angular/cdk/dialog';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
 
-import { DialogContainerComponent } from './dialog-container';
+import { BkDialogContainerComponent } from './dialog-container';
 import {
   BkDialogTitle,
   BkDialogContent,
@@ -57,7 +57,7 @@ import {
     PortalModule,
 
     // ── Our standalone pieces ───────────────────────────────────────
-    DialogContainerComponent,
+    BkDialogContainerComponent,
     BkDialogTitle,
     BkDialogContent,
     BkDialogActions,
