@@ -1,4 +1,4 @@
-<div style="max-width: 300px;">
+<div style="max-width: 300px; display: flex; gap: 20px">
   <bk-custom-calendar
             [startDate]="validFromDate"
             (selected)="onCalendarSelected($event, 'single-date')"
@@ -6,7 +6,25 @@
             [singleDatePicker]="true"
             [showRanges]="false"
             [enableTimepicker]="false"
+            [hasError]="true"
+            [appendToBody]="true"
+            [errorMessage]="'This is a error message'"
             placeholder="Select a date"></bk-custom-calendar>
+
+
+<bk-input
+        [id]="'search-input-3'"
+        [name]="'search-input-3'"
+
+        [type]="'text'"
+
+        [disabled]="false"
+        placeholder="Search here..."
+        [iconSrc]="'../../assets/images/icons/global/search-input.svg'"
+        [iconOrientation]="'right'"
+
+>
+</bk-input>
 </div>
 
 <button (click)="add2Days()">Set Date to 2 days later</button>

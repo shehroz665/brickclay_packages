@@ -1,12 +1,13 @@
 <div class="calendar-container relative" [class.open]="show" [class.inline-mode]="inline">
   <!-- Input field -->
-  <div class="input-wrapper" *ngIf="!inline">
+  <div #inputWrapper class="input-wrapper" *ngIf="!inline">
     <input
       type="text"
       (click)="toggle()"
       readonly
       [value]="getDisplayValue()"
       [placeholder]="placeholder"
+      [class.hasError]="hasError"
       class="calendar-input">
       <!-- *ngIf="!getDisplayValue()" -->
 
@@ -19,9 +20,14 @@
   <!-- Calendar Popup / Inline -->
   <div class="calendar-popup"
        [class.inline-calendar]="inline"
+       [class.append-to-body]="appendToBody && !inline"
+       [style.position]="appendToBody && !inline ? 'fixed' : null"
+       [style.top]="appendToBody && !inline && drop !== 'up' ? dropdownStyle.top : null"
+       [style.bottom]="appendToBody && !inline && drop === 'up' ? dropdownStyle.bottom : null"
+       [style.left]="appendToBody && !inline ? dropdownStyle.left : null"
        [ngClass]="{
-         'position-right': !inline && opens === 'right',
-         'position-center': !inline && opens === 'center',
+         'position-right': !inline && !appendToBody && opens === 'right',
+         'position-center': !inline && !appendToBody && opens === 'center',
          'drop-up': !inline && drop === 'up',
          'has-ranges': showRanges && customRanges,
          'dual-calendar-mode': dualCalendar
@@ -228,3 +234,7 @@
 
   </div>
 </div>
+
+@if (hasError){
+<p class="calender-error">{{errorMessage}}</p>
+}

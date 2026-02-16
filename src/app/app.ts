@@ -6,6 +6,7 @@ import { CalendarModule } from './../../projects/brickclay-lib/src/lib/calender/
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CalendarSelection } from '../../projects/brickclay-lib/src/lib/calender/components/custom-calendar/custom-calendar.component';
+import {BkInput} from "../../projects/brickclay-lib/src/lib/input/input";
 export class FuelCardModel {
     fuelCardKey!: number;
     lkpFuelCardTypeKey?: number;
@@ -21,7 +22,7 @@ export class FuelCardModel {
 
 @Component({
   selector: 'app-root',
-  imports: [CalendarModule, BkToggle, FormsModule, BkRadioButton, BkCheckbox],
+  imports: [CalendarModule, BkToggle, FormsModule, BkRadioButton, BkCheckbox, BkInput],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
