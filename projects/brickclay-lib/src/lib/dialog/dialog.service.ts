@@ -1,5 +1,5 @@
 /**
- * DialogService — The core engine of the custom dialog system.
+ * BkDialogService — The core engine of the custom dialog system.
  *
  * Architecture Decision:
  * ─────────────────────
@@ -10,10 +10,10 @@
  *     z-index stacking, and unique ID management — battle-tested infra
  *     shared with every Angular Material dialog in the ecosystem.
  *
- *  2. We provide our own `DialogContainerComponent` (extending
+ *  2. We provide our own `BkDialogContainerComponent` (extending
  *     `CdkDialogContainer`) for WAAPI animations and panel styling.
  *
- *  3. We wrap CDK's `DialogRef` in our own `DialogRef` to add the
+ *  3. We wrap CDK's `DialogRef` in our own `BkDialogRef` to add the
  *     leave-animation step before CDK tears down the overlay, and to
  *     expose the same familiar API shape (`afterClosed()`, etc.).
  *
@@ -36,7 +36,7 @@
  * ─────────────
  * CDK manages the full lifecycle: on close it detaches the overlay,
  * destroys the container, and disposes the overlay ref.
- * Our DialogRef subjects complete via CDK's `closed` observable,
+ * Our BkDialogRef subjects complete via CDK's `closed` observable,
  * preventing lingering subscriptions.
  */
 
@@ -49,20 +49,20 @@ import { Dialog } from '@angular/cdk/dialog';
 import { Overlay } from '@angular/cdk/overlay';
 import { filter } from 'rxjs';
 
-import { DialogConfig, DEFAULT_DIALOG_CONFIG } from './dialog-config';
-import { DialogRef } from './dialog-ref';
-import { DialogContainerComponent } from './dialog-container';
-import { DIALOG_GLOBAL_CONFIG, INTERNAL_DIALOG_CONFIG } from './dialog.tokens';
+import { BkDialogConfig, BK_DEFAULT_DIALOG_CONFIG } from './dialog-config';
+import { BkDialogRef } from './dialog-ref';
+import { BkDialogContainerComponent } from './dialog-container';
+import { BK_DIALOG_GLOBAL_CONFIG, BK_INTERNAL_DIALOG_CONFIG } from './dialog.tokens';
 
 @Injectable({ providedIn: 'root' })
-export class DialogService {
+export class BkDialogService {
   private readonly _cdkDialog = inject(Dialog);
   private readonly _overlay = inject(Overlay);
-  private readonly _globalConfig: DialogConfig | null =
-    inject(DIALOG_GLOBAL_CONFIG, { optional: true });
+  private readonly _globalConfig: BkDialogConfig | null =
+    inject(BK_DIALOG_GLOBAL_CONFIG, { optional: true });
 
   /** Stack of currently open dialog refs (most recent = last). */
-  private readonly _openDialogRefs: DialogRef<any, any>[] = [];
+  private readonly _openDialogRefs: BkDialogRef<any, any>[] = [];
 
   // ════════════════════════════════════════════════════════════════════
   //  Public API
@@ -74,7 +74,7 @@ export class DialogService {
    * @param component  The component class to render inside the dialog.
    * @param config     Optional per-dialog configuration (merged on top
    *                   of global and default settings).
-   * @returns          A strongly-typed `DialogRef` to interact with.
+   * @returns          A strongly-typed `BkDialogRef` to interact with.
    *
    * @example
    * ```ts
@@ -87,17 +87,17 @@ export class DialogService {
    */
   open<T, D = unknown, R = unknown>(
     component: Type<T>,
-    config?: DialogConfig<D>,
-  ): DialogRef<T, R> {
+    config?: BkDialogConfig<D>,
+  ): BkDialogRef<T, R> {
     // ── 1. Merge configs: DEFAULT ← GLOBAL ← per-call ──────────────
     const mergedConfig = {
-      ...DEFAULT_DIALOG_CONFIG,
+      ...BK_DEFAULT_DIALOG_CONFIG,
       ...(this._globalConfig ?? {}),
       ...(config ?? {}),
-    } as DialogConfig<D>;
+    } as BkDialogConfig<D>;
 
     // ── 2. Prepare the return ref (set inside providers callback) ───
-    let ourRef!: DialogRef<T, R>;
+    let ourRef!: BkDialogRef<T, R>;
 
     // ── 3. Build CDK-native config ──────────────────────────────────
     const cdkConfig = {
@@ -145,30 +145,30 @@ export class DialogService {
 
       // ── Custom container ──────────────────────────────────────────
       container: {
-        type: DialogContainerComponent,
+        type: BkDialogContainerComponent,
         providers: () => [
-          { provide: INTERNAL_DIALOG_CONFIG, useValue: mergedConfig },
+          { provide: BK_INTERNAL_DIALOG_CONFIG, useValue: mergedConfig },
         ],
       },
 
       // ── Provider callback ─────────────────────────────────────────
       // Runs after the container is created but before the user
-      // component.  We create our `DialogRef` wrapper here and make
+      // component.  We create our `BkDialogRef` wrapper here and make
       // it available for injection in the user component.
       providers: (
         cdkRef: any,
         _cdkConfig: any,
         containerInstance: any,
       ) => {
-        ourRef = new DialogRef<T, R>(cdkRef);
-        ourRef._containerInstance = containerInstance as DialogContainerComponent;
+        ourRef = new BkDialogRef<T, R>(cdkRef);
+        ourRef._containerInstance = containerInstance as BkDialogContainerComponent;
 
         // Wire up afterOpened emission.
-        (containerInstance as DialogContainerComponent).opened
+        (containerInstance as BkDialogContainerComponent).opened
           .then(() => ourRef._emitOpened());
 
         return [
-          { provide: DialogRef, useValue: ourRef },
+          { provide: BkDialogRef, useValue: ourRef },
         ];
       },
     };
@@ -204,17 +204,17 @@ export class DialogService {
   }
 
   /**
-   * Returns the `DialogRef` of the most recently opened dialog,
+   * Returns the `BkDialogRef` of the most recently opened dialog,
    * or `undefined` if none are open.
    */
-  getTopDialog(): DialogRef | undefined {
+  getTopDialog(): BkDialogRef | undefined {
     return this._openDialogRefs[this._openDialogRefs.length - 1];
   }
 
   /**
    * Get a dialog by its CDK-managed unique ID.
    */
-  getDialogById(id: string): DialogRef | undefined {
+  getDialogById(id: string): BkDialogRef | undefined {
     return this._openDialogRefs.find(r => r.id === id);
   }
 
@@ -228,10 +228,10 @@ export class DialogService {
   /**
    * Read-only snapshot of currently open dialog refs.
    * Used internally by content directives (`BkDialogTitle`, `BkDialogActions`,
-   * `BkDialogClose`) for the DOM-walk fallback when `DialogRef` is not
+   * `BkDialogClose`) for the DOM-walk fallback when `BkDialogRef` is not
    * available via injection (e.g. inside `<ng-template>`).
    */
-  get openDialogsRef(): readonly DialogRef[] {
+  get openDialogsRef(): readonly BkDialogRef[] {
     return this._openDialogRefs;
   }
 
@@ -259,7 +259,7 @@ export class DialogService {
     btnCancelText?: string;
     width?: string;
     component: Type<unknown>;
-  }): DialogRef<unknown, boolean> {
+  }): BkDialogRef<unknown, boolean> {
     return this.open<unknown, unknown, boolean>(options.component, {
       width: options.width ?? '400px',
       disableClose: true,
@@ -283,7 +283,7 @@ export class DialogService {
     btnOkText?: string;
     width?: string;
     component: Type<unknown>;
-  }): DialogRef<unknown, void> {
+  }): BkDialogRef<unknown, void> {
     return this.open<unknown, unknown, void>(options.component, {
       width: options.width ?? '400px',
       disableClose: true,
@@ -309,7 +309,7 @@ export class DialogService {
    * this gives us fine-grained control over `closeOnBackdrop` and
    * `closeOnEsc` independently.
    */
-  private _setupCloseListeners(ref: DialogRef, config: DialogConfig): void {
+  private _setupCloseListeners(ref: BkDialogRef, config: BkDialogConfig): void {
     if (config.disableClose) return;
 
     // Backdrop click
@@ -332,7 +332,7 @@ export class DialogService {
    * Build the CSS classes for the CDK overlay pane.
    * Always includes our base class; adds user-provided classes on top.
    */
-  private _buildPanelClasses(config: DialogConfig): string[] {
+  private _buildPanelClasses(config: BkDialogConfig): string[] {
     const classes = ['bk-dialog-pane'];
     if (config.panelClass) {
       if (Array.isArray(config.panelClass)) {
@@ -348,7 +348,7 @@ export class DialogService {
    * Build CDK's `GlobalPositionStrategy` from our position config.
    * Falls back to centred (both axes) when no position is specified.
    */
-  private _buildPositionStrategy(config: DialogConfig) {
+  private _buildPositionStrategy(config: BkDialogConfig) {
     const strategy = this._overlay.position().global();
 
     if (config.position?.top) {

@@ -1,5 +1,5 @@
 /**
- * DialogContainerComponent
+ * BkDialogContainerComponent
  *
  * Architecture Decision:
  * ─────────────────────
@@ -19,7 +19,7 @@
  *   • Position-offset application via CSS margin.
  *
  * This component is **never** used directly — it is created internally
- * by `DialogService` via CDK's `Dialog.open()`.
+ * by `BkDialogService` via CDK's `Dialog.open()`.
  */
 
 import {
@@ -31,8 +31,8 @@ import {
 import { CdkDialogContainer } from '@angular/cdk/dialog';
 import { CdkPortalOutlet, ComponentPortal } from '@angular/cdk/portal';
 
-import { DialogConfig } from './dialog-config';
-import { INTERNAL_DIALOG_CONFIG } from './dialog.tokens';
+import { BkDialogConfig } from './dialog-config';
+import { BK_INTERNAL_DIALOG_CONFIG } from './dialog.tokens';
 import {
   getDialogPanelAnimation,
   getDialogBackdropAnimation,
@@ -48,19 +48,19 @@ import {
     'class': 'bk-dialog-container',
   },
 })
-export class DialogContainerComponent extends CdkDialogContainer implements OnInit {
+export class BkDialogContainerComponent extends CdkDialogContainer implements OnInit {
 
   /**
    * Our full config (including animation fields).
-   * Provided by DialogService via the INTERNAL_DIALOG_CONFIG token.
+   * Provided by BkDialogService via the INTERNAL_DIALOG_CONFIG token.
    */
-  private readonly _dialogConfig: DialogConfig = inject(INTERNAL_DIALOG_CONFIG);
+  private readonly _dialogConfig: BkDialogConfig = inject(BK_INTERNAL_DIALOG_CONFIG);
 
   // ──── Opened promise ─────────────────────────────────────────────────
   /**
    * Resolves when the enter animation finishes (or immediately for 'none').
-   * `DialogService` subscribes via `.then()` to emit `afterOpened` on the
-   * `DialogRef`.
+   * `BkDialogService` subscribes via `.then()` to emit `afterOpened` on the
+   * `BkDialogRef`.
    */
   private _resolveOpened!: () => void;
   readonly opened = new Promise<void>(resolve => {
@@ -133,7 +133,7 @@ export class DialogContainerComponent extends CdkDialogContainer implements OnIn
 
   /**
    * Play the leave animation.  Returns a Promise that resolves when done.
-   * Called by `DialogRef._runCloseSequence()` before CDK tears down the
+   * Called by `BkDialogRef._runCloseSequence()` before CDK tears down the
    * overlay.
    */
   playLeaveAnimation(): Promise<void> {

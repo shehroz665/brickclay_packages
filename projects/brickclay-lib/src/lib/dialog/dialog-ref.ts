@@ -1,5 +1,5 @@
 /**
- * DialogRef — Handle returned to callers by `DialogService.open()`.
+ * BkDialogRef — Handle returned to callers by `BkDialogService.open()`.
  *
  * Architecture Decision:
  * ─────────────────────
@@ -20,7 +20,7 @@ import { Observable, Subject } from 'rxjs';
 
 /**
  * Minimal interface for the container's capabilities.
- * Avoids a direct import of `DialogContainerComponent` in this file
+ * Avoids a direct import of `BkDialogContainerComponent` in this file
  * (container imports nothing from ref, so no cycle, but this keeps
  * the coupling lightweight).
  *
@@ -34,14 +34,14 @@ export interface DialogAnimatable {
   _removeAriaLabelledBy?(id: string): void;
 }
 
-export class DialogRef<T = unknown, R = unknown> {
+export class BkDialogRef<T = unknown, R = unknown> {
   /** Unique dialog identifier (managed by CDK). */
   readonly id: string;
 
   /** Instance of the component rendered inside the dialog. */
   componentInstance!: T;
 
-  // ──── Internal wiring (set by DialogService) ──────────────────────────
+  // ──── Internal wiring (set by BkDialogService) ──────────────────────────
 
   /** @internal Container reference for leave animation. */
   _containerInstance!: DialogAnimatable;
