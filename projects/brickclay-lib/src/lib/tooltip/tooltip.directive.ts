@@ -158,43 +158,43 @@ export class BKTooltipDirective implements OnInit,OnChanges, OnDestroy {
     const hostRect = this.el.nativeElement.getBoundingClientRect();
     const tooltipRect = this.tooltipElement.getBoundingClientRect();
 
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
 
     const triangle = this.tooltipElement.querySelector('.bk-tooltip-triangle') as HTMLElement;
     const padding = 10;
 
     let top = 0, left = 0;
 
-    // Position logic
+    // Position logic — using viewport-relative coords (getBoundingClientRect)
+    // since the tooltip uses position: fixed (no scroll offset needed)
     switch (this.tooltipPosition) {
       case 'right':
       case 'left':
-        top = hostRect.top + scrollTop + hostRect.height / 2;
-        left = this.tooltipPosition === 'right'
-          ? hostRect.right + scrollLeft + padding
-          : hostRect.left + scrollLeft - tooltipRect.width - padding;
-
+        top = hostRect.top + hostRect.height / 2;
+        left =
+          this.tooltipPosition === 'right'
+            ? hostRect.right + padding
+            : hostRect.left - tooltipRect.width - padding;
+ 
         // Auto flip if out of viewport
         if (this.tooltipPosition === 'right' && left + tooltipRect.width > window.innerWidth) {
-          left = hostRect.left + scrollLeft - tooltipRect.width - padding;
+          left = hostRect.left - tooltipRect.width - padding;
         } else if (this.tooltipPosition === 'left' && left < 0) {
-          left = hostRect.right + scrollLeft + padding;
+          left = hostRect.right + padding;
         }
 
         this.setStyle(this.tooltipElement, {
           transform: 'translateY(-50%)',
         });
 
-        this.setTriangleStyles(triangle, this.tooltipPosition, left < hostRect.left + scrollLeft);
+        this.setTriangleStyles(triangle, this.tooltipPosition, left < hostRect.left);
         break;
 
       case 'top':
       case 'bottom':
-        left = hostRect.left + scrollLeft + hostRect.width / 2 - tooltipRect.width / 2;
+        left = hostRect.left  + hostRect.width / 2 - tooltipRect.width / 2;
         top = this.tooltipPosition === 'top'
-          ? hostRect.top + scrollTop - tooltipRect.height - padding
-          : hostRect.bottom + scrollTop + padding;
+          ? hostRect.top  - tooltipRect.height - padding
+          : hostRect.bottom  + padding;
 
         // Prevent overflow
         left = Math.max(10, Math.min(left, window.innerWidth - tooltipRect.width - 10));
