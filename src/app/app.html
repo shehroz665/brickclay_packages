@@ -1,16 +1,18 @@
-<div style="max-width: 300px;">
+<!-- <div style="max-width: 300px;">
   <bk-custom-calendar [(ngModel)]="calenderSelection" [required]="true" [dualCalendar]="true" [singleDatePicker]="false"
     [showRanges]="false" [enableTimepicker]="false" [displayFormat]="'MM/DD/YYYY'" placeholder="Select a date"
-    #calender="ngModel"
-    [hasError]="!!(calender?.invalid && (calender?.touched || calender?.dirty))"></bk-custom-calendar>
+    #calender="ngModel" (selected)="onCalendarSelected($event,'dual-calender')"
+    [hasError]="!!(calender?.invalid || (calender?.touched || calender?.dirty))"></bk-custom-calendar>
   <bk-validator [control]="calender" label="Date"></bk-validator>
-</div>
+  <p>{{!!calender?.invalid}} {{!!calender?.touched}} {{!!calender?.dirty}}</p>
+  <p>{{!!(calender?.invalid && (calender?.touched || calender?.dirty))}}</p>
+</div> -->
 
 <div style="max-width: 300px;">
   <bk-custom-calendar [(ngModel)]="singleDateSelection" [required]="true"  [singleDatePicker]="true"
-    [showRanges]="false" [enableTimepicker]="true" [displayFormat]="'MM/DD/YYYY'" placeholder="Select a date"
-    #singleDate="ngModel"
-    [hasError]="!!(singleDate?.invalid && (singleDate?.touched || singleDate?.dirty))"></bk-custom-calendar>
+    [showRanges]="false" [displayFormat]="'MM/DD/YYYY'" placeholder="Select a date"  [enableTimepicker]="true"
+    #singleDate="ngModel" [showCancelApply]="false" (selected)="onSingleCalenderSelected($event,'single-calender')"
+    [hasError]="singleDateHasError"></bk-custom-calendar>
   <bk-validator [control]="singleDate" label="Single Date"></bk-validator>
   <p> {{singleDateSelection | json}}</p>
 </div>

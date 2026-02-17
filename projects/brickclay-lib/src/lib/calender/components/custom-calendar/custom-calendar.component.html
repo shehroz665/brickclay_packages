@@ -223,7 +223,7 @@
     </div>
 
     <!-- FOOTER -->
-    <div class="footer" *ngIf="!inline">
+    <div class="footer" *ngIf="!inline && showCancelApply">
       <button *ngIf="showCancel" (click)="cancel()" class="btn-cancel" type="button">Cancel</button>
       <button (click)="apply()" class="btn-apply" type="button">Apply</button>
     </div>

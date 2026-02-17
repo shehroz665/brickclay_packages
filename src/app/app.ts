@@ -5,7 +5,7 @@ import { BkRadioButton } from './../../projects/brickclay-lib/src/lib/radio/radi
 import { FormsModule } from '@angular/forms';
 import { BkToggle } from './../../projects/brickclay-lib/src/lib/toggle/toggle';
 import { CalendarModule } from './../../projects/brickclay-lib/src/lib/calender/calendar.module';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, ViewChild } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -23,12 +23,11 @@ export class FuelCardModel {
 
 @Component({
   selector: 'app-root',
-  imports: [CalendarModule,  FormsModule,CommonModule,BkValidator],
+  imports: [CalendarModule, FormsModule, CommonModule, BkValidator],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
 export class App implements OnInit {
-
   singleDateSelection: CalendarSelection = new CalendarSelection();
   calenderSelection: CalendarSelection = new CalendarSelection();
 
@@ -37,6 +36,10 @@ export class App implements OnInit {
   ngOnInit(): void {
     this.calenderSelection.startDate = '2026-02-21';
     this.calenderSelection.endDate = '2026-03-22';
+
+    this.singleDateSelection.startDate='2026-02-21'
+    this.singleDateSelection.startTime='3:02 AM';
+
   }
 
   onCalendarSelected(event: any, calendarId: string) {
@@ -45,9 +48,19 @@ export class App implements OnInit {
     this.calenderSelection.endDate = event.endDate;
   }
 
-  onSingleCalenderSelected(event: any, calendarId: string){
+  onSingleCalenderSelected(event: any, calendarId: string) {
     debugger;
     this.singleDateSelection.startDate = event.startDate;
     this.singleDateSelection.endDate = event.endDate;
   }
+
+  get singleDateHasError(): boolean {
+    return  !!(
+      this.singleDateControl?.invalid &&
+      (this.singleDateControl?.touched || this.singleDateControl?.dirty)
+    );
+  }
+
+  @ViewChild('singleDate', { static: false })
+  singleDateControl!: any;
 }
