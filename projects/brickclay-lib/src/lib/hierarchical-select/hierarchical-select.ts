@@ -62,18 +62,22 @@ export class BkHierarchicalSelect implements ControlValueAccessor {
   backToMainText = input<string>('Back to Main');
   /** Search placeholder. */
   searchPlaceholder = input<string>('Search');
+  searchable = input<boolean>(false);
   /** When true, dropdown is positioned fixed and sized to the trigger (use inside modals/popups). */
   appendToBody = input<boolean>(false);
   /** Key for option color (e.g. "color"). When set, option label and selected value use this color. */
   colorKey = input<string>('');
   /** Whether to show clear button when a value is selected. */
   clearable = input<boolean>(true);
+  hasError = input<boolean>(false);
+
   /** Emit full selected node. */
   selectionChange = output<HierarchicalNode | null>();
   /** Emit value only (e.g. noteTypeKey). */
   valueChange = output<any>();
   /** Emit when clear button is clicked. */
   clear = output<any>();
+
 
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
   @ViewChild('controlWrapper') controlWrapper!: ElementRef<HTMLDivElement>;
