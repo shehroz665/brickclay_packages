@@ -1,12 +1,16 @@
 <div style="max-width: 300px;">
-  <bk-custom-calendar
-            [startDate]="validFromDate"
-            (selected)="onCalendarSelected($event, 'single-date')"
-            [dualCalendar]="false"
-            [singleDatePicker]="true"
-            [showRanges]="false"
-            [enableTimepicker]="false"
-            placeholder="Select a date"></bk-custom-calendar>
+  <bk-custom-calendar [(ngModel)]="calenderSelection" [required]="true" [dualCalendar]="true" [singleDatePicker]="false"
+    [showRanges]="false" [enableTimepicker]="false" [displayFormat]="'MM/DD/YYYY'" placeholder="Select a date"
+    #calender="ngModel"
+    [hasError]="!!(calender?.invalid && (calender?.touched || calender?.dirty))"></bk-custom-calendar>
+  <bk-validator [control]="calender" label="Date"></bk-validator>
 </div>
 
-<button (click)="add2Days()">Set Date to 2 days later</button>
+<div style="max-width: 300px;">
+  <bk-custom-calendar [(ngModel)]="singleDateSelection" [required]="true"  [singleDatePicker]="true"
+    [showRanges]="false" [enableTimepicker]="true" [displayFormat]="'MM/DD/YYYY'" placeholder="Select a date"
+    #singleDate="ngModel"
+    [hasError]="!!(singleDate?.invalid && (singleDate?.touched || singleDate?.dirty))"></bk-custom-calendar>
+  <bk-validator [control]="singleDate" label="Single Date"></bk-validator>
+  <p> {{singleDateSelection | json}}</p>
+</div>

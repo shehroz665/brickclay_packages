@@ -1,13 +1,17 @@
-<div class="calendar-container relative" [class.open]="show" [class.inline-mode]="inline">
+<div class="calendar-container relative" [class.open]="show" [class.inline-mode]="inline" [class.disabled]="disabled">
   <!-- Input field -->
   <div class="input-wrapper" *ngIf="!inline">
     <input
       type="text"
-      (click)="toggle()"
+      (click)="!disabled && toggle()"
+      (blur)="markAsTouched()"
       readonly
       [value]="getDisplayValue()"
       [placeholder]="placeholder"
-      class="calendar-input">
+      [attr.disabled]="disabled ? true : null"
+      class="calendar-input"
+      [ngClass]="{ 'calendar-input-has-error': hasError }"
+      >
       <!-- *ngIf="!getDisplayValue()" -->
 
     <span class="calendar-icon" >

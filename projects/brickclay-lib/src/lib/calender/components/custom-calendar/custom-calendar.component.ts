@@ -1,6 +1,17 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, HostListener, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  OnDestroy,
+  HostListener,
+  OnChanges,
+  SimpleChanges,
+  forwardRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 import { CalendarManagerService } from '../../services/calendar-manager.service';
 import { Subscription } from 'rxjs';
 import { BkTimePicker } from '../time-picker/time-picker.component';
@@ -11,10 +22,10 @@ export interface CalendarRange {
   end: Date;
 }
 
-export interface CalendarSelection {
-  startDate: string | null;
-  endDate: string | null;
-  selectedDates?: string[]; // For multi-date selection
+export class CalendarSelection {
+  startDate: string | null=null;
+  endDate: string | null=null;
+  selectedDates?: string[]=[]; // For multi-date selection
 }
 
 @Component({
@@ -22,9 +33,16 @@ export interface CalendarSelection {
   standalone: true,
   imports: [CommonModule, FormsModule, BkTimePicker],
   templateUrl: './custom-calendar.component.html',
-  styleUrls: ['./custom-calendar.component.css']
+  styleUrls: ['./custom-calendar.component.css'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => BkCustomCalendar),
+      multi: true,
+    },
+  ],
 })
-export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges {
+export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlValueAccessor {
 
   // Basic Options
   @Input() enableTimepicker = false;
@@ -51,18 +69,26 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges {
   @Input() opens: 'left' | 'right' | 'center' = 'left'; // NEW: Popup position
   @Input() inline = false; // NEW: Always show calendar inline (no popup)
   @Input() isDisplayCrossIcon = true; // NEW: Show/Hide clear (X) icon
-
+  @Input() hasError:boolean = false;
   @Output() selected = new EventEmitter<CalendarSelection>();
   @Output() opened = new EventEmitter<void>();
   @Output() closed = new EventEmitter<void>();
 
   /**
-   * External value passed from parent. If provided, component will select these dates on init / change.
-   * Accepts { startDate: Date|null, endDate: Date|null, selectedDates?: Date[] }
+   * External value passed from parent / ngModel. When used with ngModel, this is the bound value.
+   * Accepts { startDate: string|null, endDate: string|null, selectedDates?: string[] }
    */
   @Input() selectedValue: CalendarSelection | null = null;
   /** Optional display format for the input value. Uses moment formatting tokens. */
   @Input() displayFormat = 'MM/DD/YYYY';
+  /** When true, the control is required (used with ngModel for validation: dirty, touched, invalid). */
+  @Input() required = false;
+
+  /** CVA: called when form control value is set (e.g. ngModel binding) */
+  private onChange: (value: CalendarSelection | null) => void = () => {};
+  /** CVA: called when control is touched (blur / close) */
+  private onTouched: () => void = () => {};
+  disabled = false;
 
   brickclayIcons = BrickclayIcons;
 
@@ -77,8 +103,8 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges {
   rightYear!: number;
   leftCalendar: { day: number, currentMonth: boolean }[][] = [];
   rightCalendar: { day: number, currentMonth: boolean }[][] = [];
-  @Input() startDate: Date | null = null;
-  @Input() endDate: Date | null = null;
+  startDate: Date | null = null;
+  endDate: Date | null = null;
   selectedDates: Date[] = []; // NEW: For multi-date selection
   disableHighlight = false;
   hoveredDate: Date | null = null; // For hover preview
@@ -115,6 +141,100 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges {
   private closeFn?: () => void;
 
   constructor(private calendarManager: CalendarManagerService) {}
+
+  // --- ControlValueAccessor implementation ---
+  writeValue(value: CalendarSelection | null): void {
+    this.selectedValue = value ?? null;
+    this.applyValueToState(this.selectedValue);
+  }
+
+  registerOnChange(fn: (value: CalendarSelection | null) => void): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+  }
+
+  /** Call from template when control loses focus (for CVA touched state). */
+  markAsTouched(): void {
+    this.onTouched();
+  }
+
+  /** Apply CalendarSelection to internal state (startDate, endDate, selectedDates, calendar view). */
+  private applyValueToState(value: CalendarSelection | null): void {
+    if (!value) {
+      this.startDate = null;
+      this.endDate = null;
+      this.selectedDates = [];
+      this.month = this.today.getMonth();
+      this.year = this.today.getFullYear();
+      this.generateCalendar();
+      if (this.dualCalendar) {
+        this.initializeDual();
+      }
+      return;
+    }
+    const s = value;
+    this.startDate = s.startDate ? new Date(s.startDate) : null;
+    this.endDate = s.endDate ? new Date(s.endDate) : null;
+    this.selectedDates = (s.selectedDates || []).map((d) => new Date(d));
+
+    const focusDate = this.startDate ?? this.endDate ?? new Date();
+    this.month = focusDate.getMonth();
+    this.year = focusDate.getFullYear();
+    if (this.dualCalendar) {
+      this.initializeDual();
+      if (this.startDate) {
+        this.leftMonth = this.startDate.getMonth();
+        this.leftYear = this.startDate.getFullYear();
+      }
+      if (this.endDate && this.startDate) {
+        const startMonth = this.startDate.getMonth();
+        const startYear = this.startDate.getFullYear();
+        const endMonth = this.endDate.getMonth();
+        const endYear = this.endDate.getFullYear();
+        if (endMonth !== startMonth || endYear !== startYear) {
+          this.rightMonth = endMonth;
+          this.rightYear = endYear;
+        } else {
+          this.rightMonth = this.leftMonth + 1;
+          this.rightYear = this.leftYear;
+          if (this.rightMonth > 11) {
+            this.rightMonth = 0;
+            this.rightYear++;
+          }
+        }
+      } else if (this.endDate && !this.startDate) {
+        this.rightMonth = this.endDate.getMonth();
+        this.rightYear = this.endDate.getFullYear();
+      } else {
+        this.rightMonth = this.leftMonth + 1;
+        this.rightYear = this.leftYear;
+        if (this.rightMonth > 11) {
+          this.rightMonth = 0;
+          this.rightYear++;
+        }
+      }
+      this.generateDualCalendars();
+    } else {
+      this.generateCalendar();
+    }
+
+    if (this.startDate) {
+      this.initializeTimeFromDate(this.startDate, true);
+    }
+    if (this.endDate) {
+      this.initializeTimeFromDate(this.endDate, false);
+    }
+    if (this.startDate && this.endDate) {
+      this.checkAndSetActiveRange();
+    }
+  }
 
   @HostListener('document:click', ['$event'])
   onClickOutside(event: MouseEvent) {
@@ -183,25 +303,8 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['selectedValue'] && this.selectedValue) {
-      // Normalize incoming values to Date or null
-      const s = this.selectedValue;
-      this.startDate = s.startDate ? new Date(s.startDate) : null;
-      this.endDate = s.endDate ? new Date(s.endDate) : null;
-      this.selectedDates = (s.selectedDates || []).map((d) => new Date(d));
-
-      // Update calendar month/year to show the start date (or end date if start missing)
-      const focusDate = this.startDate ?? this.endDate ?? new Date();
-      this.month = focusDate.getMonth();
-      this.year = focusDate.getFullYear();
-      if (this.dualCalendar) {
-        this.initializeDual();
-      } else {
-        this.generateCalendar();
-      }
-
-      // Re-evaluate active range if any
-      this.checkAndSetActiveRange();
+    if (changes['selectedValue']) {
+      this.applyValueToState(this.selectedValue ?? null);
     }
   }
 
@@ -293,6 +396,7 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges {
   }
 
   toggle() {
+    if (this.disabled) return;
     // Don't toggle if inline mode is enabled
     if (this.inline) {
       return;
@@ -318,6 +422,7 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges {
       return;
     }
     this.show = false;
+    this.onTouched();
     this.closed.emit();
   }
 
@@ -347,7 +452,7 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges {
   }
 
   selectDate(day: number | null, fromRight = false) {
-    if (!day) return;
+    if (!day || this.disabled) return;
 
     let selected: Date;
     if (!this.dualCalendar) {
@@ -530,6 +635,7 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges {
   }
 
   apply() {
+    if (this.disabled) return;
     // Format minute inputs to 2 digits before applying
     this.formatAllMinuteInputs();
 
@@ -559,10 +665,12 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges {
 
     this.emitSelection();
     this.disableHighlight = true;
+    this.onTouched();
     this.close();
   }
 
   cancel() {
+    if (this.disabled) return;
     this.startDate = null;
     this.endDate = null;
     this.selectedDates = [];
@@ -570,6 +678,7 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges {
   }
 
   clear() {
+    if (this.disabled) return;
     this.startDate = null;
     this.endDate = null;
     this.selectedDates = [];
@@ -590,7 +699,7 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges {
   }
 
   chooseRange(key: string) {
-    if (!this.customRanges) return;
+    if (this.disabled || !this.customRanges) return;
     // Don't allow selecting "Custom Range" directly - it's only activated when manually selecting dates
     if (key === 'Custom Range') return;
     const r = this.customRanges[key];
@@ -673,15 +782,29 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges {
   // }
 
   emitSelection() {
+    const hasValue =
+      this.startDate != null ||
+      this.endDate != null ||
+      (this.multiDateSelection && this.selectedDates.length > 0);
+
+    if (!hasValue) {
+      this.selectedValue = null;
+      this.onChange(null);
+      this.selected.emit({ startDate: null, endDate: null, selectedDates: [] });
+      return;
+    }
+
     const selection: CalendarSelection = {
       startDate: this.startDate ? this.formatDateToString(this.startDate) : null,
       endDate: this.endDate ? this.formatDateToString(this.endDate) : null,
     };
 
     if (this.multiDateSelection && this.selectedDates.length > 0) {
-      selection.selectedDates = this.selectedDates.map(d => this.formatDateToString(d));
+      selection.selectedDates = this.selectedDates.map((d) => this.formatDateToString(d));
     }
 
+    this.selectedValue = selection;
+    this.onChange(selection);
     this.selected.emit(selection);
   }
 
