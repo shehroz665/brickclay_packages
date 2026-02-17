@@ -14,5 +14,5 @@
     #singleDate="ngModel" [showCancelApply]="false" (selected)="onSingleCalenderSelected($event,'single-calender')"
     [hasError]="singleDateHasError"></bk-custom-calendar>
   <bk-validator [control]="singleDate" label="Single Date"></bk-validator>
-  <p> {{singleDateSelection | json}}</p>
+  <p class="mt-5">Value: {{singleDateSelection | json}}</p>
 </div>
