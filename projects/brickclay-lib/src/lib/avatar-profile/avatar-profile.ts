@@ -3,7 +3,6 @@ import { CommonModule, NgClass } from '@angular/common';
 
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BKTooltipDirective } from '../tooltip/tooltip.directive';
-
 export type AvatarSize = 'sm' | 'md' | 'lg' | 'xl';
 export type AvatarFallback = 'auto' | 'initials' | 'icon' | 'camera';
 
@@ -67,6 +66,7 @@ export class AvatarProfile implements OnDestroy, ControlValueAccessor {
 
   initials = '';
   imageLoadFailed = false;
+  corrupted = false;
 
   /** Local blob URL for instant preview before server upload completes */
   private previewUrl: string | null = null;
@@ -81,6 +81,7 @@ export class AvatarProfile implements OnDestroy, ControlValueAccessor {
     // discard any stale local blob preview so displaySrc uses the real URL
     this.revokePreview();
     this.imageLoadFailed = false;
+    this.corrupted = false;
   }
 
   registerOnChange(fn: (value: string | null) => void): void {
@@ -102,6 +103,7 @@ export class AvatarProfile implements OnDestroy, ControlValueAccessor {
       this.initials = this.getInitials(this.name);
     }
     this.imageLoadFailed = false;
+    this.corrupted = false;
 
     // When the parent updates [src] via @Input (non-CVA usage), discard the local preview
     if (changes['src'] && this.previewUrl) {
@@ -132,7 +134,9 @@ export class AvatarProfile implements OnDestroy, ControlValueAccessor {
   }
 
   get containerClasses(): string {
-    return ['avatar-profile', this.size].join(' ');
+    const classes = ['avatar-profile', this.size];
+    if (this.corrupted) classes.push('corrupted');
+    return classes.join(' ');
   }
 
   get sizeClasses(): AvatarSize[] {
@@ -164,22 +168,53 @@ export class AvatarProfile implements OnDestroy, ControlValueAccessor {
       return;
     }
 
-    // Instant local preview — no server round-trip needed to show the image
+    // Create a blob URL and verify the browser can actually decode it as an image
     this.revokePreview();
-    this.previewUrl = URL.createObjectURL(file);
-    this.imageLoadFailed = false;
+    const blobUrl = URL.createObjectURL(file);
 
-    // Push the preview URL as the form value so validation (e.g. required) passes
-    this.onChange(this.previewUrl);
-    this.onTouched();
+    this.validateImage(blobUrl).then(valid => {
+      if (!valid) {
+        // Corrupted / undecodable file — show corrupted state, do NOT emit
+        URL.revokeObjectURL(blobUrl);
+        this.corrupted = true;
+        this.imageLoadFailed = false;
+        this.previewUrl = null;
+        this.fileError.emit('The selected file appears to be corrupted or is not a valid image.');
+        input.value = '';
+        return;
+      }
 
-    this.fileSelected.emit(event);
-    input.value = ''; // reset so re-selecting the same file still triggers change
+      // Valid image — proceed with preview & emission
+      this.corrupted = false;
+      this.previewUrl = blobUrl;
+      this.imageLoadFailed = false;
+
+      // Push the preview URL as the form value so validation (e.g. required) passes
+      this.onChange(this.previewUrl);
+      this.onTouched();
+
+      this.fileSelected.emit(event);
+      input.value = ''; // reset so re-selecting the same file still triggers change
+    });
+  }
+
+  /**
+   * Attempts to load a URL into an off-screen Image element.
+   * Resolves `true` if the browser can decode it, `false` otherwise.
+   */
+  private validateImage(url: string): Promise<boolean> {
+    return new Promise(resolve => {
+      const img = new Image();
+      img.onload = () => resolve(true);
+      img.onerror = () => resolve(false);
+      img.src = url;
+    });
   }
 
   onRemove(): void {
     this.revokePreview();
     this.src = null;
+    this.corrupted = false;
     this.onChange(null);
     this.onTouched();
     this.removed.emit();

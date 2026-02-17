@@ -71,6 +71,22 @@
 .avatar-profile.xl .placeholder-icon { @apply size-[65px]; }
 
 /* =========================
+   Corrupted State
+========================= */
+.avatar-profile.corrupted {
+  @apply border-[3px] border-[#E7000B];
+}
+
+.avatar-profile .corrupted-icon {
+  @apply text-[#E7000B];
+}
+
+.avatar-profile.sm  .corrupted-icon { @apply size-[28px]; }
+.avatar-profile.md  .corrupted-icon { @apply size-[42px]; }
+.avatar-profile.lg  .corrupted-icon { @apply size-[52px]; }
+.avatar-profile.xl  .corrupted-icon { @apply size-[65px]; }
+
+/* =========================
    Remove Badge
 ========================= */
 .remove-badge {
