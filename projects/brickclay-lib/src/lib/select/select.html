@@ -1,40 +1,40 @@
-<div class="ng-select-container">
+<div class="bk-select-container">
 
   @if(label){
   <label
-    class="select-label"
+    class="bk-select-label"
     (click)="openFromLabel($event)">
     {{ label }}
     @if (required) {
-      <span class="select-label-required">*</span>
+      <span class="bk-select-label-required">*</span>
     }
   </label>
   }
 
   <div
     #controlWrapper
-    class="ng-select-control"
-    [ngClass]="{ 'has-error': hasError }"
+    class="bk-select-control"
+    [ngClass]="{ 'bk-has-error': hasError }"
 
     tabindex="0"
     (keydown)="onKeyDown($event)"
-    [class.focused]="isOpen()"
-    [class.disabled]="disabled()"
+    [class.bk-focused]="isOpen()"
+    [class.bk-disabled]="disabled()"
     (mousedown)="toggleDropdown($event)"
   >
     <!-- Icon (Always visible if set) -->
     @if (iconSrc) {
       <img [src]="iconSrc" [alt]="iconAlt" class="shrink-0"/>
     }
-    <div class="ng-value-container">
+    <div class="bk-value-container">
       @if (selectedOptions().length === 0) {
-        <div class="ng-placeholder">{{ placeholder() }}</div>
+        <div class="bk-placeholder">{{ placeholder() }}</div>
       }
       @if (multiple() && selectedOptions().length > 0) {
-        <div class="ng-value-chips">
+        <div class="bk-value-chips">
           @for (opt of selectedOptions().slice(0, maxLabels()); track $index) {
-            <div class="multi-badge-item">
-              <span class="multi-badge-item-text" [style.color]="resolveColor(opt)">{{ resolveLabel(opt) }}</span>
+            <div class="bk-multi-badge-item">
+              <span class="bk-multi-badge-item-text" [style.color]="resolveColor(opt)">{{ resolveLabel(opt) }}</span>
 
               <button type="button" (mousedown)="removeOption(opt, $event)">
                 <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none">
@@ -44,19 +44,19 @@
             </div>
           }
           @if (selectedOptions().length > maxLabels()) {
-            <div class="multi-badge-item"><span
-              class="multi-badge-item-text">+{{ selectedOptions().length - maxLabels() }}</span></div>
+            <div class="bk-multi-badge-item"><span
+              class="bk-multi-badge-item-text">+{{ selectedOptions().length - maxLabels() }}</span></div>
           }
         </div>
       }
       @if (!multiple() && selectedOptions().length > 0) {
-        <div class="ng-value-label-single" [style.color]="resolveColor(selectedOptions()[0])">
+        <div class="bk-value-label-single" [style.color]="resolveColor(selectedOptions()[0])">
           {{ resolveLabel(selectedOptions()[0]) }}</div>
       }
     </div>
-    <div class="ng-actions">
+    <div class="bk-actions">
       @if (clearable() && selectedOptions().length > 0 && !disabled()) {
-        <span class="ng-clear-wrapper" (mousedown)="handleClear($event)" title="Clear">
+        <span class="bk-clear-wrapper" (mousedown)="handleClear($event)" title="Clear">
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18"
                                                                                                            y1="6" x2="6"
@@ -64,7 +64,7 @@
             x1="6" y1="6" x2="18" y2="18"></line></svg>
         </span>
       }
-      <span class="ng-arrow-wrapper" [class.open]="isOpen()">
+      <span class="bk-arrow-wrapper" [class.bk-open]="isOpen()">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path
           d="m6 9 6 6 6-6"/></svg>
@@ -75,7 +75,7 @@
   @if (isOpen()) {
     <div
       #dropdownPanel
-      class="custom-ng-dropdown-panel"
+      class="bk-dropdown-panel"
       [attr.data-position]="dropdownPosition()"
       (scroll)="onScroll($event)"
 
@@ -84,32 +84,32 @@
       [style.bottom]="getBottom()"
       [style.left]="appendToBody() ? dropdownStyle().left : null"
       [style.width]="appendToBody() ? dropdownStyle().width : '100%'"
-      [class.grouped]="groupBy()"
+      [class.bk-grouped]="groupBy()"
     >
 
 
       @if (searchable()) {
-        <div class="ng-dropdown-search">
-          <div class="ng-search-wrapper">
+        <div class="bk-dropdown-search">
+          <div class="bk-search-wrapper">
             <svg class="text-[#BBBDC5] mr-2" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                  stroke-linejoin="round">
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
-            <input #searchInput type="text" class="ng-search-input" [value]="searchTerm()" [placeholder]="'Search...'"
+            <input #searchInput type="text" class="bk-search-input" [value]="searchTerm()" [placeholder]="'Search...'"
                    (input)="onSearchInput($event)" (keydown)="onKeyDown($event)" (click)="$event.stopPropagation()">
           </div>
         </div>
       }
-      <div #optionsListContainer class="ng-options-list">
+      <div #optionsListContainer class="bk-options-list">
         @if (loading()) {
-          <div class="ng-option-disabled">{{ loadingText() }}</div>
+          <div class="bk-option-disabled">{{ loadingText() }}</div>
         } @else {
           @if (allSelect()){
 
           @if (multiple() && filteredItems().length > 0) {
-            <div class="ng-option" (mousedown)="toggleSelectAll($event)" [class.selected]="isAllSelected()">
+            <div class="bk-option" (mousedown)="toggleSelectAll($event)" [class.bk-selected]="isAllSelected()">
               <div class="flex-1 flex justify-between">
                 <span>Select All</span>
                 @if (isAllSelected()) {
@@ -125,13 +125,13 @@
           @for (group of groupedItems(); track $index) {
 
             @if (group.group) {
-              <div class="ng-option-group">
+              <div class="bk-option-group">
                 {{ group.group }}
               </div>
             }
 
             @for (item of group.items; track $index) {
-              <div #optionsRef class="ng-option" [class.selected]="isItemSelected(item)" [class.marked]="$index === markedIndex()" (click)="handleSelection(item, $event)">
+              <div #optionsRef class="bk-option" [class.bk-selected]="isItemSelected(item)" [class.bk-marked]="$index === markedIndex()" (click)="handleSelection(item, $event)">
                 <div class="flex-1 flex justify-between">
                   <span [style.color]="resolveColor(item)">{{ resolveLabel(item) }}</span>
 
@@ -148,7 +148,7 @@
           }
 
           @if (filteredItems().length === 0) {
-            <div class="ng-option-disabled">{{ notFoundText() }}</div>
+            <div class="bk-option-disabled">{{ notFoundText() }}</div>
           }
         }
       </div>
@@ -157,7 +157,7 @@
   }
   @if(hasError){
     @if (errorMessage) {
-      <p class="select-error">{{ errorMessage }}</p>
+      <p class="bk-select-error">{{ errorMessage }}</p>
     }
   }
 
