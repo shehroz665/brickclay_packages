@@ -744,7 +744,7 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
     this.endHour = 2;
     this.endMinute = 0;
     this.endSecond = 0;
-    this. endAMPM = 'AM';
+    this.endAMPM = 'AM';
     this.selectedDates = [];
     this.activeRange = null; // Clear active range
 
