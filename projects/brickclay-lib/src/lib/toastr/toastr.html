@@ -1,5 +1,5 @@
 <!-- Toast Container – fixed overlay -->
-<div class="toast-container" [attr.data-position]="position">
+<div class="toast-container" [attr.data-position]="position$ | async">
 
   @for (toast of (toasts$ | async) ?? []; track toast.id) {
     <div

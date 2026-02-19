@@ -13,6 +13,7 @@
   <div
     #controlWrapper
     class="hierarchical-select-control"
+    [ngClass]="{ 'hierarchical-select-control-has-error': hasError() }"
     tabindex="0"
     [class.focused]="isOpen()"
     [class.disabled]="isDisabled()"
@@ -73,24 +74,26 @@
       [style.top]="getDropdownTop()"
       [style.left]="getDropdownLeft()"
       [style.width]="getDropdownWidth() ?? (appendToBody() ? null : '100%')">
-      <div class="hierarchical-search">
-        <div class="hierarchical-search-wrapper">
-          <svg class="text-[#BBBDC5] mr-2" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-               viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-               stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <input
-            #searchInput
-            type="text"
-            class="hierarchical-search-input"
-            [value]="searchTerm()"
-            [placeholder]="searchPlaceholder()"
-            (input)="onSearchInput($event)"
-            (click)="$event.stopPropagation()" />
+      @if (searchable()) {
+        <div  class="hierarchical-search">
+          <div class="hierarchical-search-wrapper">
+            <svg class="text-[#BBBDC5] mr-2" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                 stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input
+              #searchInput
+              type="text"
+              class="hierarchical-search-input"
+              [value]="searchTerm()"
+              [placeholder]="searchPlaceholder()"
+              (input)="onSearchInput($event)"
+              (click)="$event.stopPropagation()" />
+          </div>
         </div>
-      </div>
+      }
 
       @if (showBack()) {
         <button

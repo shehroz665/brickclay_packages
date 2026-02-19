@@ -128,3 +128,7 @@
   flex-shrink: 0;
 }
 
+
+.hierarchical-select-control.hierarchical-select-control-has-error {
+  @apply border-[#d11e14];
+}

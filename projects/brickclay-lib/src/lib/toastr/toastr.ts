@@ -1,4 +1,4 @@
-import { Component, Input, inject, ViewEncapsulation } from '@angular/core';
+import { Component, inject, ViewEncapsulation } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { toObservable } from '@angular/core/rxjs-interop';
 import {
@@ -16,12 +16,11 @@ import {
   encapsulation: ViewEncapsulation.None,
 })
 export class BkToastr {
-  @Input() position: ToastPosition = 'top-right';
-
   private readonly svc = inject(BkToastrService);
 
   /** Convert signal → Observable so AsyncPipe triggers change detection reliably */
   readonly toasts$ = toObservable(this.svc.toasts);
+  readonly position$ = toObservable(this.svc.position);
 
   onClose(event: Event, id: string): void {
     event.stopPropagation();

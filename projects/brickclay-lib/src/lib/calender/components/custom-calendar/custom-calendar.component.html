@@ -1,12 +1,14 @@
-<div class="calendar-container relative" [class.open]="show" [class.inline-mode]="inline">
+<div class="calendar-container relative" [class.open]="show" [class.inline-mode]="inline" [class.disabled]="disabled">
   <!-- Input field -->
   <div #inputWrapper class="input-wrapper" *ngIf="!inline">
     <input
       type="text"
-      (click)="toggle()"
+      (click)="!disabled && toggle()"
+      (blur)="markAsTouched()"
       readonly
       [value]="getDisplayValue()"
       [placeholder]="placeholder"
+      [attr.disabled]="disabled ? true : null"
       [class.hasError]="hasError"
       class="calendar-input">
       <!-- *ngIf="!getDisplayValue()" -->
@@ -225,7 +227,7 @@
     </div>
 
     <!-- FOOTER -->
-    <div class="footer" *ngIf="!inline">
+    <div class="footer" *ngIf="!inline && showCancelApply">
       <button *ngIf="showCancel" (click)="cancel()" class="btn-cancel" type="button">Cancel</button>
       <button (click)="apply()" class="btn-apply" type="button">Apply</button>
     </div>
