@@ -72,3 +72,5 @@ export * from './lib/hierarchical-select/hierarchical-select';
 export * from './lib/toastr/toastr';
 export * from './lib/toastr/toastr.service';
 
+// UI Avatar
+export * from './lib/ui-avatar/ui-avatar';

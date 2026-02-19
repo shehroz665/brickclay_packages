@@ -1,0 +1,71 @@
+/* =========================
+   Base Avatar
+========================= */
+.avatar {
+  @apply relative inline-flex items-center justify-center
+  rounded-full flex-shrink-0 select-none
+  transition-all duration-200;
+}
+
+.avatar-img {
+  @apply w-full h-full object-cover rounded-full;
+}
+
+.avatar-text {
+  @apply font-medium;
+}
+
+/* =========================
+   Sizes (container + text)
+========================= */
+.xsm { @apply size-6 text-[10px] leading-[14px]; }
+.sm  { @apply size-8 text-sm; }
+.md  { @apply size-10 text-base; }
+.lg  { @apply size-12 text-[18px] leading-[26px]; }
+.xl  { @apply size-14 text-xl; }
+.xxl { @apply size-16 text-xl; }
+
+/* =========================
+   Placeholder Icon Sizes
+========================= */
+.xsm .placeholder-icon { @apply size-4; }
+.sm  .placeholder-icon { @apply size-5; }
+.md  .placeholder-icon { @apply size-6; }
+.lg  .placeholder-icon { @apply size-7; }
+.xl  .placeholder-icon,
+.xxl .placeholder-icon { @apply size-8; }
+
+/* =========================
+   Status Dot (Base)
+========================= */
+.avatar-dot {
+  @apply absolute rounded-full block box-content
+  border-[1.5px] border-white;
+}
+
+/* Dot size follows avatar size */
+.xsm .avatar-dot { @apply size-1; }
+.sm  .avatar-dot { @apply size-1.5; }
+.md  .avatar-dot { @apply size-2.5; }
+.lg  .avatar-dot { @apply size-3; }
+.xl  .avatar-dot { @apply size-[14px]; }
+.xxl .avatar-dot { @apply size-4; }
+
+/* =========================
+   Dot Variants
+========================= */
+.active {
+  @apply bg-[#22973F];
+}
+
+.inactive {
+  @apply bg-gray-300;
+}
+
+.notification {
+  @apply bg-[#2E90FA];
+}
+
+.none {
+  @apply hidden;
+}
