@@ -18,22 +18,22 @@
 /* =========================
    Sizes (container + text)
 ========================= */
-.xsm { @apply size-6 text-[10px] leading-[14px]; }
-.sm  { @apply size-8 text-sm; }
-.md  { @apply size-10 text-base; }
-.lg  { @apply size-12 text-[18px] leading-[26px]; }
-.xl  { @apply size-14 text-xl; }
-.xxl { @apply size-16 text-xl; }
+.avatar.xsm { @apply size-6 text-[10px] leading-[14px]; }
+.avatar.sm  { @apply size-8 text-sm; }
+.avatar.md  { @apply size-10 text-base; }
+.avatar.lg  { @apply size-12 text-[18px] leading-[26px]; }
+.avatar.xl  { @apply size-14 text-xl; }
+.avatar.xxl { @apply size-16 text-xl; }
 
 /* =========================
    Placeholder Icon Sizes
 ========================= */
-.xsm .placeholder-icon { @apply size-4; }
-.sm  .placeholder-icon { @apply size-5; }
-.md  .placeholder-icon { @apply size-6; }
-.lg  .placeholder-icon { @apply size-7; }
-.xl  .placeholder-icon,
-.xxl .placeholder-icon { @apply size-8; }
+.avatar.xsm .placeholder-icon { @apply size-4; }
+.avatar.sm  .placeholder-icon { @apply size-5; }
+.avatar.md  .placeholder-icon { @apply size-6; }
+.avatar.lg  .placeholder-icon { @apply size-7; }
+.avatar.xl  .placeholder-icon,
+.avatar.xxl .placeholder-icon { @apply size-8; }
 
 /* =========================
    Status Dot (Base)
@@ -44,28 +44,28 @@
 }
 
 /* Dot size follows avatar size */
-.xsm .avatar-dot { @apply size-1; }
-.sm  .avatar-dot { @apply size-1.5; }
-.md  .avatar-dot { @apply size-2.5; }
-.lg  .avatar-dot { @apply size-3; }
-.xl  .avatar-dot { @apply size-[14px]; }
-.xxl .avatar-dot { @apply size-4; }
+.avatar.xsm .avatar-dot { @apply size-1; }
+.avatar.sm  .avatar-dot { @apply size-1.5; }
+.avatar.md  .avatar-dot { @apply size-2.5; }
+.avatar.lg  .avatar-dot { @apply size-3; }
+.avatar.xl  .avatar-dot { @apply size-[14px]; }
+.avatar.xxl .avatar-dot { @apply size-4; }
 
 /* =========================
    Dot Variants
 ========================= */
-.active {
+.avatar .active {
   @apply bg-[#22973F];
 }
 
-.inactive {
+.avatar .inactive {
   @apply bg-gray-300;
 }
 
-.notification {
+.avatar .notification {
   @apply bg-[#2E90FA];
 }
 
-.none {
+.avatar .none {
   @apply hidden;
 }
