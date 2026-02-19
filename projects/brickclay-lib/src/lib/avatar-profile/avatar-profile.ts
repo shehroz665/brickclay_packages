@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, OnDestroy, Output, SimpleChanges, forwardRef } from '@angular/core';
 import { CommonModule, NgClass } from '@angular/common';
 
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, Validator, AbstractControl, ValidationErrors } from '@angular/forms';
 import { BKTooltipDirective } from '../tooltip/tooltip.directive';
-export type AvatarSize = 'sm' | 'md' | 'lg' | 'xl';
-export type AvatarFallback = 'auto' | 'initials' | 'icon' | 'camera';
+export type BkAvatarSize = 'sm' | 'md' | 'lg' | 'xl';
+export type BkAvatarFallback = 'auto' | 'initials' | 'icon' | 'camera';
 
 @Component({
   selector: 'bk-avatar-profile',
@@ -14,19 +14,24 @@ export type AvatarFallback = 'auto' | 'initials' | 'icon' | 'camera';
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => AvatarProfile),
+      useExisting: forwardRef(() => BkAvatarProfile),
+      multi: true
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => BkAvatarProfile),
       multi: true
     }
   ]
 })
-export class AvatarProfile implements OnDestroy, ControlValueAccessor {
+export class BkAvatarProfile implements OnDestroy, ControlValueAccessor, Validator {
 
   // ---------- Display inputs ----------
   @Input() src: string | null = null;
   @Input() alt = 'Avatar';
   @Input() name = '';
-  @Input() size: AvatarSize = 'md';
-  @Input() fallback: AvatarFallback = 'auto';
+  @Input() size: BkAvatarSize = 'md';
+  @Input() fallback: BkAvatarFallback = 'auto';
 
   // ---------- Functional inputs ----------
   /** Whether upload / remove actions are enabled */
@@ -97,6 +102,14 @@ export class AvatarProfile implements OnDestroy, ControlValueAccessor {
     this.editable = !isDisabled;
   }
 
+  // ---------- Validator Implementation ----------
+  validate(control: AbstractControl): ValidationErrors | null {
+    if (this.required && !control.value) {
+      return { required: true };
+    }
+    return null;
+  }
+
   // ---------- Lifecycle ----------
   ngOnChanges(changes: SimpleChanges): void {
     if (this.name) {
@@ -139,7 +152,7 @@ export class AvatarProfile implements OnDestroy, ControlValueAccessor {
     return classes.join(' ');
   }
 
-  get sizeClasses(): AvatarSize[] {
+  get sizeClasses(): BkAvatarSize[] {
     return [this.size];
   }
 
