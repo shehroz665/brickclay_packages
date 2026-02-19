@@ -1,15 +1,4 @@
-import {
-  Component,
-  Input,
-  Output,
-  EventEmitter,
-  OnInit,
-  OnDestroy,
-  HostListener,
-  OnChanges,
-  SimpleChanges,
-  forwardRef,
-} from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, HostListener, OnChanges, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 import { CalendarManagerService } from '../../services/calendar-manager.service';
@@ -72,9 +61,16 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
   @Input() placeholder = 'Select date range'; // NEW: Custom placeholder
   @Input() opens: 'left' | 'right' | 'center' = 'left'; // NEW: Popup position
   @Input() inline = false; // NEW: Always show calendar inline (no popup)
+  @Input() appendToBody = false; // When true, positions popup with fixed so it isn't clipped inside dialogs/overflow
   @Input() isDisplayCrossIcon = true; // NEW: Show/Hide clear (X) icon
-  @Input() hasError:boolean = false;
+  @Input() hasError = false; // NEW: Show/Hide clear (X) icon
+  @Input() errorMessage  = ''
   @Output() selected = new EventEmitter<CalendarSelection>();
+
+  @ViewChild('inputWrapper') inputWrapper!: ElementRef<HTMLDivElement>;
+
+  /** Used when appendToBody is true to position the popup in viewport coordinates */
+  dropdownStyle: { top?: string; bottom?: string; left?: string } = {};
   @Output() opened = new EventEmitter<void>();
   @Output() closed = new EventEmitter<void>();
   @Input() showCancelApply = true;
@@ -296,6 +292,14 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
     }
   }
 
+  @HostListener('window:scroll')
+  @HostListener('window:resize')
+  onWindowEvents() {
+    if (this.show && this.appendToBody) {
+      this.close();
+    }
+  }
+
   ngOnInit() {
     if (!this.customRanges) {
       this.initializeDefaultRanges();
@@ -453,6 +457,9 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
     this.show = !this.show;
 
     if (this.show) {
+      if (this.appendToBody && this.inputWrapper?.nativeElement) {
+        this.updatePosition();
+      }
       // If opening, close all other calendars first
       if (!wasOpen && this.closeFn) {
         this.calendarManager.closeAllExcept(this.closeFn);
@@ -461,6 +468,23 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
       this.opened.emit();
     } else {
       this.closed.emit();
+    }
+  }
+
+  /** Update popup position when appendToBody is true (fixed positioning relative to viewport). */
+  updatePosition() {
+    if (!this.inputWrapper?.nativeElement) return;
+    const rect = this.inputWrapper.nativeElement.getBoundingClientRect();
+    if (this.drop === 'up') {
+      this.dropdownStyle = {
+        bottom: `${window.innerHeight - rect.top + 4}px`,
+        left: `${rect.left}px`
+      };
+    } else {
+      this.dropdownStyle = {
+        top: `${rect.bottom + 4}px`,
+        left: `${rect.left}px`
+      };
     }
   }
 
