@@ -16,11 +16,12 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
+import { BKTooltipDirective } from '../tooltip/tooltip.directive';
 
 @Component({
   selector: 'bk-select',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,BKTooltipDirective],
   templateUrl: './select.html',
   styleUrls: ['./select.css'],
   providers: [
@@ -438,6 +439,10 @@ export class BkSelect implements ControlValueAccessor {
     if (!item) return null;
     const key = this.colorKey();
     return key && typeof item === 'object' ? item[key] : null;
+  }
+
+  getRemainingItems(): string[] | [] {
+     return this.selectedOptions().slice(this.maxLabels()).map((x)=> x.label);
   }
 
 

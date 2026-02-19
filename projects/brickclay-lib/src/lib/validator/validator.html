@@ -1,5 +1,10 @@
 <span class="text-left font-medium text-xs leading-normal text-[#C10007] mt-0.5 h-[1px] block">
-  @if (control && control.invalid && (control.dirty || control.touched)) {
+  @if (showError) {
+    <span>
+       {{ errorMessage }}
+    </span>
+  }
+  @else if (control && control.invalid && (control.dirty || control.touched)) {
     @if (control.errors?.['required']) {
       <span>
           {{ label }} is required.
@@ -31,9 +36,5 @@
         </span>
     }
 
-  } @else if (showError) {
-    <span>
-       {{ errorMessage }}
-    </span>
   }
 </span>

@@ -33,7 +33,7 @@
       @if (multiple() && selectedOptions().length > 0) {
         <div class="bk-value-chips">
           @for (opt of selectedOptions().slice(0, maxLabels()); track $index) {
-            <div class="bk-multi-badge-item">
+            <div class="bk-multi-badge-item me-0.5">
               <span class="bk-multi-badge-item-text" [style.color]="resolveColor(opt)">{{ resolveLabel(opt) }}</span>
 
               <button type="button" (mousedown)="removeOption(opt, $event)">
@@ -45,7 +45,9 @@
           }
           @if (selectedOptions().length > maxLabels()) {
             <div class="bk-multi-badge-item"><span
-              class="bk-multi-badge-item-text">+{{ selectedOptions().length - maxLabels() }}</span></div>
+              class="bk-multi-badge-item-text" bkTooltipPosition="top" [bkTooltip]="getRemainingItems()">+{{ selectedOptions().length - maxLabels() }}</span></div>
+
+
           }
         </div>
       }
@@ -89,7 +91,7 @@
 
 
       @if (searchable()) {
-        <div class="bk-dropdown-search">
+        <div class="bk-dropdown-search mb-1">
           <div class="bk-search-wrapper">
             <svg class="text-[#BBBDC5] mr-2" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
