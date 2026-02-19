@@ -12,7 +12,7 @@
   <bk-custom-calendar [(ngModel)]="singleDateSelection" [required]="true"  [singleDatePicker]="true"
     [showRanges]="false" [displayFormat]="'MM/DD/YYYY'" placeholder="Select a date"  [enableTimepicker]="true"
     #singleDate="ngModel" [showCancelApply]="false" (selected)="onSingleCalenderSelected($event,'single-calender')"
-    [hasError]="singleDateHasError"></bk-custom-calendar>
+    [hasError]="singleDateHasError" [appendToBody]="true"></bk-custom-calendar>
   <bk-validator [control]="singleDate" label="Single Date"></bk-validator>
   <p class="mt-5">Value: {{singleDateSelection | json}}</p>
 </div>
