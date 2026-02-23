@@ -9,7 +9,7 @@
   <div #formBox
     class="absolute right-0 mt-2 w-[178px] bg-white border border-[#EFEFF1] rounded-xl shadow-xl p-3 pe-1 z-[9999]">
     @if(searchable){
-      <bk-input [id]="'search-input-1'" [name]="'search-input-1'"
+      <bk-input class="w-full" [id]="'search-input-1'" [name]="'search-input-1'"
         [iconSrc]="'../../../../assets/icons/search-input.svg'" type="text" [(ngModel)]="search"
         placeholder="Search"></bk-input>
     }
