@@ -11,7 +11,7 @@ export type DotPosition = 'bottom-right' | 'top-left';
 export type AvatarFallback = 'auto' | 'initials' | 'icon';
 
 @Component({
-  selector: 'bk-ui-avatar',
+  selector: 'bk-avatar',
   standalone: true,
   imports: [CommonModule, BKTooltipDirective],
   templateUrl: './ui-avatar.html',
@@ -20,12 +20,12 @@ export type AvatarFallback = 'auto' | 'initials' | 'icon';
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => BkUiAvatar),
+      useExisting: forwardRef(() => BkAvatar),
       multi: true
     }
   ]
 })
-export class BkUiAvatar implements OnChanges, ControlValueAccessor {
+export class BkAvatar implements OnChanges, ControlValueAccessor {
 
   constructor(private cdr: ChangeDetectorRef) {}
 

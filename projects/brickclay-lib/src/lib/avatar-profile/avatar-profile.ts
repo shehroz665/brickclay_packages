@@ -7,24 +7,25 @@ export type BkAvatarSize = 'sm' | 'md' | 'lg' | 'xl';
 export type BkAvatarFallback = 'auto' | 'initials' | 'icon' | 'camera';
 
 @Component({
-  selector: 'bk-avatar-profile',
+  selector: 'bk-avatar-uploader',
   imports: [NgClass, CommonModule, BKTooltipDirective],
   templateUrl: './avatar-profile.html',
   styleUrl: './avatar-profile.css',
+  standalone: true,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => BkAvatarProfile),
+      useExisting: forwardRef(() => BkAvatarUploader),
       multi: true
     },
     {
       provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => BkAvatarProfile),
+      useExisting: forwardRef(() => BkAvatarUploader),
       multi: true
     }
   ]
 })
-export class BkAvatarProfile implements OnDestroy, ControlValueAccessor, Validator {
+export class BkAvatarUploader implements OnDestroy, ControlValueAccessor, Validator {
 
   // ---------- Display inputs ----------
   @Input() src: string | null = null;
