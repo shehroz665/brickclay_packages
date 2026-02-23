@@ -30,7 +30,8 @@
     "schematics/**/*.js",
     "src/lib/hierarchical-select/hierarchical-select.css",
     "src/lib/toastr/toastr.css",
-    "src/lib/ui-avatar/ui-avatar.css"
+    "src/lib/ui-avatar/ui-avatar.css",
+    "src/lib/column-select/components/column-select/column-select.css"
   ]
 }
 

@@ -74,3 +74,7 @@ export * from './lib/toastr/toastr.service';
 
 // UI Avatar
 export * from './lib/ui-avatar/ui-avatar';
+//Column Select
+export * from './lib/column-select/components/column-select/column-select';
+export * from './lib/column-select/models/column-filter-option';
+export * from './lib/column-select/service/column-filter.service';

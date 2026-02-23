@@ -20,3 +20,5 @@
 @import './lib/hierarchical-select/hierarchical-select.css';
 @import './lib/toastr/toastr.css';
 @import './lib/ui-avatar/ui-avatar.css';
+@import './lib/column-select/components/column-select/column-select.css';
+
