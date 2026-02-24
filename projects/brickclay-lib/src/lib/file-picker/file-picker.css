@@ -1,0 +1,106 @@
+/* Wrapper for relative positioning of hidden input */
+.file-picker-wrapper {
+  @apply relative w-full;
+}
+
+/* Hidden native file input */
+.file-picker__input {
+  @apply absolute opacity-0 w-0 h-0 overflow-hidden pointer-events-none;
+}
+
+/* Base file-picker styles */
+.file-picker {
+  @apply py-4 px-6 inline-flex flex-col justify-center items-center rounded-lg cursor-pointer transition-all duration-200 w-full relative;
+}
+
+.file-picker-has-error {
+  @apply border-[#d11e14];
+}
+
+.file-picker-error {
+  @apply text-xs text-[#E7000B] font-normal;
+}
+
+/* Default State */
+.file-picker--default {
+  @apply border border-[#E5F3FF] bg-white;
+}
+
+/* Active State */
+.file-picker--active {
+  @apply border border-[#E5F3FF] bg-[#F4FAFF];
+}
+
+/* Disabled State */
+.file-picker--disabled {
+  @apply border border-[#D6D7DC] bg-[#F4F4F6] opacity-60 cursor-not-allowed;
+}
+
+/* Icon styles */
+.file-picker__icon {
+  @apply mb-3;
+}
+
+/* Text Primary */
+.file-picker__text-primary {
+  @apply font-normal text-sm tracking-normal mb-1;
+}
+
+.file-picker__text-primary--default {
+  @apply text-[#1B223A];
+}
+
+.file-picker__text-primary--active {
+  @apply text-[#1B223A];
+}
+
+.file-picker__text-primary--disabled {
+  @apply text-[#A1A3AE];
+}
+
+/* Text Primary Bold */
+.file-picker__text-primary-bold--default {
+  @apply font-medium text-[#102BA5];
+}
+
+.file-picker__text-primary-bold--active {
+  @apply font-medium text-[#102BA5];
+}
+
+.file-picker__text-primary-bold--disabled {
+  @apply font-medium text-[#A1A3AE];
+}
+
+/* Text Secondary */
+.file-picker__text-secondary {
+  @apply font-normal text-xs leading-[18px];
+}
+
+.file-picker__text-secondary--default {
+  @apply text-[#6B7080];
+}
+
+.file-picker__text-secondary--active {
+  @apply text-[#6B7080];
+}
+
+.file-picker__text-secondary--disabled {
+  @apply text-[#A1A3AE];
+}
+
+/* File list item container */
+.file-picker__file-item {
+  @apply p-4 border border-[#EFEFF1] rounded-lg bg-white flex items-start justify-between mb-1;
+}
+
+.file-picker__file-content {
+  @apply flex gap-4;
+}
+
+.file-picker__file-info-title {
+  @apply font-medium text-sm text-[#1B223A];
+}
+
+.file-picker__file-info-size {
+  @apply text-[#1B223A] font-normal text-sm;
+}

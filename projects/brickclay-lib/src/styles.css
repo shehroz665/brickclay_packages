@@ -21,4 +21,6 @@
 @import './lib/toastr/toastr.css';
 @import './lib/ui-avatar/ui-avatar.css';
 @import './lib/column-select/components/column-select/column-select.css';
+@import './lib/file-picker/file-picker.css';
+@import './lib/file-card/file-card.css';
 

@@ -1,0 +1,107 @@
+/* Base file-uploader styles */
+.file-uploader {
+  @apply p-4 flex gap-4 border rounded-lg border-transparent bg-[white];
+}
+
+/* Uploading State */
+.file-uploader--uploading {
+  @apply border-[#EFEFF1];
+}
+
+/* Uploaded State */
+.file-uploader--uploaded {
+  @apply border-[#1434CB];
+}
+
+/* Failed State */
+.file-uploader--failed {
+  @apply border-[#FDA4A8] bg-[#FFF1F1];
+}
+
+/* Icon container */
+.file-uploader__icon-container {
+  @apply flex-shrink-0;
+}
+
+/* Icon styles */
+.file-uploader__icon {
+  @apply flex-shrink-0;
+}
+
+/* Content container */
+.file-uploader__content {
+  @apply flex flex-col flex-1 gap-0;
+}
+
+/* Row 1: File Info + Delete */
+.file-uploader__row-1 {
+  @apply flex items-start justify-between;
+}
+
+/* File info container */
+.file-uploader__file-info {
+  @apply flex flex-col;
+}
+
+/* File name */
+.file-uploader__file-name {
+  @apply font-medium text-sm text-[#1B223A];
+}
+
+.file-uploader__file-name--failed {
+  @apply text-[#B41E32] font-normal mb-1; 
+}
+
+/* File size */
+.file-uploader__file-size {
+  @apply text-[#1B223A] font-normal text-sm;
+}
+
+/* Row 2: Progress Bar + Percentage */
+.file-uploader__row-2 {
+  @apply flex justify-between items-center gap-3 mt-1;
+}
+
+/* Remove margin-top for failed state */
+.file-uploader--failed .file-uploader__row-2 {
+  @apply mt-0;
+}
+
+/* Progress bar */
+.file-uploader__progress-bar {
+  @apply flex-1 h-2 bg-[#EFEFF1] rounded-full overflow-hidden;
+}
+
+/* Progress fill */
+.file-uploader__progress-fill {
+  @apply h-full bg-[#1336EF] transition-all duration-300 rounded-full;
+}
+
+.file-uploader__progress-fill--complete {
+  @apply bg-[#22973F];
+}
+
+/* Progress text */
+.file-uploader__progress-text {
+  @apply text-sm text-[#6B7080] font-medium;
+}
+
+/* Checkmark icon */
+.file-uploader__checkmark {
+  @apply flex-shrink-0 size-[14px];
+}
+
+/* Error message */
+.file-uploader__error-message {
+  @apply text-[#B41E32] font-medium text-sm;
+}
+
+/* Try again text */
+/* .file-uploader__try-again {
+  @apply text-[#EF4444] font-normal text-sm cursor-pointer;
+} */
+
+/* Delete icon */
+.file-uploader__delete-icon {
+  @apply flex-shrink-0 cursor-pointer size-5;
+}

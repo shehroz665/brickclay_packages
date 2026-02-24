@@ -78,3 +78,6 @@ export * from './lib/ui-avatar/ui-avatar';
 export * from './lib/column-select/components/column-select/column-select';
 export * from './lib/column-select/models/column-filter-option';
 export * from './lib/column-select/service/column-filter.service';
+//File Picker & Card
+export * from './lib/file-picker/file-picker';
+export * from './lib/file-card/file-card';

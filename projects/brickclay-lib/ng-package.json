@@ -31,7 +31,9 @@
     "src/lib/hierarchical-select/hierarchical-select.css",
     "src/lib/toastr/toastr.css",
     "src/lib/ui-avatar/ui-avatar.css",
-    "src/lib/column-select/components/column-select/column-select.css"
+    "src/lib/column-select/components/column-select/column-select.css",
+    "src/lib/file-picker/file-picker.css",
+    "src/lib/file-card/file-card.css"
   ]
 }
 
