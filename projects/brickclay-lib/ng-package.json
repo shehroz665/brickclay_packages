@@ -33,7 +33,8 @@
     "src/lib/ui-avatar/ui-avatar.css",
     "src/lib/column-select/components/column-select/column-select.css",
     "src/lib/file-picker/file-picker.css",
-    "src/lib/file-card/file-card.css"
+    "src/lib/file-card/file-card.css",
+    "src/lib/pagination/pagination.css"
   ]
 }
 

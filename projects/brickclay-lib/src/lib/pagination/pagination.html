@@ -1,0 +1,153 @@
+<div class="md:px-4 px-2 md:py-3 py-2 border-t border-[#EBEDF3] rounded-b-xl">
+  <div class="flex flex-row items-center justify-between md:gap-3 gap-1">
+
+    <!-- Page size dropdown -->
+
+    <div class="flex gap-3 items-center">
+      <p class="text-xs text-[#141414] font-medium md:block hidden">Rows per page</p>
+        <bk-select
+          [items]="pageSizesList"
+          [searchable]="false"
+          bindLabel="key"
+          bindValue="value"
+          [clearable]="false"
+          [(ngModel)]="pageSize"
+          [dropdownPosition]="'top'"
+          (change)="changeSize($event)"
+          >
+        </bk-select>
+    </div>
+
+    <!-- showing entries -->
+    <p class="text-xs text-[#141414] font-medium md:block hidden">
+      Showing <span>{{ startIndex }}</span> to
+      <span>{{ endIndex > totalItems ? totalItems : endIndex }}</span> of
+      <span>{{ totalItems }}</span> Records
+    </p>
+
+    <!-- Pagination main -->
+    <nav class="flex gap-1.5 items-center">
+
+      <!-- Page count (optional like DoPlanar top numbers) -->
+      <p class="text-xs text-[#141414] font-medium md:block hidden">
+        <span>{{ startingPage || 0 }}</span> -
+        <span>{{ endingPage || 0 }}</span> of
+        <span>{{ getTotalPages() || 0 }}</span>
+      </p>
+
+
+      <!-- Page count (optional like DoPlanar top numbers) mobile version -->
+      <p class="text-xs text-[#141414] font-medium md:hidden block">
+      <span>{{ startingPage || 0 }}</span>
+        <span>{{ endingPage || 0 }}</span> of
+        <span>{{ getTotalPages() || 0 }}</span>
+      </p>
+
+      <ul class="flex items-center space-x-1 text-[13px] text-[#B9BBC6]">
+
+        <!-- Previous -->
+        <li class="md:block hidden">
+          <a
+            href="javascript:void(0)"
+            (click)="onClickPage(startingPage)"
+            class="flex items-center justify-center md:size-7 size-6 text-[13px] leading-6 text-[#15191E] rounded-md hover:bg-[#F8F8FA]"
+            [ngClass]="{'cursor-not-allowed': activePage === 1}"
+          >
+            @if(activePage === 1){
+              <img
+                src="../../assets/icons/arrow-left-double-gray.svg"
+                alt="Left Arrow Disabled"
+              />
+            }
+            @if(activePage !== 1){
+              <img
+                src="../../assets/icons/arrow-left-double-black.svg"
+                alt="Left Arrow"
+              />
+            }
+          </a>
+        </li>
+        <!-- Previous -->
+        <li>
+          <a
+            href="javascript:void(0)"
+            (click)="onClickPage(activePage - 1)"
+            class="flex items-center justify-center md:size-7 size-6 text-[13px] leading-6 text-[#15191E] rounded-md hover:bg-[#F8F8FA]"
+            [ngClass]="{'cursor-not-allowed': activePage === 1}"
+          >
+          @if(activePage === 1){
+            <img
+              src="../../assets/icons/pagination-left-gray.svg"
+              alt="Left Arrow Disabled"
+            />
+          }
+          @if(activePage !== 1){
+            <img
+              src="../../assets/icons/pagination-left-black.svg"
+              alt="Left Arrow"
+            />
+          }
+          </a>
+        </li>
+
+        <!-- Page Numbers -->
+        <li *ngFor="let item of paginate() | slice:0:2">
+          <a
+            (click)="onClickPage(item)"
+            href="javascript:void(0)"
+            class="flex items-center justify-center md:size-7 size-6 leading-6 rounded-lg"
+            [ngClass]="item === activePage
+              ? 'text-[#15191E] bg-[#F8F8FA] hover:bg-[#F8F8FA]'
+              : 'hover:bg-[#F8F8FA] hover:text-[#15191E]'">
+            {{ item }}
+          </a>
+        </li>
+
+        <!-- Next -->
+        <li>
+          <a
+            href="javascript:void(0)"
+            (click)="onClickPage(activePage + 1)"
+            class="flex items-center justify-center md:size-7 size-6 text-[13px] leading-6 text-[#15191E] rounded-md hover:bg-[#F8F8FA]"
+            [ngClass]="{'cursor-not-allowed': activePage === getTotalPages()}"
+          >
+          @if(activePage === getTotalPages()){
+            <img
+              src="../../assets/icons/pagination-right-gray.svg"
+              alt="Right Arrow Disabled"
+            />
+          }
+          @if(activePage !== getTotalPages()){
+            <img
+                src="../../assets/icons/pagination-right-black.svg"
+                alt="Right Arrow"
+              />
+          }
+          </a>
+        </li>
+        <!-- next double arrow  -->
+                 <li class="md:block hidden">
+          <a
+            href="javascript:void(0)"
+            (click)="onClickPage(getTotalPages())"
+            class="flex items-center justify-center md:size-7 size-6 text-[13px] leading-6 text-[#15191E] rounded-md hover:bg-[#F8F8FA]"
+            [ngClass]="{'cursor-not-allowed': activePage === getTotalPages()}"
+          >
+          @if(activePage === getTotalPages()){
+            <img
+              src="../../assets/icons/arrow-right-double-gray.svg"
+              alt="Right Arrow Disabled"
+            />
+          }
+          @if(activePage !== getTotalPages()){
+            <img
+              src="../../assets/icons/arrow-right-double-black.svg"
+              alt="Right Arrow"
+            />
+          }
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
