@@ -1,14 +1,15 @@
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { TableColumn, TableAction } from '../../models/grid.model';
-import { CdkDragDrop, moveItemInArray, CdkDragMove, CdkDragStart, DragDropModule } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, CdkDragMove, CdkDragStart, CdkDrag, DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { TableAction, TableBadge, TableColumn } from '../../models/grid.model';
 import { BKTooltipDirective } from '../../../tooltip/tooltip.directive';
+import { BkBadge } from '../../../badge/badge';
 export type SortDirection = 'asc' | 'desc';
 @Component({
   selector: 'bk-grid',
   standalone: true,
-  imports: [CommonModule,DragDropModule,ScrollingModule, BKTooltipDirective],
+  imports: [CommonModule,DragDropModule,ScrollingModule,BkBadge,BKTooltipDirective],
   templateUrl: './grid.html',
   styleUrl: './grid.css',
 })
@@ -136,5 +137,10 @@ export class BkGrid<T = any> {
         }
       });
     });
+  }
+
+  getBadge(row: T, column: TableColumn<T>) : TableBadge | undefined {
+    return column.badges?.find(b=> b.label===this.getCellValue(row,column));
+
   }
 }

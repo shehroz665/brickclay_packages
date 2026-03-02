@@ -61,7 +61,25 @@
                 @if (draggable && colIndex === firstVisibleColumnIndex) {
                   <span cdkDragHandle class="mr-2 text-gray-400" [ngClass]="{ 'cursor-move': draggable }">☰</span>
                 }
-                {{ getCellValue(row, col) }}
+                @if(col.badges){
+                  @let badge = getBadge(row, col);
+                    @if (badge) {
+                       <bk-badge [label]="badge.label" [variant]="badge.variant"
+                       [size]="badge.size" [color]="badge.color" [dot]="badge.dot"
+                       [customClass]="badge.customClass"></bk-badge>
+                    }
+
+                }
+                @else if (col.icons) {
+                  <div class="flex gap-2">
+                    @for (icon of col.icons; track $index) {
+                    <img [src]="icon.url" class="size-4 cursor-pointer" [bkTooltip]="icon.toolTipLabel || []" [bkTooltipPosition]="icon.tooltipPosition || 'top'" />
+                    }
+                  </div>
+                }
+                @else {
+                   {{ getCellValue(row, col) }}
+                }
               </td>
             }
           }
@@ -69,14 +87,16 @@
        @if (actions.length) {
           <td class="grid-cell action-sticky text-center">
             <div class="flex items-center justify-center gap-1.5">
+                                  <!-- appTooltip="{{ action.tooltip }}"
+                    appTooltipPosition="top" -->
               @for (action of actions; track action.name) {
                 @if (action.hasPermission) {
-                                    
-                  <button 
+                  <button
                     bkTooltip="{{ action.tooltip }}"
-                    bkTooltipPosition="top"  
+                    bkTooltipPosition="top"
                     class="size-6 flex items-center justify-center rounded hover:bg-[#F8F8FA]"
                     (click)="emitAction(action, row)"
+
                   >
                     <img
                       [src]="action.icon"
