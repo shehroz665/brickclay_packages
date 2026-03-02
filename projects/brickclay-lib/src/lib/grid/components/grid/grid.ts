@@ -1,10 +1,11 @@
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { CdkDragDrop, moveItemInArray, CdkDragMove, CdkDragStart, CdkDrag, DragDropModule } from '@angular/cdk/drag-drop';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { TableAction, TableBadge, TableColumn } from '../../models/grid.model';
 import { BKTooltipDirective } from '../../../tooltip/tooltip.directive';
 import { BkBadge } from '../../../badge/badge';
+import { TableAction, TableBadge, TableColumn } from '../../models/grid.model';
 export type SortDirection = 'asc' | 'desc';
 @Component({
   selector: 'bk-grid',
