@@ -10,7 +10,7 @@ export interface TableColumn<T = any> {
   cellClass?: string;
   formatter?: (row: T) => string;
   badges?: TableBadge[];
-  icons?: TableIcon[];
+  icons?: TableIcon[] | ((row: T) => TableIcon[]);
   /** show / hide both th + td */
   visible?: boolean; // default: true
 }

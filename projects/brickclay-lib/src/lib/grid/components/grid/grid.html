@@ -71,8 +71,9 @@
 
                 }
                 @else if (col.icons) {
-                  <div class="flex gap-2">
-                    @for (icon of col.icons; track $index) {
+                   @let iconsList = getIcons(row, col);
+                  <div class="flex justify-center items-center gap-2">
+                    @for (icon of iconsList; track $index) {
                     <img [src]="icon.url" class="size-4 cursor-pointer" [bkTooltip]="icon.toolTipLabel || []" [bkTooltipPosition]="icon.tooltipPosition || 'top'" />
                     }
                   </div>

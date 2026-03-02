@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { BKTooltipDirective } from '../../../tooltip/tooltip.directive';
 import { BkBadge } from '../../../badge/badge';
-import { TableAction, TableBadge, TableColumn } from '../../models/grid.model';
+import { TableAction, TableBadge, TableColumn, TableIcon } from '../../models/grid.model';
 export type SortDirection = 'asc' | 'desc';
 @Component({
   selector: 'bk-grid',
@@ -143,5 +143,13 @@ export class BkGrid<T = any> {
   getBadge(row: T, column: TableColumn<T>) : TableBadge | undefined {
     return column.badges?.find(b=> b.label===this.getCellValue(row,column));
 
+  }
+
+  getIcons(row: T, column: TableColumn<T>): TableIcon[] {
+    if (!column.icons) return [];
+
+    return typeof column.icons === 'function'
+      ? column.icons(row)
+      : column.icons;
   }
 }
