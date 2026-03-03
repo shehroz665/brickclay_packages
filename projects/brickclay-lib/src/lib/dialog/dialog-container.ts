@@ -90,7 +90,6 @@ export class BkDialogContainerComponent extends CdkDialogContainer implements On
     el.style.flexDirection = 'column';
     el.style.flex = '1 1 auto';
     el.style.minHeight = '0';
-    el.style.overflow = 'hidden';
     return ref;
   }
 
@@ -128,7 +127,18 @@ export class BkDialogContainerComponent extends CdkDialogContainer implements On
       backdropEl.animate(bdAnim.enter.keyframes, bdAnim.enter.options);
     }
 
-    anim.onfinish = () => this._resolveOpened();
+    anim.onfinish = () => {
+      // Cancel the animation so the persisted `transform` from
+      // `fill: 'forwards'` is removed. A lingering transform (even
+      // `scale(1)`) creates a new CSS containing block, which traps
+      // absolutely-positioned descendants (e.g. dropdown panels)
+      // inside `overflow: hidden` ancestors — causing UI distortion.
+      // The element's default styles (opacity: 1, no transform) are
+      // the same as the animation's final state, so cancelling is
+      // visually seamless.
+      anim.cancel();
+      this._resolveOpened();
+    };
   }
 
   /**

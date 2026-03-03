@@ -187,9 +187,9 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
       return;
     }
     const s = value;
-    this.startDate = s.startDate ? new Date(s.startDate) : null;
-    this.endDate = s.endDate ? new Date(s.endDate) : null;
-    this.selectedDates = (s.selectedDates || []).map((d) => new Date(d));
+    this.startDate = s.startDate ? this.parseDateString(s.startDate) : null;
+    this.endDate = s.endDate ? this.parseDateString(s.endDate) : null;
+    this.selectedDates = (s.selectedDates || []).map((d) => typeof d === 'string' ? this.parseDateString(d) : new Date(d));
     this.startTime = s.startTime ?? null;
     this.endTime = s.endTime ?? null;
 
@@ -1770,6 +1770,24 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
         }
       }
     });
+  }
+
+  /**
+   * Parse a date-only string (YYYY-MM-DD) as local date.
+   * Using new Date('2026-02-21') would be UTC midnight and can show as previous day in local time.
+   */
+  private parseDateString(value: string): Date {
+    if (!value || typeof value !== 'string') return new Date(value);
+    const match = value.trim().match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (match) {
+      const y = parseInt(match[1], 10);
+      const m = parseInt(match[2], 10) - 1;
+      const d = parseInt(match[3], 10);
+      if (m >= 0 && m <= 11 && d >= 1 && d <= 31) {
+        return new Date(y, m, d);
+      }
+    }
+    return new Date(value);
   }
 
   formatDateToString(date: Date): string {
