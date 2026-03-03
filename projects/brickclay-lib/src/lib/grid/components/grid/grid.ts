@@ -19,7 +19,7 @@ export class BkGrid<T = any> {
   @Input() columns: TableColumn<T>[] = [];
   @Input() result!: T[];
   @Input() actions: TableAction[] = [];
-
+  @Input() customClass: string ='h-[calc(100vh-260px)]';
   @Output() actionClick = new EventEmitter<{
     action: string;
     row: T;
