@@ -13,13 +13,22 @@ export interface TableColumn<T = any> {
   icons?: TableIcon[] | ((row: T) => TableIcon[]);
   /** show / hide both th + td */
   visible?: boolean; // default: true
+  actions?: TableAction[] | ((row: T) => TableAction[]);
 }
 
-export interface TableAction{
+export interface TableAction<T = any> {
   name: string;       // e.g. edit, delete
   icon: string;
   tooltip: string;
   hasPermission: boolean;
+  /** Dynamic visibility */
+  visible?: boolean | ((row: T) => boolean);
+
+  /** Disabled state */
+  disabled?: boolean | ((row: T) => boolean);
+
+  /** Click handler */
+  onClick?: (row: T) => void;
 }
  export interface TableBadge {
   label:string;

@@ -87,19 +87,18 @@
             }
           }
 
-       @if (actions.length) {
+        @if (getRowActions(row).length) {
           <td class="grid-cell action-sticky text-center">
-            <div class="flex items-center justify-center gap-1.5">
-                                  <!-- appTooltip="{{ action.tooltip }}"
-                    appTooltipPosition="top" -->
-              @for (action of actions; track action.name) {
-                @if (action.hasPermission) {
+            <div class="flex items-center justify-start gap-1.5">
+
+              @for (action of getRowActions(row); track action.name) {
+                @if (isActionVisible(action, row)) {
                   <button
                     bkTooltip="{{ action.tooltip }}"
                     bkTooltipPosition="top"
                     class="size-6 flex items-center justify-center rounded hover:bg-[#F8F8FA]"
                     (click)="emitAction(action, row)"
-
+                    [disabled]="isActionDisabled(action, row)"
                   >
                     <img
                       [src]="action.icon"
@@ -110,6 +109,7 @@
                   </button>
                 }
               }
+
             </div>
           </td>
         }
