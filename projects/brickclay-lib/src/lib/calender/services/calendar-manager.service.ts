@@ -4,10 +4,10 @@ import { Subject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class CalendarManagerService {
+export class BkCalendarManagerService {
   private calendarInstances: Set<() => void> = new Set();
   private closeAllSubject = new Subject<void>();
-  
+
   closeAll$ = this.closeAllSubject.asObservable();
 
   /**
@@ -15,7 +15,7 @@ export class CalendarManagerService {
    */
   register(closeFn: () => void): () => void {
     this.calendarInstances.add(closeFn);
-    
+
     // Return unregister function
     return () => {
       this.calendarInstances.delete(closeFn);
@@ -40,6 +40,18 @@ export class CalendarManagerService {
     this.closeAllSubject.next();
     this.calendarInstances.forEach(closeFn => closeFn());
   }
+
+
+  getOnlyDate(input: string | Date): string {
+    const date = new Date(input);
+
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
+
 }
 
 

@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, HostListener, OnChanges, SimpleChanges, ViewChild, ElementRef, forwardRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
-import { CalendarManagerService } from '../../services/calendar-manager.service';
+import { BkCalendarManagerService } from '../../services/calendar-manager.service';
 import { Subscription } from 'rxjs';
 import { BkTimePicker } from '../time-picker/time-picker.component';
 import moment from 'moment';
@@ -145,7 +145,7 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
   private closeAllSubscription?: Subscription;
   private closeFn?: () => void;
 
-  constructor(private calendarManager: CalendarManagerService) {}
+  constructor(private calendarManager: BkCalendarManagerService) {}
 
   // --- ControlValueAccessor implementation ---
   writeValue(value: CalendarSelection | null): void {
