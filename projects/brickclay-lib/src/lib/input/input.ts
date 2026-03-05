@@ -219,8 +219,9 @@ export class BkInput implements OnInit, OnDestroy, ControlValueAccessor {
   private onTouched = () => {};
 
   writeValue(value: any): void {
-    this.value = value || '';
-    this.inputValue = this.value;
+    const str = (value === null || value === undefined) ? '' : String(value);
+    this.value = str;
+    this.inputValue = str;
   }
 
   registerOnChange(fn: any): void {
@@ -241,7 +242,9 @@ export class BkInput implements OnInit, OnDestroy, ControlValueAccessor {
   };
 
   ngOnInit(): void {
-    if (this.value) this.inputValue = this.value;
+    if (this.value !== undefined && this.value !== null && this.value !== '') {
+      this.inputValue = String(this.value);
+    }
     if (this.password && this.type !== 'password') this.type = 'password';
     if (this.phone) {
       const country = this.countryOptions.find(c => c.code === this.countryCode);
@@ -285,9 +288,10 @@ export class BkInput implements OnInit, OnDestroy, ControlValueAccessor {
   handleInput(event: Event): void {
     const val = (event.target as HTMLInputElement).value;
     this.inputValue = val;
-    this.value = val;       // update CVA value
-    this.onChange(val);     // propagate to parent form
-    this.input.emit(event); // emit raw event
+    this.value = val;
+    const out = this.type === 'number' ? (val === '' ? null : Number(val)) : val;
+    this.onChange(out);
+    this.input.emit(event);
   }
 
   handleClicked():void {
