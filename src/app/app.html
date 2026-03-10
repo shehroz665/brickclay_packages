@@ -7,12 +7,23 @@
   <p>{{!!calender?.invalid}} {{!!calender?.touched}} {{!!calender?.dirty}}</p>
   <p>{{!!(calender?.invalid && (calender?.touched || calender?.dirty))}}</p>
 </div> -->
-
+<!--
 <div style="max-width: 300px;">
   <bk-custom-calendar [(ngModel)]="singleDateSelection" [required]="true"  [singleDatePicker]="true"
     [showRanges]="false" [displayFormat]="'MM/DD/YYYY'" placeholder="Select a date"  [enableTimepicker]="true"
     #singleDate="ngModel" [showCancelApply]="false" (selected)="onSingleCalenderSelected($event,'single-calender')"
     [hasError]="singleDateHasError" [appendToBody]="true"></bk-custom-calendar>
   <bk-validator [control]="singleDate" label="Single Date"></bk-validator>
+  <p class="mt-5">Value: {{singleDateSelection | json}}</p>
+</div> -->
+
+
+
+<div style="max-width: 300px;">
+  <bk-custom-calendar [(ngModel)]="dualDateSelection"  [dualCalendar]="true"
+    [showRanges]="true" [displayFormat]="'MM/DD/YYYY'" placeholder="Select a date"
+    #DualDate="ngModel"  (selected)="onCalenderSelected($event,'dual-calender')"
+     [appendToBody]="true"></bk-custom-calendar>
+  <!-- <bk-validator [control]="singleDate" label="Single Date"></bk-validator> -->
   <p class="mt-5">Value: {{singleDateSelection | json}}</p>
 </div>

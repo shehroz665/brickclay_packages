@@ -30,6 +30,7 @@ export class FuelCardModel {
 export class App implements OnInit {
   singleDateSelection: CalendarSelection = new CalendarSelection();
   calenderSelection: CalendarSelection = new CalendarSelection();
+  dualDateSelection:CalendarSelection = new CalendarSelection();
 
   constructor() {}
 
@@ -38,8 +39,14 @@ export class App implements OnInit {
     this.calenderSelection.endDate = '2026-03-22';
 
     this.singleDateSelection.startDate='2026-02-21'
+    this.singleDateSelection.endDate='2026-03-21'
     this.singleDateSelection.startTime='3:02 AM';
 
+  }
+
+  onCalenderSelected(event: any, calendarId: string):void{
+    this.dualDateSelection.startDate  = event.startDate;
+    this.dualDateSelection.endDate = event.endDate;
   }
 
   onCalendarSelected(event: any, calendarId: string) {
