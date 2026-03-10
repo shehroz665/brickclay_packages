@@ -3,7 +3,7 @@
     @if(label){
       <label>{{ label }}</label>
     }
-    <div class="time-input-wrapper">
+    <div class="time-input-wrapper" [class.has-value]="hasValue">
       <input
         type="text"
         class="time-input"
@@ -16,8 +16,19 @@
       <span class="time-icon">
         <img alt="timer" class="timer-icon" [src]='brickclayIcons.timerIcon'/>
       </span>
+      <button
+        type="button"
+        class="time-clear-btn"
+        *ngIf="clearable && hasValue && !disabled"
+        (click)="clear(); $event.stopPropagation()"
+        title="Clear time"
+        aria-label="Clear time">×</button>
       <div class="custom-time-picker-dropdown" *ngIf="showPicker">
-        <div class="custom-time-picker" [ngClass]="position === 'left' ? 'left-position' : 'right-position'">
+        <div class="custom-time-picker" [ngClass]="{
+          'left-position': position === 'left',
+          'right-position': position === 'right',
+          'format-24': timeFormat === 24
+        }">
           <!-- Hours Column -->
           <div class="time-column">
             <div class="time-scroll" #timeScroll>
@@ -43,19 +54,21 @@
               </div>
             </div>
           </div>
-          <span class="time-separator">:</span>
-          <!-- AM/PM Column -->
-          <div class="time-column ampm-column">
-            <div class="time-scroll" #timeScroll>
-              <div
-                *ngFor="let ap of getAMPMOptions()"
-                class="time-item"
-                [class.selected]="currentAMPM === ap"
-                (click)="onAMPMChange(ap)">
-                {{ ap }}
+          <!-- AM/PM Column (only in 12-hour format) -->
+          @if (timeFormat === 12) {
+            <span class="time-separator">:</span>
+            <div class="time-column ampm-column">
+              <div class="time-scroll" #timeScroll>
+                <div
+                  *ngFor="let ap of getAMPMOptions()"
+                  class="time-item"
+                  [class.selected]="currentAMPM === ap"
+                  (click)="onAMPMChange(ap)">
+                  {{ ap }}
+                </div>
               </div>
             </div>
-          </div>
+          }
         </div>
       </div>
     </div>

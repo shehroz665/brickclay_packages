@@ -28,7 +28,7 @@
   }
   @case ('timeOnly') {
     <div style="max-width: 300px;">
-      <bk-time-picker [(ngModel)]="timeOnlyValue" label="Time" #timePicker="ngModel" [required]="true"></bk-time-picker>
+      <bk-time-picker [(ngModel)]="timeOnlyValue" [timeFormat]="24" label="Time" #timePicker="ngModel" [required]="true" [clearable]="true"></bk-time-picker>
       <bk-validator [control]="timePicker" label="Time"></bk-validator>
       <p class="mt-5">Value: {{ timeOnlyValue }}</p>
     </div>

@@ -105,7 +105,7 @@
           <bk-time-picker
             pickerId="single-time"
             [label]="''"
-            [ngModel]="singleTimeModel || getSingleTimePickerDisplay()"
+            [ngModel]="singleTimeModel"
             (ngModelChange)="onSingleTimePickerChange($event); singleTimeModel=$event"
             [closePicker]="shouldClosePicker('single-time')"
             (pickerOpened)="onTimePickerOpened($event)"
@@ -161,7 +161,7 @@
             <bk-time-picker
               pickerId="dual-start"
               [label]="''"
-              [ngModel]="startTimeModel || getDualTimePickerDisplay(true)"
+              [ngModel]="startTimeModel"
               (ngModelChange)="onDualTimePickerChange($event, true); startTimeModel=$event"
               [closePicker]="shouldClosePicker('dual-start')"
               (pickerOpened)="onTimePickerOpened($event)"
@@ -215,7 +215,7 @@
             <bk-time-picker
               pickerId="dual-end"
               [label]="''"
-              [ngModel]="endTimeModel || getDualTimePickerDisplay(false)"
+              [ngModel]="endTimeModel"
               (ngModelChange)="onDualTimePickerChange($event, false); endTimeModel=$event"
               [closePicker]="shouldClosePicker('dual-end')"
               (pickerOpened)="onTimePickerOpened($event)"

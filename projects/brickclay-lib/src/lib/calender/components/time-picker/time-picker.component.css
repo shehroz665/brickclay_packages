@@ -23,6 +23,10 @@
   align-items: center;
 }
 
+.time-input-wrapper.has-value .time-input {
+  padding-right: 56px;
+}
+
 .time-input {
   padding: 8px 40px 8px 12px;
   border: 1px solid #d1d5db;
@@ -45,6 +49,27 @@
 
 .time-input:hover {
   border-color: #9ca3af;
+}
+
+.time-clear-btn {
+  position: absolute;
+  right: 32px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.time-clear-btn:hover {
+  color: #374151;
 }
 
 .time-icon {
@@ -74,24 +99,29 @@
 
 .custom-time-picker {
   display: flex;
-    /* align-items: center; */
-    gap: 8px;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    padding: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    width:182px;
-    position: absolute;
-    top: calc(100% + 4px);
-    /* right: 0; */
-    z-index: 1000;
+  align-items: flex-start;
+  gap: 8px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 182px;
+  position: absolute;
+  top: calc(100% + 4px);
+  z-index: 1000;
 }
+
+/* 24-hour format: no AM/PM column, narrower width */
+.custom-time-picker.format-24 {
+  width: 124px;
+}
+
 .custom-time-picker.left-position {
-left: 0;
+  left: 0;
 }
 .custom-time-picker.right-position {
-right: 0;
+  right: 0;
 }
 .time-column {
   display: flex;

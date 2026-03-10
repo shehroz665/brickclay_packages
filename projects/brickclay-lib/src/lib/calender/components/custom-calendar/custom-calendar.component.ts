@@ -138,12 +138,12 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
   /** Current end time string in 12-hour format with AM/PM (e.g. "2:00 AM"). Synced with ngModel/CalendarSelection. */
   endTime: string | null = null;
 
-  /** ngModel binding for single-calendar time picker. */
-  singleTimeModel = '';
-  /** ngModel binding for dual-calendar start time picker. */
-  startTimeModel = '';
-  /** ngModel binding for dual-calendar end time picker. */
-  endTimeModel = '';
+  /** ngModel binding for single-calendar time picker (null = no time). */
+  singleTimeModel: string | null = null;
+  /** ngModel binding for dual-calendar start time picker (null = no time). */
+  startTimeModel: string | null = null;
+  /** ngModel binding for dual-calendar end time picker (null = no time). */
+  endTimeModel: string | null = null;
 
   // Track open time-picker within this calendar (for single-open behavior)
   openTimePickerId: string | null = null;
@@ -203,9 +203,9 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
       this.startTime = null;
       this.endTime = null;
       this.selectedDates = [];
-      this.singleTimeModel = '';
-      this.startTimeModel = '';
-      this.endTimeModel = '';
+      this.singleTimeModel = null;
+      this.startTimeModel = null;
+      this.endTimeModel = null;
       this.month = this.today.getMonth();
       this.year = this.today.getFullYear();
       this.generateCalendar();
@@ -301,12 +301,12 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
       this.checkAndSetActiveRange();
     }
 
-    // Sync ngModel values for embedded time pickers
+    // Sync ngModel values for embedded time pickers (null when no time set)
     if (!this.dualCalendar) {
-      this.singleTimeModel = this.getSingleTimePickerDisplay();
+      this.singleTimeModel = this.startTime ?? null;
     } else {
-      this.startTimeModel = this.getDualTimePickerDisplay(true);
-      this.endTimeModel = this.getDualTimePickerDisplay(false);
+      this.startTimeModel = this.startTime ?? null;
+      this.endTimeModel = this.endTime ?? null;
     }
   }
 
@@ -1278,7 +1278,18 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
   }
 
   // NEW: Handle BkTimePicker change for single calendar
-  onSingleTimePickerChange(time: string) {
+  onSingleTimePickerChange(time: string | null) {
+    if (time == null || time === '') {
+      this.startTime = null;
+      this.selectedHour = 1;
+      this.selectedMinute = 0;
+      this.selectedAMPM = 'AM';
+      if (this.startDate) {
+        this.startDate.setHours(0, 0, this.selectedSecond);
+      }
+      this.emitSelection();
+      return;
+    }
     const { hour12, minute, ampm } = this.parsePickerTimeString(time);
 
     this.selectedHour = hour12;
@@ -1287,7 +1298,6 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
 
     const timeStr = this.formatTimeToAmPm(hour12, minute, ampm);
     this.startTime = timeStr;
-
 
     if (this.startDate) {
       let h24 = hour12;
@@ -1300,7 +1310,24 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
   }
 
   // NEW: Handle BkTimePicker change for dual calendar
-  onDualTimePickerChange(time: string, isStart = true) {
+  onDualTimePickerChange(time: string | null, isStart = true) {
+    if (time == null || time === '') {
+      if (isStart) {
+        this.startTime = null;
+        this.startHour = 1;
+        this.startMinute = 0;
+        this.startAMPM = 'AM';
+        if (this.startDate) this.startDate.setHours(0, 0, this.startSecond);
+      } else {
+        this.endTime = null;
+        this.endHour = 2;
+        this.endMinute = 0;
+        this.endAMPM = 'AM';
+        if (this.endDate) this.endDate.setHours(0, 0, this.endSecond);
+      }
+      this.emitSelection();
+      return;
+    }
     const { hour12, minute, ampm } = this.parsePickerTimeString(time);
     const timeStr = this.formatTimeToAmPm(hour12, minute, ampm);
 

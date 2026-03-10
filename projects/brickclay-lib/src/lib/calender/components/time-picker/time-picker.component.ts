@@ -20,22 +20,23 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/f
 export class BkTimePicker implements OnInit, OnChanges, AfterViewInit, ControlValueAccessor {
   @Input() required: boolean = false;
   /** @deprecated Prefer [(ngModel)]. When ngModel is not used, this sets the initial/current time. */
-  @Input() value: string = '1:00 AM'; // Time in format "H:MM AM/PM"
+  @Input() value: string | null = null; // Time in format "H:MM AM/PM"; null = empty
   @Input() label: string = '';
   @Input() placeholder: string = 'Select time';
+  @Input() clearable = false;
   @Input() position: 'left' | 'right' = 'left';
   @Input() pickerId: string = ''; // Unique ID for this picker
   @Input() closePicker: number = 0; // Close counter from parent (triggers close when changed)
   @Input() timeFormat: 12 | 24 = 12; // Visual mode: 12h or 24h
   @Input() showSeconds = false; // Whether to show/edit seconds
-  @Output() change = new EventEmitter<string>();
+  @Output() change = new EventEmitter<string | null>();
   /** Alias for (change) for backward compatibility */
-  @Output() timeChange = new EventEmitter<string>();
+  @Output() timeChange = new EventEmitter<string | null>();
   @Output() pickerOpened = new EventEmitter<string>(); // Notify parent when opened
   @Output() pickerClosed = new EventEmitter<string>(); // Notify parent when closed
 
   /** CVA: called when the control value is set (e.g. ngModel or programmatic) */
-  private onChange: (value: string) => void = () => {};
+  private onChange: (value: string | null) => void = () => {};
   /** CVA: called when the control is touched (blur / close picker) */
   private onTouched: () => void = () => {};
   disabled = false;
@@ -43,20 +44,28 @@ export class BkTimePicker implements OnInit, OnChanges, AfterViewInit, ControlVa
   @ViewChildren('timeScroll') timeScrollElements!: QueryList<ElementRef>;
 
   showPicker = false;
-  currentHour = 1;
+  currentHour = 12;
   currentMinute = 0;
-  currentAMPM = 'AM';
+  currentAMPM = 'PM';
   currentSecond = 0;
 
-  brickclayIcons=BrickclayIcons;
+  /** When null, input shows placeholder; otherwise the selected time string. */
+  private _modelValue: string | null = null;
+
+  brickclayIcons = BrickclayIcons;
 
   // --- ControlValueAccessor implementation ---
   writeValue(value: string | null): void {
-    const str = value ?? this.value;
-    this.parseTimeValue(str);
+    if (value == null || value === '') {
+      this._modelValue = null;
+      this.setDefaultsForDropdown();
+    } else {
+      this._modelValue = value;
+      this.parseTimeValue(value);
+    }
   }
 
-  registerOnChange(fn: (value: string) => void): void {
+  registerOnChange(fn: (value: string | null) => void): void {
     this.onChange = fn;
   }
 
@@ -68,14 +77,43 @@ export class BkTimePicker implements OnInit, OnChanges, AfterViewInit, ControlVa
     this.disabled = isDisabled;
   }
 
-  /** Display string for the input (from current hour/minute/AM-PM). */
+  /** Display string for the input; empty when value is null. */
   getDisplayValue(): string {
+    if (this._modelValue == null || this._modelValue === '') return '';
     return this.formatTimeFromComponents(
       this.currentHour,
       this.currentMinute,
       this.currentSecond,
       this.currentAMPM
     );
+  }
+
+  /** True when a time is selected (show clear button). */
+  get hasValue(): boolean {
+    return this._modelValue != null && this._modelValue !== '';
+  }
+
+  /** Reset dropdown to default time (used when opening with null value). 12h → 12:00 PM, 24h → 00:00 */
+  private setDefaultsForDropdown(): void {
+    if (this.timeFormat === 24) {
+      this.currentHour = 0;
+    } else {
+      this.currentHour = 12;
+      this.currentAMPM = 'PM';
+    }
+    this.currentMinute = 0;
+    this.currentSecond = 0;
+  }
+
+  /** Clear the time value and notify CVA. */
+  clear(): void {
+    this._modelValue = null;
+    this.value = null;
+    this.setDefaultsForDropdown();
+    this.onChange(null);
+    this.change.emit(null);
+    this.timeChange.emit(null);
+    this.markAsTouched();
   }
 
   /** Call when control loses focus or picker closes (for CVA touched state). */
@@ -95,9 +133,15 @@ export class BkTimePicker implements OnInit, OnChanges, AfterViewInit, ControlVa
     }
   }
 
-  /** @param timeStr Optional; when not provided uses this.value (from @Input). */
-  parseTimeValue(timeStr?: string) {
-    const str = timeStr ?? this.value;
+  /** @param timeStr Optional; when not provided uses this.value (from @Input). Empty/null sets defaults. */
+  parseTimeValue(timeStr?: string | null) {
+    const str = timeStr ?? this.value ?? '';
+    if (str === '') {
+      this._modelValue = null;
+      this.setDefaultsForDropdown();
+      return;
+    }
+    this._modelValue = str;
     const parsed = this.parseTimeStringToComponents(str);
     this.currentHour = parsed.hour;
     this.currentMinute = parsed.minute;
@@ -136,7 +180,7 @@ export class BkTimePicker implements OnInit, OnChanges, AfterViewInit, ControlVa
         hour: this.timeFormat === 24 ? 0 : 12,
         minute: 0,
         second: 0,
-        ampm: this.timeFormat === 24 ? '' : 'AM'
+        ampm: this.timeFormat === 24 ? '' : 'PM'
       };
     }
 
@@ -251,7 +295,13 @@ export class BkTimePicker implements OnInit, OnChanges, AfterViewInit, ControlVa
   }
 
   updateTime() {
-    const newTime = this.getDisplayValue();
+    const newTime = this.formatTimeFromComponents(
+      this.currentHour,
+      this.currentMinute,
+      this.currentSecond,
+      this.currentAMPM
+    );
+    this._modelValue = newTime;
     this.value = newTime;
     this.onChange(newTime);
     this.change.emit(newTime);
@@ -282,8 +332,8 @@ export class BkTimePicker implements OnInit, OnChanges, AfterViewInit, ControlVa
   private previousCloseCounter: number = 0;
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['value'] && changes['value'].currentValue) {
-      this.parseTimeValue();
+    if (changes['value']) {
+      this.parseTimeValue(this.value ?? '');
     }
     if (changes['closePicker'] && this.showPicker) {
       const newCounter = changes['closePicker'].currentValue;
