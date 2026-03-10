@@ -1,16 +1,25 @@
 import { BrickclayIcons } from '../../../assets/icons';
-import { Component, Input, Output, EventEmitter, OnInit, OnChanges, AfterViewInit, QueryList, ViewChildren, ElementRef, HostListener, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, AfterViewInit, QueryList, ViewChildren, ElementRef, HostListener, SimpleChanges, forwardRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'bk-time-picker',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './time-picker.component.html',
-  styleUrls: ['./time-picker.component.css']
+  styleUrls: ['./time-picker.component.css'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => BkTimePicker),
+      multi: true,
+    },
+  ],
 })
-export class BkTimePicker implements OnInit, OnChanges, AfterViewInit {
+export class BkTimePicker implements OnInit, OnChanges, AfterViewInit, ControlValueAccessor {
   @Input() required: boolean = false;
+  /** @deprecated Prefer [(ngModel)]. When ngModel is not used, this sets the initial/current time. */
   @Input() value: string = '1:00 AM'; // Time in format "H:MM AM/PM"
   @Input() label: string = '';
   @Input() placeholder: string = 'Select time';
@@ -20,8 +29,16 @@ export class BkTimePicker implements OnInit, OnChanges, AfterViewInit {
   @Input() timeFormat: 12 | 24 = 12; // Visual mode: 12h or 24h
   @Input() showSeconds = false; // Whether to show/edit seconds
   @Output() change = new EventEmitter<string>();
+  /** Alias for (change) for backward compatibility */
+  @Output() timeChange = new EventEmitter<string>();
   @Output() pickerOpened = new EventEmitter<string>(); // Notify parent when opened
   @Output() pickerClosed = new EventEmitter<string>(); // Notify parent when closed
+
+  /** CVA: called when the control value is set (e.g. ngModel or programmatic) */
+  private onChange: (value: string) => void = () => {};
+  /** CVA: called when the control is touched (blur / close picker) */
+  private onTouched: () => void = () => {};
+  disabled = false;
 
   @ViewChildren('timeScroll') timeScrollElements!: QueryList<ElementRef>;
 
@@ -32,6 +49,39 @@ export class BkTimePicker implements OnInit, OnChanges, AfterViewInit {
   currentSecond = 0;
 
   brickclayIcons=BrickclayIcons;
+
+  // --- ControlValueAccessor implementation ---
+  writeValue(value: string | null): void {
+    const str = value ?? this.value;
+    this.parseTimeValue(str);
+  }
+
+  registerOnChange(fn: (value: string) => void): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+  }
+
+  /** Display string for the input (from current hour/minute/AM-PM). */
+  getDisplayValue(): string {
+    return this.formatTimeFromComponents(
+      this.currentHour,
+      this.currentMinute,
+      this.currentSecond,
+      this.currentAMPM
+    );
+  }
+
+  /** Call when control loses focus or picker closes (for CVA touched state). */
+  markAsTouched(): void {
+    this.onTouched();
+  }
 
   ngOnInit() {
     this.parseTimeValue();
@@ -45,8 +95,10 @@ export class BkTimePicker implements OnInit, OnChanges, AfterViewInit {
     }
   }
 
-  parseTimeValue() {
-    const parsed = this.parseTimeStringToComponents(this.value);
+  /** @param timeStr Optional; when not provided uses this.value (from @Input). */
+  parseTimeValue(timeStr?: string) {
+    const str = timeStr ?? this.value;
+    const parsed = this.parseTimeStringToComponents(str);
     this.currentHour = parsed.hour;
     this.currentMinute = parsed.minute;
     this.currentSecond = parsed.second;
@@ -161,6 +213,7 @@ export class BkTimePicker implements OnInit, OnChanges, AfterViewInit {
       }, 100);
     } else {
       this.showPicker = false;
+      this.markAsTouched();
       this.pickerClosed.emit(this.pickerId);
     }
   }
@@ -198,14 +251,11 @@ export class BkTimePicker implements OnInit, OnChanges, AfterViewInit {
   }
 
   updateTime() {
-    const newTime = this.formatTimeFromComponents(
-      this.currentHour,
-      this.currentMinute,
-      this.currentSecond,
-      this.currentAMPM
-    );
+    const newTime = this.getDisplayValue();
     this.value = newTime;
+    this.onChange(newTime);
     this.change.emit(newTime);
+    this.timeChange.emit(newTime);
   }
 
   scrollToSelectedTimes() {
@@ -224,6 +274,7 @@ export class BkTimePicker implements OnInit, OnChanges, AfterViewInit {
     const target = event.target as HTMLElement;
     if (!target.closest('.time-picker-wrapper') && this.showPicker) {
       this.showPicker = false;
+      this.markAsTouched();
       this.pickerClosed.emit(this.pickerId);
     }
   }
@@ -239,6 +290,7 @@ export class BkTimePicker implements OnInit, OnChanges, AfterViewInit {
       // If counter increased, close the picker
       if (newCounter > this.previousCloseCounter) {
         this.showPicker = false;
+        this.markAsTouched();
         this.pickerClosed.emit(this.pickerId);
         this.previousCloseCounter = newCounter;
       }

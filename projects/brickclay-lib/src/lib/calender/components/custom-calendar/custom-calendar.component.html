@@ -104,10 +104,10 @@
         <div class="timepicker-controls">
           <bk-time-picker
             pickerId="single-time"
-            [label]="'Time'"
-            [value]="getSingleTimePickerDisplay()"
+            [label]="''"
+            [ngModel]="singleTimeModel || getSingleTimePickerDisplay()"
+            (ngModelChange)="onSingleTimePickerChange($event); singleTimeModel=$event"
             [closePicker]="shouldClosePicker('single-time')"
-            (change)="onSingleTimePickerChange($event)"
             (pickerOpened)="onTimePickerOpened($event)"
             (pickerClosed)="onTimePickerClosed($event)">
           </bk-time-picker>
@@ -160,10 +160,10 @@
           <div class="timepicker-controls">
             <bk-time-picker
               pickerId="dual-start"
-              [label]="'Time'"
-              [value]="getDualTimePickerDisplay(true)"
+              [label]="''"
+              [ngModel]="startTimeModel || getDualTimePickerDisplay(true)"
+              (ngModelChange)="onDualTimePickerChange($event, true); startTimeModel=$event"
               [closePicker]="shouldClosePicker('dual-start')"
-              (change)="onDualTimePickerChange($event, true)"
               (pickerOpened)="onTimePickerOpened($event)"
               (pickerClosed)="onTimePickerClosed($event)">
             </bk-time-picker>
@@ -214,10 +214,10 @@
           <div class="timepicker-controls">
             <bk-time-picker
               pickerId="dual-end"
-              [label]="'Time'"
-              [value]="getDualTimePickerDisplay(false)"
+              [label]="''"
+              [ngModel]="endTimeModel || getDualTimePickerDisplay(false)"
+              (ngModelChange)="onDualTimePickerChange($event, false); endTimeModel=$event"
               [closePicker]="shouldClosePicker('dual-end')"
-              (change)="onDualTimePickerChange($event, false)"
               (pickerOpened)="onTimePickerOpened($event)"
               (pickerClosed)="onTimePickerClosed($event)">
             </bk-time-picker>

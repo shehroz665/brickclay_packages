@@ -20,17 +20,26 @@ export class FuelCardModel {
   lkpFuelCardTypeName?: string;
   lkpStatusName?: string;
 }
-
+export type CalendarVariant = 'single' | 'dual' | 'timeOnly';
 @Component({
   selector: 'app-root',
   imports: [CalendarModule, FormsModule, CommonModule, BkValidator],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
+
+
 export class App implements OnInit {
   singleDateSelection: CalendarSelection = new CalendarSelection();
   calenderSelection: CalendarSelection = new CalendarSelection();
-  dualDateSelection:CalendarSelection = new CalendarSelection();
+  dualDateSelection: CalendarSelection = new CalendarSelection();
+
+  /** Which calendar variant to show: single date, dual (range), or time picker only. */
+  calendarVariant: CalendarVariant = 'single';
+
+  /** Bound to time picker when variant is 'timeOnly'. */
+  // timeOnlyValue = '1:00 AM';
+  timeOnlyValue : string | null= null;
 
   constructor() {}
 

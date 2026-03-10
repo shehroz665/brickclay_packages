@@ -138,6 +138,13 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
   /** Current end time string in 12-hour format with AM/PM (e.g. "2:00 AM"). Synced with ngModel/CalendarSelection. */
   endTime: string | null = null;
 
+  /** ngModel binding for single-calendar time picker. */
+  singleTimeModel = '';
+  /** ngModel binding for dual-calendar start time picker. */
+  startTimeModel = '';
+  /** ngModel binding for dual-calendar end time picker. */
+  endTimeModel = '';
+
   // Track open time-picker within this calendar (for single-open behavior)
   openTimePickerId: string | null = null;
   closePickerCounter: { [key: string]: number } = {};
@@ -196,6 +203,9 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
       this.startTime = null;
       this.endTime = null;
       this.selectedDates = [];
+      this.singleTimeModel = '';
+      this.startTimeModel = '';
+      this.endTimeModel = '';
       this.month = this.today.getMonth();
       this.year = this.today.getFullYear();
       this.generateCalendar();
@@ -289,6 +299,14 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
 
     if (this.startDate && this.endDate) {
       this.checkAndSetActiveRange();
+    }
+
+    // Sync ngModel values for embedded time pickers
+    if (!this.dualCalendar) {
+      this.singleTimeModel = this.getSingleTimePickerDisplay();
+    } else {
+      this.startTimeModel = this.getDualTimePickerDisplay(true);
+      this.endTimeModel = this.getDualTimePickerDisplay(false);
     }
   }
 
