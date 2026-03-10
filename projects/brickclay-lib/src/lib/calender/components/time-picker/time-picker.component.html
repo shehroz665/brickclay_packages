@@ -1,6 +1,8 @@
 <div class="time-picker-wrapper">
   <div class="time-input-group">
-    <label *ngIf="label">{{ label }}</label>
+    @if(label){
+      <label>{{ label }}</label>
+    }
     <div class="time-input-wrapper">
       <input
         type="text"

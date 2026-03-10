@@ -104,10 +104,10 @@
         <div class="timepicker-controls">
           <bk-time-picker
             pickerId="single-time"
-            [label]="''"
+            [label]="'Time'"
             [value]="getSingleTimePickerDisplay()"
             [closePicker]="shouldClosePicker('single-time')"
-            (timeChange)="onSingleTimePickerChange($event)"
+            (change)="onSingleTimePickerChange($event)"
             (pickerOpened)="onTimePickerOpened($event)"
             (pickerClosed)="onTimePickerClosed($event)">
           </bk-time-picker>
@@ -160,10 +160,10 @@
           <div class="timepicker-controls">
             <bk-time-picker
               pickerId="dual-start"
-              [label]="''"
+              [label]="'Time'"
               [value]="getDualTimePickerDisplay(true)"
               [closePicker]="shouldClosePicker('dual-start')"
-              (timeChange)="onDualTimePickerChange($event, true)"
+              (change)="onDualTimePickerChange($event, true)"
               (pickerOpened)="onTimePickerOpened($event)"
               (pickerClosed)="onTimePickerClosed($event)">
             </bk-time-picker>
@@ -214,10 +214,10 @@
           <div class="timepicker-controls">
             <bk-time-picker
               pickerId="dual-end"
-              [label]="''"
+              [label]="'Time'"
               [value]="getDualTimePickerDisplay(false)"
               [closePicker]="shouldClosePicker('dual-end')"
-              (timeChange)="onDualTimePickerChange($event, false)"
+              (change)="onDualTimePickerChange($event, false)"
               (pickerOpened)="onTimePickerOpened($event)"
               (pickerClosed)="onTimePickerClosed($event)">
             </bk-time-picker>

@@ -10,15 +10,16 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./time-picker.component.css']
 })
 export class BkTimePicker implements OnInit, OnChanges, AfterViewInit {
+  @Input() required: boolean = false;
   @Input() value: string = '1:00 AM'; // Time in format "H:MM AM/PM"
-  @Input() label: string = 'Time';
+  @Input() label: string = '';
   @Input() placeholder: string = 'Select time';
   @Input() position: 'left' | 'right' = 'left';
   @Input() pickerId: string = ''; // Unique ID for this picker
   @Input() closePicker: number = 0; // Close counter from parent (triggers close when changed)
   @Input() timeFormat: 12 | 24 = 12; // Visual mode: 12h or 24h
   @Input() showSeconds = false; // Whether to show/edit seconds
-  @Output() timeChange = new EventEmitter<string>();
+  @Output() change = new EventEmitter<string>();
   @Output() pickerOpened = new EventEmitter<string>(); // Notify parent when opened
   @Output() pickerClosed = new EventEmitter<string>(); // Notify parent when closed
 
@@ -204,7 +205,7 @@ export class BkTimePicker implements OnInit, OnChanges, AfterViewInit {
       this.currentAMPM
     );
     this.value = newTime;
-    this.timeChange.emit(newTime);
+    this.change.emit(newTime);
   }
 
   scrollToSelectedTimes() {

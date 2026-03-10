@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, HostListener, OnChanges, SimpleChanges, ViewChild, ElementRef, forwardRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormsModule, Validator, AbstractControl, ValidationErrors } from '@angular/forms';
 import { BkCalendarManagerService } from '../../services/calendar-manager.service';
 import { Subscription } from 'rxjs';
 import { BkTimePicker } from '../time-picker/time-picker.component';
@@ -33,9 +33,14 @@ export class CalendarSelection {
       useExisting: forwardRef(() => BkCustomCalendar),
       multi: true,
     },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => BkCustomCalendar),
+      multi: true,
+    },
   ],
 })
-export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlValueAccessor {
+export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlValueAccessor, Validator {
 
   // Basic Options
   @Input() enableTimepicker = false;
@@ -163,6 +168,19 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
+  }
+
+  /** Validator: when required is true, value must have a date selected. */
+  validate(control: AbstractControl): ValidationErrors | null {
+    if (!this.required) return null;
+    const value = control.value as CalendarSelection | null;
+    if (!value) return { required: true };
+    if (this.multiDateSelection) {
+      if (!value.selectedDates || value.selectedDates.length === 0) return { required: true };
+    } else {
+      if (!value.startDate) return { required: true };
+    }
+    return null;
   }
 
   /** Call from template when control loses focus (for CVA touched state). */
