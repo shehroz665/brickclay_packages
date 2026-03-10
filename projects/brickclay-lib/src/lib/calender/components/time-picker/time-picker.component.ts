@@ -42,6 +42,18 @@ export class BkTimePicker implements OnInit, OnChanges, AfterViewInit, ControlVa
   disabled = false;
 
   @ViewChildren('timeScroll') timeScrollElements!: QueryList<ElementRef>;
+  @ViewChildren('minuteScroll') minuteScrollElements!: QueryList<ElementRef>;
+  @ViewChildren('secondScroll') secondScrollElements!: QueryList<ElementRef>;
+
+  /** Cyclic wheel: item height and cycle size (0-59). Middle block starts at CYCLE_SIZE * ITEM_HEIGHT */
+  private readonly ITEM_HEIGHT = 32;
+  private readonly WHEEL_CYCLE = 60;
+  private readonly MIDDLE_OFFSET = this.WHEEL_CYCLE * this.ITEM_HEIGHT; // 1920
+  private readonly VIEWPORT_HEIGHT = 95;
+
+  /** Repeated 0-59 for infinite scroll (minutes and seconds) */
+  wheelMinutes: number[] = Array.from({ length: this.WHEEL_CYCLE * 3 }, (_, i) => i % this.WHEEL_CYCLE);
+  wheelSeconds: number[] = Array.from({ length: this.WHEEL_CYCLE * 3 }, (_, i) => i % this.WHEEL_CYCLE);
 
   showPicker = false;
   currentHour = 12;
@@ -317,6 +329,56 @@ export class BkTimePicker implements OnInit, OnChanges, AfterViewInit, ControlVa
         element.scrollTop = scrollTop;
       }
     });
+    this.initMinuteWheelScroll();
+    if (this.showSeconds) this.initSecondWheelScroll();
+  }
+
+  /** Position wheel so the selected value is at the top of the viewport. */
+  private initMinuteWheelScroll(): void {
+    const list = this.minuteScrollElements?.toArray();
+    if (!list?.length) return;
+    const el = list[0].nativeElement as HTMLElement;
+    const scrollTop = this.MIDDLE_OFFSET + this.currentMinute * this.ITEM_HEIGHT;
+    el.scrollTop = Math.max(0, scrollTop);
+  }
+
+  private initSecondWheelScroll(): void {
+    const list = this.secondScrollElements?.toArray();
+    if (!list?.length) return;
+    const el = list[0].nativeElement as HTMLElement;
+    const scrollTop = this.MIDDLE_OFFSET + this.currentSecond * this.ITEM_HEIGHT;
+    el.scrollTop = Math.max(0, scrollTop);
+  }
+
+  /** Scroll position -> value 0-59 (value at top of viewport). Recenter when in first or third block. */
+  private wheelScrollToValue(el: HTMLElement, currentValue: number, setValue: (v: number) => void): void {
+    let scrollTop = el.scrollTop;
+    const maxScroll = this.MIDDLE_OFFSET * 2 - 50;
+    if (scrollTop < this.MIDDLE_OFFSET - 100) {
+      scrollTop += this.MIDDLE_OFFSET;
+      el.scrollTop = scrollTop;
+    } else if (scrollTop > maxScroll) {
+      scrollTop -= this.MIDDLE_OFFSET;
+      el.scrollTop = scrollTop;
+    }
+    const index = Math.round(scrollTop / this.ITEM_HEIGHT);
+    const value = ((index % this.WHEEL_CYCLE) + this.WHEEL_CYCLE) % this.WHEEL_CYCLE;
+    if (value !== currentValue) {
+      setValue(value);
+      this.updateTime();
+    }
+  }
+
+  onMinuteWheelScroll(): void {
+    const list = this.minuteScrollElements?.toArray();
+    if (!list?.length) return;
+    this.wheelScrollToValue(list[0].nativeElement, this.currentMinute, (v) => this.currentMinute = v);
+  }
+
+  onSecondWheelScroll(): void {
+    const list = this.secondScrollElements?.toArray();
+    if (!list?.length) return;
+    this.wheelScrollToValue(list[0].nativeElement, this.currentSecond, (v) => this.currentSecond = v);
   }
 
   @HostListener('document:click', ['$event'])

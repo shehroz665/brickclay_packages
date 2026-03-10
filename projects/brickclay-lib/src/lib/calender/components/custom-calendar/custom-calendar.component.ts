@@ -57,7 +57,8 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
   @Input() drop: 'up' | 'down' = 'down';
   @Input() dualCalendar = false;
   @Input() showRanges = true;
-  @Input() timeFormat: 12 | 24 = 24;
+  @Input() timeFormat: 12 | 24 = 12;
+  @Input() clearableTime: boolean = false;
   @Input() enableSeconds = false;
   @Input() customRanges?: Record<string, CalendarRange>;
   @Input() multiDateSelection = false; // NEW: Enable multi-date selection
@@ -584,16 +585,16 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
       return;
     }
 
-    // Apply time if timepicker is enabled (convert 12-hour to 24-hour)
+    // Apply time only when user has already selected a time; otherwise keep time null (date at midnight)
     if (this.enableTimepicker) {
       if (this.dualCalendar) {
-        // For dual calendar, use separate start/end times
-        // If no startDate OR endDate exists, we're selecting start date
         const isStart = !this.startDate || !!this.endDate;
-        this.applyTimeToDate(selected, isStart);
+        if (isStart && this.startTime != null) this.applyTimeToDate(selected, true);
+        else if (!isStart && this.endTime != null) this.applyTimeToDate(selected, false);
+        else selected.setHours(0, 0, this.selectedSecond);
       } else {
-        // For single calendar, always use selected time for start
-        this.applyTimeToDate(selected, true);
+        if (this.startTime != null) this.applyTimeToDate(selected, true);
+        else selected.setHours(0, 0, this.selectedSecond);
       }
     }
 
@@ -603,9 +604,10 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
       this.endDate = null;
       // Activate Custom Range when manually selecting dates
       this.activeRange = 'Custom Range';
-      // Apply time immediately if timepicker is enabled
+      // Apply time only if user has already picked a time; otherwise keep time null
       if (this.enableTimepicker) {
-        this.applyTimeToDate(this.startDate, true);
+        if (this.startTime != null) this.applyTimeToDate(this.startDate, true);
+        else this.startDate.setHours(0, 0, this.selectedSecond);
       }
       if (this.autoApply) {
         this.apply();
@@ -927,8 +929,8 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
     const selection: CalendarSelection = {
       startDate: this.startDate ? this.formatDateToString(this.startDate) : null,
       endDate: this.endDate ? this.formatDateToString(this.endDate) : null,
-      startTime: this.startTime ?? (this.startDate ? this.formatTimeToAmPm(this.startHour, this.startMinute, this.startAMPM) : null),
-      endTime: this.endTime ?? (this.endDate ? this.formatTimeToAmPm(this.endHour, this.endMinute, this.endAMPM) : null),
+      startTime: this.startTime ?? null,
+      endTime: this.endTime ?? null,
     };
 
     if (this.multiDateSelection && this.selectedDates.length > 0) {
@@ -1160,34 +1162,19 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
     // Prefer moment formatting for consistent display
     let dateStr = moment(this.startDate).format(this.displayFormat);
 
-    if (this.enableTimepicker && !this.dualCalendar) {
-      const hr = this.startDate.getHours().toString().padStart(2, '0');
-      const min = this.startDate.getMinutes().toString().padStart(2, '0');
-      dateStr += ` ${hr}:${min}`;
-      if (this.enableSeconds) {
-        const sec = this.startDate.getSeconds().toString().padStart(2, '0');
-        dateStr += `:${sec}`;
-      }
+    // Only show time when user has selected a time; use startTime/endTime strings so 12:00 AM shows as "12:00 AM" not "00:00"
+    if (this.enableTimepicker && !this.dualCalendar && this.startTime != null) {
+      dateStr += ` ${this.startTime}`;
     }
 
     if (this.endDate && !this.singleDatePicker) {
       let endStr = moment(this.endDate).format(this.displayFormat);
       if (this.enableTimepicker) {
-        if (this.dualCalendar) {
-          const startHr = this.startDate.getHours().toString().padStart(2, '0');
-          const startMin = this.startDate.getMinutes().toString().padStart(2, '0');
-          dateStr += ` ${startHr}:${startMin}`;
-          if (this.enableSeconds) {
-            const startSec = this.startDate.getSeconds().toString().padStart(2, '0');
-            dateStr += `:${startSec}`;
-          }
+        if (this.dualCalendar && this.startTime != null) {
+          dateStr += ` ${this.startTime}`;
         }
-        const endHr = this.endDate.getHours().toString().padStart(2, '0');
-        const endMin = this.endDate.getMinutes().toString().padStart(2, '0');
-        endStr += ` ${endHr}:${endMin}`;
-        if (this.enableSeconds) {
-          const endSec = this.endDate.getSeconds().toString().padStart(2, '0');
-          endStr += `:${endSec}`;
+        if (this.endTime != null) {
+          endStr += ` ${this.endTime}`;
         }
       }
       return `${dateStr} - ${endStr}`;

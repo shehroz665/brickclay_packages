@@ -104,6 +104,8 @@
         <div class="timepicker-controls">
           <bk-time-picker
             pickerId="single-time"
+            [timeFormat]="timeFormat"
+            [clearable]="clearableTime"
             [label]="''"
             [ngModel]="singleTimeModel"
             (ngModelChange)="onSingleTimePickerChange($event); singleTimeModel=$event"
@@ -160,6 +162,8 @@
           <div class="timepicker-controls">
             <bk-time-picker
               pickerId="dual-start"
+              [timeFormat]="timeFormat"
+              [clearable]="clearableTime"
               [label]="''"
               [ngModel]="startTimeModel"
               (ngModelChange)="onDualTimePickerChange($event, true); startTimeModel=$event"
@@ -214,6 +218,8 @@
           <div class="timepicker-controls">
             <bk-time-picker
               pickerId="dual-end"
+              [timeFormat]="timeFormat"
+              [clearable]="clearableTime"
               [label]="''"
               [ngModel]="endTimeModel"
               (ngModelChange)="onDualTimePickerChange($event, false); endTimeModel=$event"
