@@ -34,6 +34,7 @@ import { BkColumnFilterService } from '../../service/column-filter.service';
 })
 export class BkColumnSelect implements ControlValueAccessor, OnChanges {
   @Input() searchable = false;
+  @Input() buttonClass : string = '';
   @Input() cacheKey!: string;
   @Input() columns: string[] = [];
   @Input() isOpened = false;

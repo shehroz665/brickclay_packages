@@ -11,16 +11,25 @@
           [class.tabs-button--active]="isActive(tab.id)"
           [class.tabs-button--disabled]="disabled || tab.disabled"
           [class.tabs-button--no-icon]="!getTabIcon(tab)"
+          [class.tabs-button--icon-right]="tab.direction === 'right'"
           class="tabs-button"
           (click)="setActiveTab(tab)"
           role="tab">
-          @if (getTabIcon(tab)) {
+          @if (getTabIcon(tab) && tab.direction !== 'right') {
             <img
+              [bkTooltip]="tab.iconTooltip || []" [bkTooltipPosition]="tab.iconTooltipDirection || 'top'"
               [src]="getTabIcon(tab)"
               [alt]="tab.iconAlt || tab.label"
               class="tabs-icon">
           }
           <span class="tabs-label">{{ tab.label }}</span>
+          @if (getTabIcon(tab) && tab.direction === 'right') {
+            <img
+              [bkTooltip]="tab.iconTooltip || []" [bkTooltipPosition]="tab.iconTooltipDirection || 'top'"
+              [src]="getTabIcon(tab)"
+              [alt]="tab.iconAlt || tab.label"
+              class="tabs-icon">
+          }
         </button>
       </li>
     }
