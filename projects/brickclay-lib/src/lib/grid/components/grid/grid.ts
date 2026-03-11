@@ -6,11 +6,12 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { BKTooltipDirective } from '../../../tooltip/tooltip.directive';
 import { BkBadge } from '../../../badge/badge';
 import { TableAction, TableBadge, TableColumn, TableIcon } from '../../models/grid.model';
+import { BkCheckbox } from '../../../checkbox/checkbox';
 export type SortDirection = 'asc' | 'desc';
 @Component({
   selector: 'bk-grid',
   standalone: true,
-  imports: [CommonModule,DragDropModule,ScrollingModule,BkBadge,BKTooltipDirective],
+  imports: [CommonModule,DragDropModule,ScrollingModule,BkBadge,BKTooltipDirective,BkCheckbox,FormsModule],
   templateUrl: './grid.html',
   styleUrl: './grid.css',
 })
@@ -22,7 +23,10 @@ export class BkGrid<T = any> {
   @Input() result!: T[];
   @Input() actions: TableAction<T>[] | ((row: T) => TableAction<T>[]) = [];
   @Input() customClass: string = 'h-[calc(100vh-260px)]';
-
+  @Output() change = new EventEmitter<{
+    row: T;
+    column: TableColumn<T>
+  }>();
   /* ================= Outputs ================= */
 
   @Output() actionClick = new EventEmitter<{
@@ -90,6 +94,20 @@ export class BkGrid<T = any> {
     }
 
     return '';
+  }
+
+  /* ================= Checkbox ================= */
+
+  getCheckboxValue(row: T, column: TableColumn<T>): boolean {
+    if (!column.field) return false;
+    return !!(row as any)[column.field];
+  }
+
+  setCheckboxValue(row: T, column: TableColumn<T>, value: boolean): void {
+    if (column.field){
+      (row as any)[column.field] = value;
+      this.change.emit({row: row,column:column});
+    }
   }
 
   /* ================= Badges ================= */

@@ -63,7 +63,14 @@
                 @if (draggable && colIndex === firstVisibleColumnIndex) {
                   <span cdkDragHandle class="mr-2 text-gray-400" [ngClass]="{ 'cursor-move': draggable }">☰</span>
                 }
-                @if(col.badges){
+                @if (col.checkbox) {
+                  <bk-checkbox
+                    checkboxClass="sm"
+                    [ngModel]="getCheckboxValue(row, col)"
+                    (ngModelChange)="setCheckboxValue(row, col, $event)"
+                  ></bk-checkbox>
+                }
+                @else if(col.badges){
                   @let badge = getBadge(row, col);
                     @if (badge) {
                        <bk-badge [label]="badge.label" [variant]="badge.variant"

@@ -14,6 +14,7 @@ export interface TableColumn<T = any> {
   /** show / hide both th + td */
   visible?: boolean; // default: true
   actions?: TableAction[] | ((row: T) => TableAction[]);
+  checkbox?:boolean;
 }
 
 export interface TableAction<T = any> {
