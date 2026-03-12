@@ -1,6 +1,6 @@
 {
   "name": "@brickclay-org/ui",
-  "version": "0.0.86",
+  "version": "0.0.87",
   "schematics": "./schematics/collection.json",
   "ng-add": {
     "save": "dependencies"
