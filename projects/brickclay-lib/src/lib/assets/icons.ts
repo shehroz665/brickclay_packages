@@ -3,6 +3,6 @@
 export const BrickclayIcons = {
   arrowleft: 'assets/icons/chevron-left.svg',
   arrowRight: 'assets/icons/chevron-right.svg',
-  calenderIcon: 'assets/icons/calender.svg',
+  calenderIcon: 'assets/icons/custom-calender.svg',
   timerIcon: 'assets/icons/timer.svg',
 } as const;
