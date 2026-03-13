@@ -53,7 +53,8 @@
 
 .time-clear-btn {
   position: absolute;
-  right: 32px;
+  /* right: 32px; */
+  right: 26px;
   background: none;
   border: none;
   font-size: 18px;
@@ -66,6 +67,8 @@
   align-items: center;
   justify-content: center;
   line-height: 1;
+  /*  */
+  top: 7px;
 }
 
 .time-clear-btn:hover {

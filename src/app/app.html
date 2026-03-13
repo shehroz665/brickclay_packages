@@ -7,14 +7,70 @@
 
 @switch (calendarVariant) {
   @case ('single') {
-    <div style="max-width: 300px;">
-      <bk-custom-calendar [(ngModel)]="singleDateSelection" [required]="true" [singleDatePicker]="true"
+    <form #form="ngForm">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="col-span-2">
+          <label for="ValidFrom" class="field-label required"> Valid From </label>
+          <bk-custom-calendar
+            name="ValidFrom"
+            [(ngModel)]="singleDatefromSelection"
+            (selected)="onSingleCalenderSelected($event, 'from')"
+            [dualCalendar]="false"
+            [singleDatePicker]="true"
+            [showRanges]="false"
+            [enableTimepicker]="false"
+            [required]="true"
+            placeholder="Select a date"
+            [displayFormat]="'MM/DD/YYYY'"
+            [appendToBody]="true"
+            [showCancelApply]="false"
+            [autoApply]="true"
+            #ValidFrom="ngModel"
+          >
+          </bk-custom-calendar>
+          <bk-validator
+            class=""
+            [control]="ValidFrom"
+            [label]="'Valid From'"
+          />
+        </div>
+        <div class="col-span-2">
+            <label for="ValidTo" class="field-label required"> Valid To </label>
+            <bk-custom-calendar
+              name="ValidTo"
+              [(ngModel)]="singleDatetoSelection"
+              (selected)="onSingleCalenderSelected($event, 'to')"
+              [dualCalendar]="false"
+              [singleDatePicker]="true"
+              [showRanges]="false"
+              [inline]="false"
+              [required]="true"
+              [enableTimepicker]="false"
+              placeholder="Select a date"
+              [displayFormat]="'MM/DD/YYYY'"
+              [appendToBody]="true"
+              [showCancelApply]="false"
+              [autoApply]="true"
+              #ValidTo="ngModel"
+            >
+            </bk-custom-calendar>
+
+            <bk-validator
+              class=""
+              [control]="ValidTo"
+              [label]="'Valid To'"
+            />
+        </div>
+      </div>
+    </form>
+    <!-- <div style="max-width: 300px;">
+      <bk-custom-calendar [(ngModel)]="singleDatefromSelection" [required]="true" [singleDatePicker]="true"
         [showRanges]="false" [displayFormat]="'MM/DD/YYYY'" placeholder="Select a date" [enableTimepicker]="true"
         #singleDate="ngModel" [showCancelApply]="false" (selected)="onSingleCalenderSelected($event,'single-calender')"
         [hasError]="singleDateHasError" [appendToBody]="true"></bk-custom-calendar>
       <bk-validator [control]="singleDate" label="Single Date"></bk-validator>
-      <p class="mt-5">Value: {{ singleDateSelection | json }}</p>
-    </div>
+      <p class="mt-5">Value: {{ singleDatefromSelection | json }}</p>
+    </div> -->
   }
   @case ('dual') {
     <div style="max-width: 600px;">
@@ -27,11 +83,18 @@
     </div>
   }
   @case ('timeOnly') {
-    <div style="max-width: 300px;">
-      <bk-time-picker [(ngModel)]="timeOnlyValue" [timeFormat]="24" label="Time" #timePicker="ngModel" [required]="true" [clearable]="true"></bk-time-picker>
+    <!-- <div style="max-width: 300px;">
+      <bk-time-picker [(ngModel)]="timeOnlyValue"  [timeFormat]="12" label="Time" #timePicker="ngModel" [required]="true" [clearable]="true"></bk-time-picker>
       <bk-validator [control]="timePicker" label="Time"></bk-validator>
       <p class="mt-5">Value: {{ timeOnlyValue }}</p>
+    </div> -->
+
+    <div style="max-width: 300px;">
+      <bk-time-picker [(ngModel)]="timeOnlyValue1"  [timeFormat]="24" label="Time" #timePicker="ngModel" [required]="true" [clearable]="true"></bk-time-picker>
+      <bk-validator [control]="timePicker" label="Time"></bk-validator>
+      <p class="mt-5">Value: {{ timeOnlyValue1 }}</p>
     </div>
+
   }
 }
 

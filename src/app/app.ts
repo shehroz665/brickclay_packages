@@ -30,7 +30,9 @@ export type CalendarVariant = 'single' | 'dual' | 'timeOnly';
 
 
 export class App implements OnInit {
-  singleDateSelection: CalendarSelection = new CalendarSelection();
+  singleDatefromSelection: CalendarSelection = new CalendarSelection();
+  singleDatetoSelection: CalendarSelection = new CalendarSelection();
+
   calenderSelection: CalendarSelection = new CalendarSelection();
   dualDateSelection: CalendarSelection = new CalendarSelection();
 
@@ -38,8 +40,9 @@ export class App implements OnInit {
   calendarVariant: CalendarVariant = 'single';
 
   /** Bound to time picker when variant is 'timeOnly'. */
-  // timeOnlyValue = '1:00 AM';
-  timeOnlyValue : string | null= null;
+  timeOnlyValue = '09:04 AM';
+  timeOnlyValue1 = '13:04:56';
+  // timeOnlyValue : string | null= '13:08';
 
   constructor() {}
 
@@ -47,8 +50,10 @@ export class App implements OnInit {
     this.calenderSelection.startDate = '2026-02-21';
     this.calenderSelection.endDate = '2026-03-22';
 
-    // this.singleDateSelection.startDate='2026-02-21'
-    // this.singleDateSelection.endDate='2026-03-21'
+    // this.singleDatefromSelection.startDate='2026-02-21'
+    // this.singleDatetoSelection.endDate='2026-03-21'
+
+
     // this.singleDateSelection.startTime='3:02 AM';
 
   }
@@ -66,8 +71,15 @@ export class App implements OnInit {
 
   onSingleCalenderSelected(event: any, calendarId: string) {
     debugger;
-    this.singleDateSelection.startDate = event.startDate;
-    this.singleDateSelection.endDate = event.endDate;
+    if(calendarId==='to'){
+    this.singleDatetoSelection.startDate = event.startDate;
+    this.singleDatetoSelection.endDate = event.endDate;
+    }
+    else if(calendarId==='from'){
+    this.singleDatefromSelection.startDate = event.startDate;
+    this.singleDatefromSelection.endDate = event.endDate;
+    }
+
   }
 
   get singleDateHasError(): boolean {

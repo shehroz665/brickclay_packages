@@ -9,7 +9,7 @@
         class="time-input"
         [value]="getDisplayValue()"
         [placeholder]="placeholder"
-        [attr.disabled]="disabled ? true : null"
+        [disabled]="disabled ? true : null"
         readonly
         (click)="!disabled && togglePicker()"
         (blur)="markAsTouched()">
