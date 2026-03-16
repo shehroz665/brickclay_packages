@@ -246,10 +246,13 @@ export class BkHierarchicalSelect implements ControlValueAccessor {
   }
 
   closeDropdown(): void {
+    const wasOpen = this.isOpen();
     this.isOpen.set(false);
     this.searchTerm.set('');
     this.breadcrumb.set([]);
-    this.onTouched();
+    if (wasOpen) {
+      this.onTouched();
+    }
   }
 
   goBack(): void {
