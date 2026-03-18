@@ -9,7 +9,7 @@ export interface TableColumn<T = any> {
   headerClass?: string;
   cellClass?: string;
   formatter?: (row: T) => string;
-  badges?: TableBadge[];
+  badges?: TableBadge[] | ((row: T) => TableBadge[]);
   icons?: TableIcon[] | ((row: T) => TableIcon[]);
   /** show / hide both th + td */
   visible?: boolean; // default: true

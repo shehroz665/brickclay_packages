@@ -113,7 +113,9 @@ export class BkGrid<T = any> {
   /* ================= Badges ================= */
 
   getBadge(row: T, column: TableColumn<T>): TableBadge | undefined {
-    return column.badges?.find((b) => b.label === this.getCellValue(row, column));
+    if (!column.badges) return undefined;
+    const list = typeof column.badges === 'function' ? column.badges(row) : column.badges;
+    return list.find((b) => b.label === this.getCellValue(row, column));
   }
 
   /* ================= Icons ================= */
