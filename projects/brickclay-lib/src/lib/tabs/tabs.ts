@@ -31,7 +31,6 @@ export class BkTabs {
 
   // Set active tab and emit change event
   setActiveTab(tab:TabItem): void {
-    debugger
     if (tab?.disabled || this.disabled) return;
     this.activeTabId = tab.id;
     this.change.emit(tab);
