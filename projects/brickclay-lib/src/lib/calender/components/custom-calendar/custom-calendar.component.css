@@ -4,6 +4,7 @@
 .calendar-container * {
   font-family: 'Inter', sans-serif !important;
 }
+
 /* --------------------------
    CALENDAR CONTAINER
 ---------------------------*/
@@ -24,26 +25,35 @@
 
 .calendar-input {
   width: 100%;
-    padding: 9px 12px 9px 36px;
-    border: 1px solid #E3E3E7;
-    border-radius: 4px;
-    font-size: 14px;
+  padding: 9px 12px 9px 36px;
+  border: 1px solid #E3E3E7;
+  border-radius: 4px;
+  font-size: 14px;
   line-height: 20px;
-    cursor: pointer;
-    background: #fff;
-    transition: all 0.2s;
+  cursor: pointer;
+  background: #fff;
+  transition: all 0.2s;
 }
+
 .calendar-input::placeholder {
   color: #6B7080;
 }
+
 .calendar-input.hasError {
   border-color: #F34050;
 }
 
+.calendar-input:disabled {
+  cursor: not-allowed;
+  border-color: rgb(227 227 231);
+  background-color: rgb(244 244 246);
+  color: rgb(161 163 174);
+}
+
 .calendar-input:focus {
   outline: none;
-    border-color: #999;
-    /*box-shadow: 0 0 0 3px rgb(106 106 106 / 10%);*/
+  border-color: #999;
+  /*box-shadow: 0 0 0 3px rgb(106 106 106 / 10%);*/
 }
 
 .calendar-icon {
@@ -69,7 +79,7 @@
   justify-content: center;
   line-height: 1;
   transition: color 0.2s;
-  top: 8px;
+  top: 10px;
 }
 
 .clear-btn:hover {
@@ -80,10 +90,11 @@
    CALENDAR POPUP
 ---------------------------*/
 .calendar-popup {
-  position: absolute;
-  top: 110%;
+  position: absolute !important;
+  top: 110% !important;
   left: 0;
   width: 320px;
+  max-width: 100%;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
@@ -112,9 +123,11 @@
 .calendar-popup.dual-calendar-mode {
   width: 600px;
 }
+
 .calendar-popup.dual-calendar-mode.has-ranges {
   width: 730px;
 }
+
 .calendar-popup.has-ranges {
   width: 450px;
 }
@@ -149,6 +162,7 @@
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -160,6 +174,7 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -256,10 +271,11 @@
   background: #f0f0f0;
   color: #000;
 }
-.nav-btn img{
+
+.nav-btn img {
   width: auto;
 
-    max-width: none !important;
+  max-width: none !important;
 }
 
 /* --------------------------
@@ -422,10 +438,10 @@
 
 .calendar-popup.has-ranges .ranges {
   margin-bottom: 0;
-    padding-bottom: 0;
-    border-bottom: none;
-    /* border-right: 1px solid #993535; */
-    padding: 10px;
+  padding-bottom: 0;
+  border-bottom: none;
+  /* border-right: 1px solid #993535; */
+  padding: 10px;
 }
 
 .calendar-popup.has-ranges .dual-calendar,
@@ -454,11 +470,11 @@
 
 .timepicker-label {
   font-size: 12px;
-    font-weight: 500;
-    color: #000000;
-    margin-bottom: 4px;
-    /* text-transform: uppercase; */
-    letter-spacing: -0.28px;
+  font-weight: 500;
+  color: #000000;
+  margin-bottom: 4px;
+  /* text-transform: uppercase; */
+  letter-spacing: -0.28px;
 }
 
 /* .timepicker-controls {
@@ -701,15 +717,16 @@
 .w-100 {
   width: 100%;
 }
+
 .flex-grow-1 {
   flex-grow: 1;
 }
 
 /*calender-error*/
 .calender-error {
-    margin-top: 6px;
-    color: #F34050;
-    font-size: 14px;
-    line-height: 20px;
+  margin-top: 6px;
+  color: #F34050;
+  font-size: 14px;
+  line-height: 20px;
 
 }
