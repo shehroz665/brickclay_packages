@@ -1,6 +1,6 @@
 <div class="time-picker-wrapper">
-  <div class="time-input-group">
-    @if(label){
+  <div class="time-input-group" [ngClass]="variation">
+    @if (label) {
       <label>{{ label }}</label>
     }
     <div class="time-input-wrapper" [class.has-value]="hasValue">
@@ -12,7 +12,8 @@
         [disabled]="disabled ? true : null"
         readonly
         (click)="!disabled && togglePicker()"
-        (blur)="markAsTouched()">
+        (blur)="markAsTouched()"
+      />
       <span class="time-icon">
         <img alt="timer" class="timer-icon" [src]="brickclayIcons.timerIcon" />
       </span>
@@ -22,13 +23,32 @@
         *ngIf="clearable && hasValue && !disabled"
         (click)="clear(); $event.stopPropagation()"
         title="Clear time"
-        aria-label="Clear time">×</button>
+        aria-label="Clear time"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
       <div class="custom-time-picker-dropdown" *ngIf="showPicker">
-        <div class="custom-time-picker" [ngClass]="{
-          'left-position': position === 'left',
-          'right-position': position === 'right',
-          'format-24': timeFormat === 24
-        }">
+        <div
+          class="custom-time-picker"
+          [ngClass]="{
+            'left-position': position === 'left',
+            'right-position': position === 'right',
+            'format-24': timeFormat === 24,
+          }"
+        >
           <!-- Hours Column -->
           <div class="time-column">
             <div class="time-scroll" #timeScroll>
@@ -65,7 +85,8 @@
                   *ngFor="let s of wheelSeconds"
                   class="time-item"
                   [class.selected]="currentSecond === s"
-                  (click)="onSecondChange(s)">
+                  (click)="onSecondChange(s)"
+                >
                   {{ s.toString().padStart(2, '0') }}
                 </div>
               </div>
@@ -80,7 +101,8 @@
                   *ngFor="let ap of getAMPMOptions()"
                   class="time-item"
                   [class.selected]="currentAMPM === ap"
-                  (click)="onAMPMChange(ap)">
+                  (click)="onAMPMChange(ap)"
+                >
                   {{ ap }}
                 </div>
               </div>

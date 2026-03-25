@@ -40,8 +40,8 @@
 }
 
 .time-input-group.default .time-input {
-  font-size: 11px;
-  padding: 5.75px 40px 5.75px 12px;
+  font-size: 12px;
+  padding: 6px 40px 5px 12px;
 }
 
 .time-input-group.lg .time-input {
@@ -77,11 +77,19 @@
   justify-content: center;
   line-height: 1;
   /*  */
-  top: 7px;
+  /* top: 7px; */
 }
+
 
 .time-clear-btn:hover {
   color: #374151;
+}
+
+.time-input-group.default .time-clear-btn {
+  top: 5px;
+}
+.time-input-group.lg .time-clear-btn {
+  top: 10px;
 }
 
 .time-icon {

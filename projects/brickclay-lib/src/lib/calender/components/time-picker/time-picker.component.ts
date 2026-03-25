@@ -28,6 +28,7 @@ export class BkTimePicker implements OnInit, OnChanges, AfterViewInit, ControlVa
   @Input() placeholder: string = 'Select time';
   @Input() clearable = false;
   @Input() position: 'left' | 'right' = 'left';
+  @Input() variation: 'default' | 'lg' = 'default';
   @Input() pickerId: string = '';
   @Input() closePicker: number = 0;
   @Input() timeFormat: 12 | 24 = 12;
