@@ -96,7 +96,7 @@
               [value]="singleStartTime"
               [position]="'left'"
               [closePicker]="shouldClosePicker('single-start')"
-              (timeChange)="onSingleStartTimeChange($event)"
+              (change)="onSingleStartTimeChange($event)"
               (pickerOpened)="onTimePickerOpened($event)"
               (pickerClosed)="onTimePickerClosed($event)">
             </bk-time-picker>
@@ -106,7 +106,7 @@
               [value]="singleEndTime"
               [position]="'right'"
               [closePicker]="shouldClosePicker('single-end')"
-              (timeChange)="onSingleEndTimeChange($event)"
+              (change)="onSingleEndTimeChange($event)"
               (pickerOpened)="onTimePickerOpened($event)"
               (pickerClosed)="onTimePickerClosed($event)">
             </bk-time-picker>
@@ -139,7 +139,7 @@
               [value]="dateConfig.startTime"
               [position]="'left'"
               [closePicker]="shouldClosePicker('multiple-' + i + '-start')"
-              (timeChange)="onMultipleDateStartTimeChange(i, $event)"
+              (change)="onMultipleDateStartTimeChange(i, $event)"
               (pickerOpened)="onTimePickerOpened($event)"
               (pickerClosed)="onTimePickerClosed($event)">
             </bk-time-picker>
@@ -149,7 +149,7 @@
               [value]="dateConfig.endTime"
               [position]="'right'"
               [closePicker]="shouldClosePicker('multiple-' + i + '-end')"
-              (timeChange)="onMultipleDateEndTimeChange(i, $event)"
+              (change)="onMultipleDateEndTimeChange(i, $event)"
               (pickerOpened)="onTimePickerOpened($event)"
               (pickerClosed)="onTimePickerClosed($event)">
             </bk-time-picker>
@@ -179,7 +179,7 @@
             [value]="rangeStartTime"
             [position]="'left'"
             [closePicker]="shouldClosePicker('range-start')"
-            (timeChange)="onRangeStartTimeChange($event)"
+            (change)="onRangeStartTimeChange($event)"
             (pickerOpened)="onTimePickerOpened($event)"
             (pickerClosed)="onTimePickerClosed($event)">
           </bk-time-picker>
@@ -189,7 +189,7 @@
             [value]="rangeEndTime"
             [position]="'right'"
             [closePicker]="shouldClosePicker('range-end')"
-            (timeChange)="onRangeEndTimeChange($event)"
+            (change)="onRangeEndTimeChange($event)"
             (pickerOpened)="onTimePickerOpened($event)"
             (pickerClosed)="onTimePickerClosed($event)">
           </bk-time-picker>

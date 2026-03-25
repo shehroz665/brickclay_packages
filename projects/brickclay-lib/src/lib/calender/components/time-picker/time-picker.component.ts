@@ -1,284 +1,433 @@
 import { BrickclayIcons } from '../../../assets/icons';
-import { Component, Input, Output, EventEmitter, OnInit, OnChanges, AfterViewInit, QueryList, ViewChildren, ElementRef, HostListener, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, AfterViewInit, QueryList, ViewChildren, ElementRef, HostListener, SimpleChanges, forwardRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'bk-time-picker',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './time-picker.component.html',
-  styleUrls: ['./time-picker.component.css']
+  styleUrls: ['./time-picker.component.css'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => BkTimePicker),
+      multi: true,
+    },
+  ],
 })
-export class BkTimePicker implements OnInit, OnChanges, AfterViewInit {
-  @Input() value: string = '1:00 AM'; // Time in format "H:MM AM/PM"
-  @Input() label: string = 'Time';
+export class BkTimePicker implements OnInit, OnChanges, AfterViewInit, ControlValueAccessor {
+
+  @Input() required: boolean = false;
+
+  /** @deprecated Prefer [(ngModel)] */
+  @Input() value: string | null = null;
+
+  @Input() label: string = '';
   @Input() placeholder: string = 'Select time';
+  @Input() clearable = false;
   @Input() position: 'left' | 'right' = 'left';
-  @Input() variantion: 'default' | 'lg' = 'default';
-  @Input() pickerId: string = ''; // Unique ID for this picker
-  @Input() closePicker: number = 0; // Close counter from parent (triggers close when changed)
-  @Input() timeFormat: 12 | 24 = 12; // Visual mode: 12h or 24h
-  @Input() showSeconds = false; // Whether to show/edit seconds
-  @Output() timeChange = new EventEmitter<string>();
-  @Output() pickerOpened = new EventEmitter<string>(); // Notify parent when opened
-  @Output() pickerClosed = new EventEmitter<string>(); // Notify parent when closed
+  @Input() pickerId: string = '';
+  @Input() closePicker: number = 0;
+  @Input() timeFormat: 12 | 24 = 12;
+  @Input() showSeconds = false;
+
+  @Output() change = new EventEmitter<string | null>();
+  @Output() timeChange = new EventEmitter<string | null>();
+  @Output() pickerOpened = new EventEmitter<string>();
+  @Output() pickerClosed = new EventEmitter<string>();
+
+  private onChange: (value: string | null) => void = () => {};
+  private onTouched: () => void = () => {};
+  @Input() disabled:boolean = false;
 
   @ViewChildren('timeScroll') timeScrollElements!: QueryList<ElementRef>;
+  @ViewChildren('minuteScroll') minuteScrollElements!: QueryList<ElementRef>;
+  @ViewChildren('secondScroll') secondScrollElements!: QueryList<ElementRef>;
+
+  private readonly ITEM_HEIGHT = 32;
+  private readonly WHEEL_CYCLE = 60;
+  private readonly MIDDLE_OFFSET = this.WHEEL_CYCLE * this.ITEM_HEIGHT;
+
+  wheelMinutes: number[] = Array.from({ length: this.WHEEL_CYCLE * 3 }, (_, i) => i % this.WHEEL_CYCLE);
+  wheelSeconds: number[] = Array.from({ length: this.WHEEL_CYCLE * 3 }, (_, i) => i % this.WHEEL_CYCLE);
 
   showPicker = false;
-  currentHour = 1;
+  currentHour = 12;
   currentMinute = 0;
-  currentAMPM = 'AM';
   currentSecond = 0;
+  currentAMPM = 'PM';
 
-  brickclayIcons=BrickclayIcons;
+  private _modelValue: string | null = null;
 
-  ngOnInit() {
-    this.parseTimeValue();
-  }
+  brickclayIcons = BrickclayIcons;
 
-  ngAfterViewInit() {
-    if (this.showPicker) {
-      setTimeout(() => {
-        this.scrollToSelectedTimes();
-      }, 100);
-    }
-  }
+  /* ---------------- CVA ---------------- */
 
-  parseTimeValue() {
-    const parsed = this.parseTimeStringToComponents(this.value);
-    this.currentHour = parsed.hour;
-    this.currentMinute = parsed.minute;
-    this.currentSecond = parsed.second;
-    this.currentAMPM = parsed.ampm;
-  }
+  writeValue(value: string | null): void {
 
-  getHours(): number[] {
-    // 12-hour: 1-12, 24-hour: 0-23
-    if (this.timeFormat === 24) {
-      return Array.from({ length: 24 }, (_, i) => i);
-    }
-    return Array.from({ length: 12 }, (_, i) => i + 1);
-  }
-
-  getMinutes(): number[] {
-    return Array.from({ length: 60 }, (_, i) => i);
-  }
-
-  getSeconds(): number[] {
-    return Array.from({ length: 60 }, (_, i) => i);
-  }
-
-  getAMPMOptions(): string[] {
-    return ['AM', 'PM'];
-  }
-
-  parseTimeStringToComponents(timeStr: string): { hour: number; minute: number; second: number; ampm: string } {
-    // Supports:
-    // - "H:MM AM/PM"
-    // - "H:MM:SS AM/PM"
-    // - "HH:MM" (24h)
-    // - "HH:MM:SS" (24h)
-    if (!timeStr) {
-      return {
-        hour: this.timeFormat === 24 ? 0 : 12,
-        minute: 0,
-        second: 0,
-        ampm: this.timeFormat === 24 ? '' : 'AM'
-      };
+    if (!value) {
+      this._modelValue = null;
+      this.setDefaultsForDropdown();
+      return;
     }
 
-    const parts = timeStr.trim().split(' ');
-    const timePart = parts[0] || (this.timeFormat === 24 ? '00:00' : '12:00');
-    let ampm = (parts[1] || '').toUpperCase();
-
-    const [hoursStr, minutesStr, secondsStr] = timePart.split(':');
-    let hour = parseInt(hoursStr || (this.timeFormat === 24 ? '0' : '12'), 10);
-    const minute = parseInt(minutesStr || '0', 10);
-    const second = parseInt(secondsStr || '0', 10);
-
-    if (this.timeFormat === 24) {
-      // In 24-hour mode we ignore AM/PM and keep hour as 0-23
-      return {
-        hour: isNaN(hour) ? 0 : Math.min(Math.max(hour, 0), 23),
-        minute: isNaN(minute) ? 0 : Math.min(Math.max(minute, 0), 59),
-        second: isNaN(second) ? 0 : Math.min(Math.max(second, 0), 59),
-        ampm: ''
-      };
-    }
-
-    // 12-hour mode: normalize AM/PM and convert 24h inputs if needed
-    let ampmValue = ampm === 'PM' || ampm === 'AM' ? ampm : '';
-    if (!ampmValue) {
-      // No AM/PM provided -> interpret as 24-hour and convert to 12-hour with AM/PM
-      if (hour >= 12) {
-        ampmValue = 'PM';
-        if (hour > 12) hour -= 12;
-      } else {
-        ampmValue = 'AM';
-        if (hour === 0) hour = 12;
-      }
-    }
-
-    // Clamp to 1-12 range
-    if (hour < 1) hour = 1;
-    if (hour > 12) hour = 12;
-
-    return {
-      hour,
-      minute: isNaN(minute) ? 0 : Math.min(Math.max(minute, 0), 59),
-      second: isNaN(second) ? 0 : Math.min(Math.max(second, 0), 59),
-      ampm: ampmValue
-    };
+    this._modelValue = value;
+    this.parseTimeValue(value);
   }
 
-  formatTimeFromComponents(hour: number, minute: number, second: number, ampm: string): string {
-    const hStr = hour.toString().padStart(2, '0');
-    const minuteStr = minute.toString().padStart(2, '0');
-    const secondStr = second.toString().padStart(2, '0');
-
-    if (this.timeFormat === 24) {
-      // "HH:mm" or "HH:mm:ss"
-      return this.showSeconds
-        ? `${hStr}:${minuteStr}:${secondStr}`
-        : `${hStr}:${minuteStr}`;
-    }
-
-    // 12-hour: "H:MM" or "H:MM:SS" with AM/PM
-    const displayHour = hour; // already 1-12
-    return this.showSeconds
-      ? `${displayHour}:${minuteStr}:${secondStr} ${ampm}`
-      : `${displayHour}:${minuteStr} ${ampm}`;
+  registerOnChange(fn: (value: string | null) => void): void {
+    this.onChange = fn;
   }
 
-  togglePicker() {
-    if (!this.showPicker) {
-      this.showPicker = true;
-      this.parseTimeValue();
-      this.pickerOpened.emit(this.pickerId);
-      setTimeout(() => {
-        this.scrollToSelectedTimes();
-      }, 100);
-    } else {
-      this.showPicker = false;
-      this.pickerClosed.emit(this.pickerId);
-    }
+  registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
   }
 
-  onHourChange(hour: number) {
-    this.currentHour = hour;
-    this.updateTime();
-    setTimeout(() => {
-      this.scrollToSelectedTimes();
-    }, 50);
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
   }
 
-  onMinuteChange(minute: number) {
-    this.currentMinute = minute;
-    this.updateTime();
-    setTimeout(() => {
-      this.scrollToSelectedTimes();
-    }, 50);
-  }
+  /* ---------------- Display ---------------- */
 
-  onSecondChange(second: number) {
-    this.currentSecond = second;
-    this.updateTime();
-    setTimeout(() => {
-      this.scrollToSelectedTimes();
-    }, 50);
-  }
+  getDisplayValue(): string {
 
-  onAMPMChange(ampm: string) {
-    this.currentAMPM = ampm;
-    this.updateTime();
-    setTimeout(() => {
-      this.scrollToSelectedTimes();
-    }, 50);
-  }
+    if (!this._modelValue) return '';
 
-  updateTime() {
-    const newTime = this.formatTimeFromComponents(
+    return this.formatTimeFromComponents(
       this.currentHour,
       this.currentMinute,
       this.currentSecond,
       this.currentAMPM
     );
-    this.value = newTime;
-    this.timeChange.emit(newTime);
   }
 
-  scrollToSelectedTimes() {
-    this.timeScrollElements.forEach((elementRef) => {
-      const element = elementRef.nativeElement;
-      const selectedItem = element.querySelector('.time-item.selected');
-      if (selectedItem) {
-        const scrollTop = selectedItem.offsetTop - element.offsetHeight / 40 + selectedItem.offsetHeight / 40;
-        element.scrollTop = scrollTop;
-      }
-    });
+  get hasValue(): boolean {
+    return !!this._modelValue;
   }
 
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
-    const target = event.target as HTMLElement;
-    if (!target.closest('.time-picker-wrapper') && this.showPicker) {
-      this.showPicker = false;
-      this.pickerClosed.emit(this.pickerId);
+  /* ---------------- Defaults ---------------- */
+
+  private setDefaultsForDropdown(): void {
+
+    if (this.timeFormat === 24) {
+      this.currentHour = 0;
+    } else {
+      this.currentHour = 12;
+      this.currentAMPM = 'PM';
+    }
+
+    this.currentMinute = 0;
+    this.currentSecond = 0;
+  }
+
+  clear(): void {
+
+    this._modelValue = null;
+    this.value = null;
+
+    this.setDefaultsForDropdown();
+
+    this.onChange(null);
+    this.change.emit(null);
+    this.timeChange.emit(null);
+
+    this.markAsTouched();
+  }
+
+  markAsTouched(): void {
+    this.onTouched();
+  }
+
+  /* ---------------- Lifecycle ---------------- */
+
+  ngOnInit() {
+    this.parseTimeValue(this._modelValue ?? this.value);
+  }
+
+  ngAfterViewInit() {
+
+    if (this.showPicker) {
+      setTimeout(() => this.scrollToSelectedTimes(), 100);
     }
   }
-
-  private previousCloseCounter: number = 0;
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['value'] && changes['value'].currentValue) {
-      this.parseTimeValue();
+
+    if (changes['value'] && !this._modelValue) {
+      this.parseTimeValue(this.value);
     }
+
     if (changes['closePicker'] && this.showPicker) {
+
       const newCounter = changes['closePicker'].currentValue;
-      // If counter increased, close the picker
+
       if (newCounter > this.previousCloseCounter) {
         this.showPicker = false;
+        this.markAsTouched();
         this.pickerClosed.emit(this.pickerId);
         this.previousCloseCounter = newCounter;
       }
     }
   }
 
-  // Basic keyboard support on the input (combobox behavior)
-  onInputKeydown(event: KeyboardEvent) {
-    const key = event.key;
+  /* ---------------- Parse Logic ---------------- */
 
-    if (key === 'Enter' || key === ' ') {
-      event.preventDefault();
-      this.togglePicker();
+  parseTimeValue(timeStr?: string | null) {
+
+    const str = timeStr ?? this._modelValue ?? this.value ?? '';
+
+    if (!str) {
+      this._modelValue = null;
+      this.setDefaultsForDropdown();
       return;
     }
 
-    if (key === 'Escape' && this.showPicker) {
-      this.showPicker = false;
-      this.pickerClosed.emit(this.pickerId);
-      return;
+    this._modelValue = str;
+
+    const parsed = this.parseTimeStringToComponents(str);
+
+    this.currentHour = parsed.hour;
+    this.currentMinute = parsed.minute;
+    this.currentSecond = parsed.second;
+    this.currentAMPM = parsed.ampm;
+  }
+
+  parseTimeStringToComponents(timeStr: string) {
+
+    const parts = timeStr.trim().split(' ');
+    const timePart = parts[0];
+    let ampm = (parts[1] || '').toUpperCase();
+
+    const [h, m, s] = timePart.split(':');
+
+    let hour = parseInt(h || '0', 10);
+    const minute = parseInt(m || '0', 10);
+    const second = parseInt(s || '0', 10);
+
+    if (this.timeFormat === 24) {
+
+      return {
+        hour: Math.min(Math.max(hour, 0), 23),
+        minute: Math.min(Math.max(minute, 0), 59),
+        second: Math.min(Math.max(second, 0), 59),
+        ampm: ''
+      };
     }
 
-    // Simple hour increment/decrement when closed
-    if (!this.showPicker && (key === 'ArrowUp' || key === 'ArrowDown')) {
-      event.preventDefault();
-      if (this.timeFormat === 24) {
-        if (key === 'ArrowUp') {
-          this.currentHour = (this.currentHour + 1) % 24;
-        } else {
-          this.currentHour = this.currentHour <= 0 ? 23 : this.currentHour - 1;
-        }
+    if (!ampm) {
+
+      if (hour >= 12) {
+        ampm = 'PM';
+        if (hour > 12) hour -= 12;
       } else {
-        if (key === 'ArrowUp') {
-          this.currentHour = this.currentHour >= 12 ? 1 : this.currentHour + 1;
-        } else {
-          this.currentHour = this.currentHour <= 1 ? 12 : this.currentHour - 1;
-        }
+        ampm = 'AM';
+        if (hour === 0) hour = 12;
       }
-      this.updateTime();
     }
+
+    if (hour < 1) hour = 1;
+    if (hour > 12) hour = 12;
+
+    return {
+      hour,
+      minute,
+      second,
+      ampm
+    };
+  }
+
+  formatTimeFromComponents(hour: number, minute: number, second: number, ampm: string): string {
+
+    const hStr = hour.toString().padStart(2, '0');
+    const mStr = minute.toString().padStart(2, '0');
+    const sStr = second.toString().padStart(2, '0');
+
+    if (this.timeFormat === 24) {
+      return this.showSeconds ? `${hStr}:${mStr}:${sStr}` : `${hStr}:${mStr}`;
+    }
+
+    return this.showSeconds
+      ? `${hour}:${mStr}:${sStr} ${ampm}`
+      : `${hour}:${mStr} ${ampm}`;
+  }
+
+  /* ---------------- Picker ---------------- */
+
+  togglePicker() {
+
+    if (!this.showPicker) {
+
+      this.showPicker = true;
+
+      this.parseTimeValue(this._modelValue);
+
+      this.pickerOpened.emit(this.pickerId);
+
+      setTimeout(() => this.scrollToSelectedTimes(), 100);
+
+    } else {
+
+      this.showPicker = false;
+      this.markAsTouched();
+      this.pickerClosed.emit(this.pickerId);
+    }
+  }
+
+  /* ---------------- Change handlers ---------------- */
+
+  onHourChange(hour: number) {
+    this.currentHour = hour;
+    this.updateTime();
+  }
+
+  onMinuteChange(minute: number) {
+    this.currentMinute = minute;
+    this.updateTime();
+  }
+
+  onSecondChange(second: number) {
+    this.currentSecond = second;
+    this.updateTime();
+  }
+
+  onAMPMChange(ampm: string) {
+    this.currentAMPM = ampm;
+    this.updateTime();
+  }
+
+  updateTime() {
+
+    const newTime = this.formatTimeFromComponents(
+      this.currentHour,
+      this.currentMinute,
+      this.currentSecond,
+      this.currentAMPM
+    );
+
+    this._modelValue = newTime;
+    this.value = newTime;
+
+    this.onChange(newTime);
+    this.change.emit(newTime);
+    this.timeChange.emit(newTime);
+  }
+
+  /* ---------------- Scroll ---------------- */
+
+  scrollToSelectedTimes() {
+
+    this.timeScrollElements.forEach((elRef) => {
+
+      const element = elRef.nativeElement;
+      const selected = element.querySelector('.time-item.selected');
+
+      if (selected) {
+
+        element.scrollTop =
+          selected.offsetTop -
+          element.offsetHeight / 2 +
+          selected.offsetHeight / 2;
+      }
+    });
+
+    this.initMinuteWheelScroll();
+
+    if (this.showSeconds) this.initSecondWheelScroll();
+  }
+
+  private initMinuteWheelScroll() {
+
+    const el = this.minuteScrollElements?.first?.nativeElement;
+    if (!el) return;
+
+    el.scrollTop = this.MIDDLE_OFFSET + this.currentMinute * this.ITEM_HEIGHT;
+  }
+
+  private initSecondWheelScroll() {
+
+    const el = this.secondScrollElements?.first?.nativeElement;
+    if (!el) return;
+
+    el.scrollTop = this.MIDDLE_OFFSET + this.currentSecond * this.ITEM_HEIGHT;
+  }
+
+  /* ---------------- Outside click ---------------- */
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+
+    const target = event.target as HTMLElement;
+
+    if (!target.closest('.time-picker-wrapper') && this.showPicker) {
+
+      this.showPicker = false;
+      this.markAsTouched();
+      this.pickerClosed.emit(this.pickerId);
+    }
+  }
+
+  private previousCloseCounter = 0;
+
+  getHours(): number[] {
+  if (this.timeFormat === 24) {
+    return Array.from({ length: 24 }, (_, i) => i);
+  }
+  return Array.from({ length: 12 }, (_, i) => i + 1);
+}
+
+getAMPMOptions(): string[] {
+  return ['PM','AM'];
+}
+
+onMinuteWheelScroll(): void {
+  const el = this.minuteScrollElements?.first?.nativeElement;
+  if (!el) return;
+
+  let scrollTop = el.scrollTop;
+
+  const maxScroll = this.MIDDLE_OFFSET * 2 - 50;
+
+  if (scrollTop < this.MIDDLE_OFFSET - 100) {
+    scrollTop += this.MIDDLE_OFFSET;
+    el.scrollTop = scrollTop;
+  } else if (scrollTop > maxScroll) {
+    scrollTop -= this.MIDDLE_OFFSET;
+    el.scrollTop = scrollTop;
+  }
+
+  const index = Math.round(scrollTop / this.ITEM_HEIGHT);
+  const value = ((index % this.WHEEL_CYCLE) + this.WHEEL_CYCLE) % this.WHEEL_CYCLE;
+
+  if (value !== this.currentMinute) {
+    this.currentMinute = value;
+    this.updateTime();
   }
 }
 
+onSecondWheelScroll(): void {
+  const el = this.secondScrollElements?.first?.nativeElement;
+  if (!el) return;
+
+  let scrollTop = el.scrollTop;
+
+  const maxScroll = this.MIDDLE_OFFSET * 2 - 50;
+
+  if (scrollTop < this.MIDDLE_OFFSET - 100) {
+    scrollTop += this.MIDDLE_OFFSET;
+    el.scrollTop = scrollTop;
+  } else if (scrollTop > maxScroll) {
+    scrollTop -= this.MIDDLE_OFFSET;
+    el.scrollTop = scrollTop;
+  }
+
+  const index = Math.round(scrollTop / this.ITEM_HEIGHT);
+  const value = ((index % this.WHEEL_CYCLE) + this.WHEEL_CYCLE) % this.WHEEL_CYCLE;
+
+  if (value !== this.currentSecond) {
+    this.currentSecond = value;
+    this.updateTime();
+  }
+}
+}

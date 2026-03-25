@@ -9,17 +9,27 @@ export interface TableColumn<T = any> {
   headerClass?: string;
   cellClass?: string;
   formatter?: (row: T) => string;
-  badges?: TableBadge[];
+  badges?: TableBadge[] | ((row: T) => TableBadge[]);
   icons?: TableIcon[] | ((row: T) => TableIcon[]);
   /** show / hide both th + td */
   visible?: boolean; // default: true
+  actions?: TableAction[] | ((row: T) => TableAction[]);
+  checkbox?:boolean;
 }
 
-export interface TableAction{
+export interface TableAction<T = any> {
   name: string;       // e.g. edit, delete
   icon: string;
   tooltip: string;
   hasPermission: boolean;
+  /** Dynamic visibility */
+  visible?: boolean | ((row: T) => boolean);
+
+  /** Disabled state */
+  disabled?: boolean | ((row: T) => boolean);
+
+  /** Click handler */
+  onClick?: (row: T) => void;
 }
  export interface TableBadge {
   label:string;

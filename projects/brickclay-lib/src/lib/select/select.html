@@ -45,9 +45,9 @@
           }
           @if (selectedOptions().length > maxLabels()) {
             <div class="bk-multi-badge-item"><span
-              class="bk-multi-badge-item-text" bkTooltipPosition="top" [bkTooltip]="getRemainingItems()">+{{ selectedOptions().length - maxLabels() }}</span></div>
-
-
+              class="bk-multi-badge-item-text"
+              bkTooltipPosition="top"
+              [bkTooltip]="getRemainingItems()">+{{ selectedOptions().length - maxLabels() }}</span></div>
           }
         </div>
       }

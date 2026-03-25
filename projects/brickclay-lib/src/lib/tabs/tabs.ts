@@ -1,19 +1,24 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { BKTooltipDirective } from '../tooltip/tooltip.directive';
 
+export type TabIconDirection = 'left' | 'right'
 export interface TabItem {
   id: string;
   label: string;
   icon?: string; // Icon for inactive state
   iconActive?: string; // Icon for active state (optional, falls back to icon if not provided)
   iconAlt?: string;
-  disabled?: boolean;
+  disabled?: boolean ;
+  direction?: TabIconDirection;
+  iconTooltip?: string | string[];
+  iconTooltipDirection?: 'left' | 'right' | 'top' | 'bottom';
 }
 
 @Component({
   selector: 'bk-tabs',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,BKTooltipDirective],
   templateUrl: './tabs.html',
   styleUrl: './tabs.css',
 })
@@ -26,7 +31,6 @@ export class BkTabs {
 
   // Set active tab and emit change event
   setActiveTab(tab:TabItem): void {
-    debugger
     if (tab?.disabled || this.disabled) return;
     this.activeTabId = tab.id;
     this.change.emit(tab);

@@ -1,18 +1,146 @@
-<!-- <div style="max-width: 300px;">
-  <bk-custom-calendar [(ngModel)]="calenderSelection" [required]="true" [dualCalendar]="true" [singleDatePicker]="false"
-    [showRanges]="false" [enableTimepicker]="false" [displayFormat]="'MM/DD/YYYY'" placeholder="Select a date"
-    #calender="ngModel" (selected)="onCalendarSelected($event,'dual-calender')"
-    [hasError]="!!(calender?.invalid || (calender?.touched || calender?.dirty))"></bk-custom-calendar>
-  <bk-validator [control]="calender" label="Date"></bk-validator>
-  <p>{{!!calender?.invalid}} {{!!calender?.touched}} {{!!calender?.dirty}}</p>
-  <p>{{!!(calender?.invalid && (calender?.touched || calender?.dirty))}}</p>
-</div> -->
-
-<div style="max-width: 300px;">
-  <bk-custom-calendar [(ngModel)]="singleDateSelection" [required]="true"  [singleDatePicker]="true"
-    [showRanges]="false" [displayFormat]="'MM/DD/YYYY'" placeholder="Select a date"  [enableTimepicker]="true"
-    #singleDate="ngModel" [showCancelApply]="false" (selected)="onSingleCalenderSelected($event,'single-calender')"
-    [hasError]="singleDateHasError" [appendToBody]="true"></bk-custom-calendar>
-  <bk-validator [control]="singleDate" label="Single Date"></bk-validator>
-  <p class="mt-5">Value: {{singleDateSelection | json}}</p>
+<div class="variant-switcher">
+  <label>Variant:</label>
+  <button type="button" [class.active]="calendarVariant === 'single'" (click)="calendarVariant = 'single'">Single date</button>
+  <button type="button" [class.active]="calendarVariant === 'dual'" (click)="calendarVariant = 'dual'">Dual (range)</button>
+  <button type="button" [class.active]="calendarVariant === 'timeOnly'" (click)="calendarVariant = 'timeOnly'">Time only</button>
+  <button type="button" [class.active]="calendarVariant === 'input'" (click)="calendarVariant = 'input'">Input</button>
 </div>
+
+@switch (calendarVariant) {
+  @case ('single') {
+    <form #form="ngForm">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="col-span-2">
+          <label for="ValidFrom" class="field-label required"> Valid From </label>
+          <bk-custom-calendar
+            name="ValidFrom"
+            [(ngModel)]="singleDatefromSelection"
+            (selected)="onSingleCalenderSelected($event, 'from')"
+            [dualCalendar]="false"
+            [singleDatePicker]="true"
+            [showRanges]="false"
+            [enableTimepicker]="false"
+            [required]="true"
+            placeholder="Select a date"
+            [displayFormat]="'MM/DD/YYYY'"
+            [appendToBody]="true"
+            [showCancelApply]="false"
+            [autoApply]="true"
+            #ValidFrom="ngModel"
+          >
+          </bk-custom-calendar>
+          <bk-validator
+            class=""
+            [control]="ValidFrom"
+            [label]="'Valid From'"
+          />
+        </div>
+        <div class="col-span-2">
+            <label for="ValidTo" class="field-label required"> Valid To </label>
+            <bk-custom-calendar
+              name="ValidTo"
+              [(ngModel)]="singleDatetoSelection"
+              (selected)="onSingleCalenderSelected($event, 'to')"
+              [dualCalendar]="false"
+              [singleDatePicker]="true"
+              [showRanges]="false"
+              [inline]="false"
+              [required]="true"
+              [enableTimepicker]="false"
+              placeholder="Select a date"
+              [displayFormat]="'MM/DD/YYYY'"
+              [appendToBody]="true"
+              [showCancelApply]="false"
+              [autoApply]="true"
+              #ValidTo="ngModel"
+            >
+            </bk-custom-calendar>
+
+            <bk-validator
+              class=""
+              [control]="ValidTo"
+              [label]="'Valid To'"
+            />
+        </div>
+      </div>
+    </form>
+    <!-- <div style="max-width: 300px;">
+      <bk-custom-calendar [(ngModel)]="singleDatefromSelection" [required]="true" [singleDatePicker]="true"
+        [showRanges]="false" [displayFormat]="'MM/DD/YYYY'" placeholder="Select a date" [enableTimepicker]="true"
+        #singleDate="ngModel" [showCancelApply]="false" (selected)="onSingleCalenderSelected($event,'single-calender')"
+        [hasError]="singleDateHasError" [appendToBody]="true"></bk-custom-calendar>
+      <bk-validator [control]="singleDate" label="Single Date"></bk-validator>
+      <p class="mt-5">Value: {{ singleDatefromSelection | json }}</p>
+    </div> -->
+  }
+  @case ('dual') {
+    <div style="max-width: 600px;">
+      <bk-custom-calendar [(ngModel)]="calenderSelection" [required]="true" [dualCalendar]="true" [singleDatePicker]="false"
+        [showRanges]="false" [enableTimepicker]="false" [displayFormat]="'MM/DD/YYYY'" placeholder="Select a date range"
+        #calender="ngModel" (selected)="onCalendarSelected($event,'dual-calender')"
+        [hasError]="!!(calender?.invalid && (calender?.touched || calender?.dirty))"></bk-custom-calendar>
+      <bk-validator [control]="calender" label="Date range"></bk-validator>
+      <p class="mt-5">Value: {{ calenderSelection | json }}</p>
+    </div>
+  }
+  @case ('timeOnly') {
+    <!-- <div style="max-width: 300px;">
+      <bk-time-picker [(ngModel)]="timeOnlyValue"  [timeFormat]="12" label="Time" #timePicker="ngModel" [required]="true" [clearable]="true"></bk-time-picker>
+      <bk-validator [control]="timePicker" label="Time"></bk-validator>
+      <p class="mt-5">Value: {{ timeOnlyValue }}</p>
+    </div> -->
+
+    <div style="max-width: 300px;">
+      <bk-time-picker [(ngModel)]="timeOnlyValue1"  [timeFormat]="24" label="Time" #timePicker="ngModel" [required]="true" [clearable]="true"></bk-time-picker>
+      <bk-validator [control]="timePicker" label="Time"></bk-validator>
+      <p class="mt-5">Value: {{ timeOnlyValue1 }}</p>
+    </div>
+
+  }
+  @case ('input') {
+<bk-input
+            [id]="'number-input-0'"
+            [name]="'number-input-0'"
+            [(ngModel)]="number"
+            type="text"
+            label="Number"
+            [required]="true"
+            autoComplete="off"
+            placeholder="Enter a number"
+            mask="000-000-0000"
+            [dropSpecialCharacters]="dropSpecialCharacters"
+            >
+          </bk-input>
+          {{number }}
+
+
+          <bk-input
+            [id]="'cnic-input-1'"
+            [name]="'cnic-input-1'"
+            [(ngModel)]="cnicString1"
+            [type]="'text'"
+            label="CNIC"
+            [required]="true"
+            placeholder="00000-0000000-0"
+            mask="00000-0000000-0"
+            hint="This is a hint text to help user."
+            >
+          </bk-input>
+          {{cnicString1}}
+
+                  <bk-input
+        [id]="'phone-input-1'"
+        [name]="'phone-input-1'"
+        [type]="'text'"
+        [(ngModel)]="countryPhone1"
+        label="Phone Number"
+        [required]="true"
+        [countryCode]="'US'"
+        [phone]="true"
+        placeholder="(555) 000-000"
+        hint="This is a hint text to help user.">
+        </bk-input>
+        {{countryPhone1}}
+
+  }
+}

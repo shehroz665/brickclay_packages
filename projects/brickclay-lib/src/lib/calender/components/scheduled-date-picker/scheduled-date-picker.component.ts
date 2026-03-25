@@ -119,7 +119,8 @@ export class BkScheduledDatePicker implements OnInit {
     }
   }
 
-  onSingleStartTimeChange(time: string) {
+  onSingleStartTimeChange(time: string | null) {
+    if (time == null) return;
     this.singleStartTime = time;
     if (this.singleDate) {
       this.updateSingleDateTimes();
@@ -127,7 +128,8 @@ export class BkScheduledDatePicker implements OnInit {
     }
   }
 
-  onSingleEndTimeChange(time: string) {
+  onSingleEndTimeChange(time: string | null) {
+    if (time == null) return;
     this.singleEndTime = time;
     if (this.singleDate) {
       this.updateSingleDateTimes();
@@ -190,22 +192,20 @@ export class BkScheduledDatePicker implements OnInit {
     }
   }
 
-  onMultipleDateStartTimeChange(index: number, time: string) {
-    if (this.multipleDates[index]) {
-      this.multipleDates[index].startTime = time;
-      if (!this.multipleDates[index].allDay) {
-        const parsed = this.parseTimeString(time);
-        this.multipleDates[index].date.setHours(parsed.hours, parsed.minutes, 0, 0);
-      }
-      this.emitScheduled();
+  onMultipleDateStartTimeChange(index: number, time: string | null) {
+    if (time == null || !this.multipleDates[index]) return;
+    this.multipleDates[index].startTime = time;
+    if (!this.multipleDates[index].allDay) {
+      const parsed = this.parseTimeString(time);
+      this.multipleDates[index].date.setHours(parsed.hours, parsed.minutes, 0, 0);
     }
+    this.emitScheduled();
   }
 
-  onMultipleDateEndTimeChange(index: number, time: string) {
-    if (this.multipleDates[index]) {
-      this.multipleDates[index].endTime = time;
-      this.emitScheduled();
-    }
+  onMultipleDateEndTimeChange(index: number, time: string | null) {
+    if (time == null || !this.multipleDates[index]) return;
+    this.multipleDates[index].endTime = time;
+    this.emitScheduled();
   }
 
   // Date Range Handlers
@@ -231,7 +231,8 @@ export class BkScheduledDatePicker implements OnInit {
     }
   }
 
-  onRangeStartTimeChange(time: string) {
+  onRangeStartTimeChange(time: string | null) {
+    if (time == null) return;
     this.rangeStartTime = time;
     if (this.rangeStartDate && !this.rangeAllDay) {
       this.updateRangeTimes();
@@ -239,7 +240,8 @@ export class BkScheduledDatePicker implements OnInit {
     }
   }
 
-  onRangeEndTimeChange(time: string) {
+  onRangeEndTimeChange(time: string | null) {
+    if (time == null) return;
     this.rangeEndTime = time;
     if (this.rangeEndDate && !this.rangeAllDay) {
       this.updateRangeTimes();
@@ -284,7 +286,10 @@ export class BkScheduledDatePicker implements OnInit {
   }
 
   getDateString(date: Date): string {
-    return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+    const y = date.getFullYear();
+    const m = (date.getMonth() + 1).toString().padStart(2, '0');
+    const d = date.getDate().toString().padStart(2, '0');
+    return `${y}-${m}-${d}`;
   }
 
   formatDate(date: Date): string {

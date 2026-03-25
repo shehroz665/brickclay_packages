@@ -46,6 +46,7 @@ export class BkFilePicker implements ControlValueAccessor, Validator {
   @Input() errorMessage: string = '';
   @Input() hasError: boolean = false;
   @Input() draggable: boolean = true;
+  @Input() description: string = '';
   @Input()
   set required(val: boolean) {
     this._required = val;

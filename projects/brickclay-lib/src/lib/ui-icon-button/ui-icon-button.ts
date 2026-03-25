@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-export type IconButtonSize = 'xxsm' | 'xsm' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
-export type IconButtonVariant = 'primary' | 'secondary';
+export type IconButtonSize = 'xxxsm' | 'xxsm' | 'xsm' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
+export type IconButtonVariant = 'primary' | 'secondary' | 'none';
 
 @Component({
   selector: 'bk-icon-button',
@@ -17,17 +17,28 @@ export class BkIconButton {
   @Input() alt: string = 'icon';
   @Input() variant: IconButtonVariant = 'primary';
   @Input() size: IconButtonSize = 'md';
-
   @Input() disabled: boolean = false;
-
   // Custom classes
   @Input() buttonClass: string = '';
 
   @Output() clicked = new EventEmitter<boolean>();
+  @Output() hovered = new EventEmitter<boolean>();
 
   onClick(event: Event) {
     if (!this.disabled) {
       this.clicked.emit(true);
+    }
+  }
+
+  onMouseEnter() {
+    if (!this.disabled) {
+      this.hovered.emit(true);
+    }
+  }
+
+  onMouseLeave() {
+    if (!this.disabled) {
+      this.hovered.emit(false);
     }
   }
 

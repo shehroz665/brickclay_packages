@@ -17,6 +17,7 @@ export class BkButton {
   // 1. Style & Size Inputs
   @Input() variant: ButtonVariant = 'primary';
   @Input() size: ButtonSize = 'md';
+  @Input() shadow: boolean = true;
 
   // 2. Content Inputs
   @Input() label: string = ''; // Pass text directly

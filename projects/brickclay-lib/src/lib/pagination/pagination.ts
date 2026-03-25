@@ -69,12 +69,21 @@ export class BkPagination implements OnChanges {
       return  totalPages;
   }
 
-  // ✅ Added method
+  // Visible window: startingPage/endingPage reflect the two page numbers shown in the control
   private updateStartEndPages(): void {
-    this.startingPage = this.pages.length > 0 ? this.pages[0] : 0;
-    this.endingPage = this.pages.length > 0
-      ? Math.min(this.startingPage + 2, this.pages[this.pages.length - 1])
-      : 0;
+    const totalPages = this.getTotalPages();
+    if (totalPages <= 0) {
+      this.startingPage = 0;
+      this.endingPage = 0;
+      return;
+    }
+    if (totalPages === 1) {
+      this.startingPage = 1;
+      this.endingPage = 1;
+      return;
+    }
+    this.startingPage = this.activePage;
+    this.endingPage = Math.min(this.activePage + 1, totalPages);
   }
 
   private getPageCount(): number {
@@ -98,15 +107,21 @@ export class BkPagination implements OnChanges {
     return pageArray;
   }
 
-  paginate() {
-    var from = this.activePage === 1 ? this.activePage - 1 : this.activePage - 2;
-    return this.pages.slice(from, this.activePage + 4);
+  /** Returns exactly 2 visible page numbers: current and next (e.g. 1-2, then 2-3 on click of 2). */
+  paginate(): number[] {
+    const totalPages = this.getTotalPages();
+    if (totalPages <= 0) return [];
+    if (totalPages === 1) return [1];
+    const start = this.activePage;
+    const end = Math.min(this.activePage + 1, totalPages);
+    return this.pages.slice(start - 1, end);
   }
 
   onClickPage(pageNumber: number): void {
-    if(this.activePage!==pageNumber){
+    if (this.activePage !== pageNumber) {
       if (pageNumber >= 1 && pageNumber <= this.pages.length) {
         this.activePage = pageNumber;
+        this.updateStartEndPages();
         this.pageChanged.emit(this.activePage);
       }
     }
