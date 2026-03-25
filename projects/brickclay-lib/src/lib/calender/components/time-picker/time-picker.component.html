@@ -1,5 +1,5 @@
 <div class="time-picker-wrapper">
-  <div class="time-input-group" [ngClass]="variantion">
+  <div class="time-input-group">
     <label *ngIf="label">{{ label }}</label>
     <div class="time-input-wrapper">
       <input
@@ -8,16 +8,12 @@
         [value]="value"
         [placeholder]="placeholder"
         readonly
-        (click)="togglePicker()"
-      />
+        (click)="togglePicker()">
       <span class="time-icon">
-        <img alt="timer" class="timer-icon" [src]="brickclayIcons.timerIcon" />
+        <img alt="timer" class="timer-icon" [src]='brickclayIcons.timerIcon'/>
       </span>
       <div class="custom-time-picker-dropdown" *ngIf="showPicker">
-        <div
-          class="custom-time-picker"
-          [ngClass]="position === 'left' ? 'left-position' : 'right-position'"
-        >
+        <div class="custom-time-picker" [ngClass]="position === 'left' ? 'left-position' : 'right-position'">
           <!-- Hours Column -->
           <div class="time-column">
             <div class="time-scroll" #timeScroll>
@@ -25,8 +21,7 @@
                 *ngFor="let h of getHours()"
                 class="time-item"
                 [class.selected]="currentHour === h"
-                (click)="onHourChange(h)"
-              >
+                (click)="onHourChange(h)">
                 {{ h.toString().padStart(2, '0') }}
               </div>
             </div>
@@ -39,8 +34,7 @@
                 *ngFor="let m of getMinutes()"
                 class="time-item"
                 [class.selected]="currentMinute === m"
-                (click)="onMinuteChange(m)"
-              >
+                (click)="onMinuteChange(m)">
                 {{ m.toString().padStart(2, '0') }}
               </div>
             </div>
@@ -53,8 +47,7 @@
                 *ngFor="let ap of getAMPMOptions()"
                 class="time-item"
                 [class.selected]="currentAMPM === ap"
-                (click)="onAMPMChange(ap)"
-              >
+                (click)="onAMPMChange(ap)">
                 {{ ap }}
               </div>
             </div>
@@ -64,3 +57,4 @@
     </div>
   </div>
 </div>
+

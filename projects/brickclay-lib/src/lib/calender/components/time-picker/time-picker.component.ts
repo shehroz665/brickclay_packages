@@ -14,14 +14,20 @@ export class BkTimePicker implements OnInit, OnChanges, AfterViewInit {
   @Input() label: string = 'Time';
   @Input() placeholder: string = 'Select time';
   @Input() position: 'left' | 'right' = 'left';
-  @Input() variantion: 'default' | 'lg' = 'default';
-  @Input() pickerId: string = ''; // Unique ID for this picker
-  @Input() closePicker: number = 0; // Close counter from parent (triggers close when changed)
-  @Input() timeFormat: 12 | 24 = 12; // Visual mode: 12h or 24h
-  @Input() showSeconds = false; // Whether to show/edit seconds
-  @Output() timeChange = new EventEmitter<string>();
-  @Output() pickerOpened = new EventEmitter<string>(); // Notify parent when opened
-  @Output() pickerClosed = new EventEmitter<string>(); // Notify parent when closed
+  @Input() variation: 'default' | 'lg' = 'default';
+  @Input() pickerId: string = '';
+  @Input() closePicker: number = 0;
+  @Input() timeFormat: 12 | 24 = 12;
+  @Input() showSeconds = false;
+
+  @Output() change = new EventEmitter<string | null>();
+  @Output() timeChange = new EventEmitter<string | null>();
+  @Output() pickerOpened = new EventEmitter<string>();
+  @Output() pickerClosed = new EventEmitter<string>();
+
+  private onChange: (value: string | null) => void = () => {};
+  private onTouched: () => void = () => {};
+  @Input() disabled:boolean = false;
 
   @ViewChildren('timeScroll') timeScrollElements!: QueryList<ElementRef>;
 
