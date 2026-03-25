@@ -1,7 +1,13 @@
-<div class="tabs-container">
+<div class="tabs-container overflow-x-auto whitespace-nowrap">
   <ul class="tabs-list" role="tablist">
     @for (tab of list; track tab.id; let i = $index) {
       <li class="tabs-item" role="presentation">
+        <!--
+          Tooltip logic:
+          - Icon present (error or not) → tooltip on the icon, button gets no tooltip
+          - No icon + error state      → tooltip on the button
+          - No icon + no error         → no tooltip
+        -->
         <button
           type="button"
           [id]="'tab-' + tab.id"
@@ -9,27 +15,29 @@
           [attr.aria-controls]="'panel-' + tab.id"
           [disabled]="tab.disabled"
           [class.tabs-button--active]="isActive(tab.id)"
+          [class.tabs-button--error]="tab.error"
           [class.tabs-button--disabled]="disabled || tab.disabled"
-          [class.tabs-button--no-icon]="!getTabIcon(tab)"
           [class.tabs-button--icon-right]="tab.direction === 'right'"
+          [bkTooltip]="(!getTabIcon(tab) && tab.error) ? (tab.iconTooltip || []) : []"
+          [bkTooltipPosition]="tab.iconTooltipDirection || 'top'"
           class="tabs-button"
           (click)="setActiveTab(tab)"
           role="tab">
-          @if (getTabIcon(tab) && tab.direction !== 'right') {
-            <img
-              [bkTooltip]="tab.iconTooltip || []" [bkTooltipPosition]="tab.iconTooltipDirection || 'top'"
-              [src]="getTabIcon(tab)"
-              [alt]="tab.iconAlt || tab.label"
-              class="tabs-icon">
-          }
+          <!-- Left icon: tooltip lives on the icon when an icon is present -->
+          <img
+            [bkTooltip]="getTabIcon(tab) ? (tab.iconTooltip || []) : []" [bkTooltipPosition]="tab.iconTooltipDirection || 'top'"
+            [attr.src]="getTabIcon(tab)"
+            [alt]="tab.iconAlt || tab.label"
+            [class.tabs-icon--hidden]="!getTabIcon(tab) || tab.direction === 'right'"
+            class="tabs-icon">
           <span class="tabs-label">{{ tab.label }}</span>
-          @if (getTabIcon(tab) && tab.direction === 'right') {
-            <img
-              [bkTooltip]="tab.iconTooltip || []" [bkTooltipPosition]="tab.iconTooltipDirection || 'top'"
-              [src]="getTabIcon(tab)"
-              [alt]="tab.iconAlt || tab.label"
-              class="tabs-icon">
-          }
+          <!-- Right icon: same tooltip rule, shown when direction is 'right' -->
+          <img
+            [bkTooltip]="getTabIcon(tab) ? (tab.iconTooltip || []) : []" [bkTooltipPosition]="tab.iconTooltipDirection || 'top'"
+            [attr.src]="getTabIcon(tab)"
+            [alt]="tab.iconAlt || tab.label"
+            [class.tabs-icon--hidden]="!getTabIcon(tab) || tab.direction !== 'right'"
+            class="tabs-icon">
         </button>
       </li>
     }

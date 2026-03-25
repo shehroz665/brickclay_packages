@@ -7,17 +7,24 @@
   font-weight: 500;
   font-size: 12px;
   line-height: 18px;
-  position: absolute;
+  position: fixed; /* match directive */
   font-family: 'Inter', sans-serif !important;
   max-width: 300px;
+  box-sizing: border-box;
+  width: max-content; /* ← key fix: shrink to content, respect max-width */
 }
+
 .bk-tooltip-content .text {
   margin-bottom: 0;
-  word-break: break-all;
+  word-break: normal;
+  overflow-wrap: normal;
+  white-space: pre-wrap;
 }
-.bk-tooltip-content .text:last-child{
+
+.bk-tooltip-content .text:last-child {
   margin-bottom: 0;
 }
+
 .bk-divider {
   display: block;
   height: 1px;

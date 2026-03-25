@@ -13,7 +13,7 @@
       @for (col of columns; track col.header;let i=$index;) {
         @if (isColumnVisible(col)) {
           <th
-            class="grid-header sticky top-0 cursor-pointer"
+            class="grid-header sticky top-[-1px] cursor-pointer"
             [class.action-sticky]="col.sticky"
             [class.z-10]="col.sticky"
             [ngClass]="col.headerClass"
@@ -96,7 +96,7 @@
 
         @if (getRowActions(row).length) {
           <td class="grid-cell action-sticky text-center">
-            <div class="flex items-center justify-start gap-1.5">
+            <div class="flex items-center justify-center gap-1.5">
 
               @for (action of getRowActions(row); track action.name) {
                 @if (isActionVisible(action, row)) {

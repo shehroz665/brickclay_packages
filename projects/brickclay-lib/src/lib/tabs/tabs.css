@@ -1,11 +1,11 @@
 /* Tabs Container */
 .tabs-container {
-  @apply w-full overflow-x-auto whitespace-nowrap;
+  @apply w-full;
 }
 
 /* Tabs List */
 .tabs-list {
-  @apply flex gap-2 list-none m-0 p-0;
+  @apply flex gap-0 list-none m-0 p-0;
 }
 
 /* Tab Item */
@@ -19,11 +19,6 @@
   @apply text-sm leading-[11px] font-medium text-[#141414] tracking-[-0.28];
 }
 
-/* Tab Button - No Icon Variant (adjust padding when no icon) */
-.tabs-button--no-icon {
-  @apply gap-0 px-3 py-[10.5px];
-}
-
 /* Tab Button - Hover State */
 /* .tabs-button:hover:not(:disabled):not(.tabs-button--active) {
   @apply text-[#141414] bg-[#F9FAFA];
@@ -32,6 +27,11 @@
 /* Tab Button - Active State */
 .tabs-button--active {
   @apply bg-[#141414] text-white;
+}
+
+/* Tab Button - Error State */
+.tabs-button--error {
+  @apply bg-[#C10007] text-white border-0;
 }
 
 /* Tab Button - Disabled State */
@@ -46,7 +46,15 @@
 /* Tab Icon - Base Styles */
 .tabs-icon {
   @apply size-4 flex-shrink-0;
-  transition: opacity 0.2s ease;
+  max-width: 1rem;
+  opacity: 1;
+  overflow: hidden;
+  transition: max-width 0.2s ease, opacity 0.2s ease;
+}
+
+.tabs-icon--hidden {
+  max-width: 0;
+  opacity: 0;
 }
 
 /* Tab Label */

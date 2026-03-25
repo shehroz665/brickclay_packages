@@ -122,6 +122,37 @@
   cursor: pointer;
 }
 
+/* ─── Mobile Layout (<768px) ─────────────────────────────────────────────── */
+@media (max-width: 425px) {
+  .toast-container {
+    width: calc(100vw - 2rem);
+    max-width: 100%;
+  }
+
+  .toast-container[data-position="top-center"],
+  .toast-container[data-position="bottom-center"] {
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    align-items: center;
+  }
+
+  .toast-item {
+    display: grid;
+    grid-template-areas:
+      "icon action close"
+      "content content content";
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    row-gap: 6px;
+  }
+
+  .toast-icon    { grid-area: icon; }
+  .toast-content { grid-area: content; }
+  .toast-action  { grid-area: action; justify-self: end; }
+  .toast-close   { grid-area: close; }
+}
+
 /* ─── Animations ──────────────────────────────────────────────────────────── */
 .toast-enter {
   animation: toastIn 0.3s ease-out forwards;
