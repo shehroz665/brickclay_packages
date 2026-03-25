@@ -18,10 +18,11 @@ import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 import { BKTooltipDirective } from '../tooltip/tooltip.directive';
 
+
 @Component({
   selector: 'bk-select',
   standalone: true,
-  imports: [CommonModule, FormsModule,BKTooltipDirective],
+  imports: [CommonModule, FormsModule, BKTooltipDirective],
   templateUrl: './select.html',
   styleUrls: ['./select.css'],
   providers: [
@@ -48,8 +49,7 @@ export class BkSelect implements ControlValueAccessor {
   @Input() iconAlt: string = 'icon';
   @Input() label: string = '';
   @Input() required: Boolean = false;
-
-
+  @Input() variation: 'default' | 'sm' = 'default';
   @Input() iconSrc?: string; // optional icon
 
   // Config
@@ -88,7 +88,7 @@ export class BkSelect implements ControlValueAccessor {
 
   // --- State ---
   private _value: any = null;
-
+  private static activeInstance: BkSelect | null = null;
   isOpen = signal(false);
   selectedOptions = signal<any[]>([]);
   searchTerm = signal<string>('');
@@ -163,17 +163,21 @@ export class BkSelect implements ControlValueAccessor {
   openDropdown() {
     if (this.isOpen()) return;
 
-    // Only calculate position if we are appending to body
+    // Close previously opened dropdown
+    if (BkSelect.activeInstance && BkSelect.activeInstance !== this) {
+      BkSelect.activeInstance.closeDropdown();
+    }
+
+    BkSelect.activeInstance = this;
+
     if (this.appendToBody()) {
       this.updatePosition();
     }
 
     this.isOpen.set(true);
-    // this.markedIndex.set(0);
     this.open.emit();
     this.focus.emit();
-    // this.markedIndex.set(0);
-    // setTimeout(() => this.searchInput?.nativeElement.focus());
+
     setTimeout(() => {
       if (this.searchable()) {
         this.searchInput?.nativeElement.focus();
@@ -185,11 +189,16 @@ export class BkSelect implements ControlValueAccessor {
 
   closeDropdown() {
     if (!this.isOpen()) return;
+
     this.isOpen.set(false);
     this.searchTerm.set('');
     this.onTouched();
     this.close.emit();
     this.blur.emit();
+
+    if (BkSelect.activeInstance === this) {
+      BkSelect.activeInstance = null;
+    }
   }
 
   getTop(): string | null {
@@ -321,7 +330,13 @@ export class BkSelect implements ControlValueAccessor {
   }
 
   onKeyDown(event: KeyboardEvent) {
-    if (!this.isOpen()) return;
+    if (!this.isOpen()) {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        this.openDropdown();
+      }
+      return;
+    }
     const list = this.filteredItems();
     const current = this.markedIndex();
     switch (event.key) {
@@ -373,8 +388,8 @@ export class BkSelect implements ControlValueAccessor {
     });
   }
 
-  onChange: any = () => {};
-  onTouched: any = () => {};
+  onChange: any = () => { };
+  onTouched: any = () => { };
   writeValue(value: any): void { this._value = value; this.resolveSelectedOptions(value); }
   registerOnChange(fn: any) { this.onChange = fn; }
   registerOnTouched(fn: any) { this.onTouched = fn; }
@@ -441,11 +456,11 @@ export class BkSelect implements ControlValueAccessor {
     return key && typeof item === 'object' ? item[key] : null;
   }
 
-  getRemainingItems(): string | string[] {
-      return this.selectedOptions()
-        .slice(this.maxLabels())
-        .map((x) => this.resolveLabel(x));
-    }
+  getRemainingItems(): string[] {
+    return this.selectedOptions()
+      .slice(this.maxLabels())
+      .map((x) => this.resolveLabel(x));
+  }
 
 
 }

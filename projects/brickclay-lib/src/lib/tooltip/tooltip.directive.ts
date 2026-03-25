@@ -14,13 +14,13 @@ import {
   selector: '[bkTooltip]',
   standalone: true,
 })
-export class BKTooltipDirective implements OnInit,OnChanges, OnDestroy {
+export class BKTooltipDirective implements OnInit, OnChanges, OnDestroy {
   @Input('bkTooltip') tooltipContent: string | string[] = '';
   @Input('bkTooltipPosition') tooltipPosition: 'left' | 'right' | 'top' | 'bottom' = 'right';
 
   private tooltipElement: HTMLElement | null = null;
 
-  constructor(private el: ElementRef, private renderer: Renderer2) {}
+  constructor(private el: ElementRef, private renderer: Renderer2) { }
 
   ngOnInit(): void {
     this.createTooltip();
@@ -38,16 +38,19 @@ export class BKTooltipDirective implements OnInit,OnChanges, OnDestroy {
 
 
   updateTooltipContent() {
+    // If content is now empty, destroy the tooltip so it no longer shows on hover
+    if (this.isTooltipContentEmpty()) {
+      this.removeTooltip();
+      return;
+    }
+
     // If tooltip doesn't exist yet and content is now available, create it
-    if (!this.tooltipElement && !this.isTooltipContentEmpty()) {
+    if (!this.tooltipElement) {
       this.createTooltip();
       return;
     }
 
-    if (!this.tooltipElement) return;
-    if (this.isTooltipContentEmpty()) return;
-
-    // remove old .text nodes
+    // Update existing tooltip: remove old text nodes and re-append updated content
     Array.from(this.tooltipElement.querySelectorAll('.text')).forEach((el) =>
       this.renderer.removeChild(this.tooltipElement, el)
     );
@@ -106,26 +109,27 @@ export class BKTooltipDirective implements OnInit,OnChanges, OnDestroy {
       this.setTooltipPosition();
     }
   }
-    private isTooltipContentEmpty(): boolean {
-      if (typeof this.tooltipContent === 'string') {
-        return !this.tooltipContent.trim();
-      } else if (Array.isArray(this.tooltipContent)) {
-        return this.tooltipContent.length === 0 || this.tooltipContent.every(line => !line.trim());
-      }
-      return true;
+  private isTooltipContentEmpty(): boolean {
+    if (typeof this.tooltipContent === 'string') {
+      return !this.tooltipContent.trim();
+    } else if (Array.isArray(this.tooltipContent)) {
+      return this.tooltipContent.length === 0 || this.tooltipContent.every(line => !line.trim());
     }
+    return true;
+  }
   private createTooltip() {
-    if(this.isTooltipContentEmpty()) return
+    if (this.isTooltipContentEmpty()) return;
     this.tooltipElement = this.renderer.createElement('div');
     this.renderer.addClass(this.tooltipElement, 'bk-tooltip-content');
 
     // Add content
-    const contentLines = Array.isArray(this.tooltipContent) ? this.tooltipContent : [this.tooltipContent];
+    const contentLines = Array.isArray(this.tooltipContent)
+      ? this.tooltipContent
+      : [this.tooltipContent];
+
     contentLines.forEach((line: string) => {
       const div = this.renderer.createElement('div');
       this.renderer.addClass(div, 'text');
-      // this.renderer.appendChild(div, this.renderer.createText(line));
-      // Check if the line contains HTML
       if (line.trim().startsWith('<')) {
         div.innerHTML = line;
       } else {
@@ -147,6 +151,11 @@ export class BKTooltipDirective implements OnInit,OnChanges, OnDestroy {
       opacity: '0',
       zIndex: '9999',
       transition: 'opacity 0.3s ease, visibility 0.3s ease',
+      maxWidth: '300px',
+      wordBreak: 'normal',        // ← only break at spaces
+      overflowWrap: 'normal',     // ← don't force break
+      whiteSpace: 'pre-wrap',     // ← ← ← KEY: respects spaces, wraps at word boundaries
+      boxSizing: 'border-box',
     });
 
     this.renderer.appendChild(document.body, this.tooltipElement);
@@ -174,7 +183,7 @@ export class BKTooltipDirective implements OnInit,OnChanges, OnDestroy {
           this.tooltipPosition === 'right'
             ? hostRect.right + padding
             : hostRect.left - tooltipRect.width - padding;
- 
+
         // Auto flip if out of viewport
         if (this.tooltipPosition === 'right' && left + tooltipRect.width > window.innerWidth) {
           left = hostRect.left - tooltipRect.width - padding;
@@ -191,10 +200,10 @@ export class BKTooltipDirective implements OnInit,OnChanges, OnDestroy {
 
       case 'top':
       case 'bottom':
-        left = hostRect.left  + hostRect.width / 2 - tooltipRect.width / 2;
+        left = hostRect.left + hostRect.width / 2 - tooltipRect.width / 2;
         top = this.tooltipPosition === 'top'
-          ? hostRect.top  - tooltipRect.height - padding
-          : hostRect.bottom  + padding;
+          ? hostRect.top - tooltipRect.height - padding
+          : hostRect.bottom + padding;
 
         // Prevent overflow
         left = Math.max(10, Math.min(left, window.innerWidth - tooltipRect.width - 10));

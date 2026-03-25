@@ -1,14 +1,33 @@
 /* Container */
 .bk-select-container {
-  @apply relative w-full box-border flex flex-col gap-1.5;;
+  @apply relative w-full box-border flex flex-col gap-1.5;
+  ;
 }
 
 /* Control */
 .bk-select-control {
-  @apply flex items-center justify-between gap-2 w-full bg-white border border-[#E3E3E7] rounded transition-all duration-200 px-3 py-2.5 cursor-pointer ;
+  @apply flex items-center justify-between gap-2 w-full bg-white border border-[#E3E3E7] rounded transition-all duration-200 cursor-pointer shadow-input;
 
-  &.bk-focused { @apply border-[#6B7080] shadow-none z-10; }
-  &.bk-disabled { @apply bg-[#F4F4F6] cursor-not-allowed opacity-60; }
+  &.bk-focused {
+    @apply border-[#6B7080] shadow-none z-10;
+  }
+
+  &.bk-disabled {
+    @apply cursor-not-allowed;
+    border-color: rgb(227 227 231);
+    background-color: rgb(244 244 246);
+    .bk-placeholder{
+      color: rgb(161 163 174);
+    }
+  }
+}
+
+.bk-select-container.default .bk-select-control{
+  @apply px-3 py-2.5;
+}
+
+.bk-select-container.sm .bk-select-control{
+  @apply px-3 py-[5px];
 }
 
 .bk-select-control.bk-has-error {
@@ -28,8 +47,17 @@
 
 /* --- NEW: Single Value --- */
 .bk-value-label-single {
-  @apply font-normal text-[14px]  !leading-[18px] text-[#141414] truncate w-full;
+  @apply font-normal  text-[#141414] truncate w-full;
 }
+
+.bk-select-container.default .bk-select-control .bk-value-label-single{
+  @apply text-[14px] !leading-[18px];
+}
+
+.bk-select-container.sm .bk-select-control .bk-value-label-single{
+  @apply text-xs;
+}
+
 /* --- NEW: Multi Select Chips --- */
 
 /* Badge Item */
@@ -43,40 +71,68 @@
 
 /* Badge Close Button */
 .bk-multi-badge-close {
-  @apply  cursor-pointer outline-none w-3 h-3;
+  @apply cursor-pointer outline-none w-3 h-3;
 }
 
 /* Actions */
 .bk-actions {
   @apply flex items-center gap-0.5 flex-shrink-0;
 }
-.bk-clear-wrapper { @apply text-gray-400 hover:text-red-500 cursor-pointer; }
-.bk-arrow-wrapper { @apply text-gray-400 transition-transform duration-200; &.bk-open { @apply rotate-180; }}
+
+.bk-clear-wrapper {
+  @apply text-gray-400 hover:text-red-500 cursor-pointer;
+}
+
+.bk-arrow-wrapper {
+  @apply text-gray-400 transition-transform duration-200;
+
+  &.bk-open {
+    @apply rotate-180;
+  }
+}
 
 /* Dropdown */
 .bk-dropdown-panel {
   @apply absolute left-0 w-full bg-white border border-[#E3E3E7] rounded-xl shadow-lg z-[99] overflow-hidden cursor-default p-2.5;
 }
 
-.bk-dropdown-search { @apply px-2 pt-2;}
-.bk-search-wrapper { @apply flex items-center border border-[#E3E3E7] rounded-md px-3 py-[7px] bg-white transition-colors focus-within:border-[#E3E3E7]; }
-.bk-search-input { @apply w-full outline-none font-normal text-sm text-[#141414] placeholder-[#A1A3AE] bg-transparent;}
+.bk-dropdown-search {
+  @apply px-2 pt-2;
+}
 
-.bk-options-list { @apply max-h-60 overflow-auto relative flex flex-col gap-0.5;  }
+.bk-search-wrapper {
+  @apply flex items-center border border-[#E3E3E7] rounded-md px-3 py-[7px] bg-white transition-colors focus-within:border-[#E3E3E7];
+}
+
+.bk-search-input {
+  @apply w-full outline-none font-normal text-sm text-[#141414] placeholder-[#A1A3AE] bg-transparent;
+}
+
+.bk-options-list {
+  @apply max-h-60 overflow-auto relative flex flex-col gap-0.5;
+}
 
 /* Options */
 .bk-option {
   @apply flex items-center p-2.5 cursor-pointer transition-colors font-normal text-sm text-[#141414];
-  &:hover, &.bk-marked { @apply bg-[#F8F8F8] rounded-md;}
-  &.bk-selected { @apply bg-[#F8F8F8] rounded-md; }
+
+  &:hover,
+  &.bk-marked {
+    @apply bg-[#F8F8F8] rounded-md;
+  }
+
+  &.bk-selected {
+    @apply bg-[#F8F8F8] rounded-md;
+  }
 }
+
 .bk-grouped .bk-option {
   @apply ps-5;
 }
 
-.bk-option-disabled { @apply px-3 py-2 text-gray-400 cursor-default; }
-
-
+.bk-option-disabled {
+  @apply px-3 py-2 text-gray-400 cursor-default text-sm;
+}
 
 /* ... Previous styles ... */
 

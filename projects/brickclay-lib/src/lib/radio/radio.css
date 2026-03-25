@@ -1,39 +1,50 @@
 /*---- Checkbox Sizes Class ---- */
 .radio.xsm {
-  @apply size-[14px];
+  @apply size-[14px] min-h-[14px] min-w-[14px];
 }
+
 .radio.sm {
-  @apply size-[16px];
+  @apply size-[16px] min-h-[16px] min-w-[16px];
 }
+
 .radio.md {
-  @apply size-[18px];
+  @apply size-[18px] min-h-[18px] min-w-[18px];
 }
+
 .radio.lg {
-  @apply size-[19px];
+  @apply size-[19px] min-h-[19px] min-w-[19px];
 }
+
 /*---- Dot Sizes Class ---- */
 .radio.xsm .dot {
-  @apply size-[6px];
+  @apply size-[6px] min-h-[6px] min-w-[6px];
 }
+
 .radio.sm .dot {
-  @apply size-[8px];
+  @apply size-[8px] min-h-[8px] min-w-[8px];
 }
+
 .radio.md .dot {
-  @apply size-[10px];
+  @apply size-[10px] min-h-[10px] min-w-[10px];
 }
+
 .radio.lg .dot {
-  @apply size-[11px];
+  @apply size-[11px] min-h-[11px] min-w-[11px];
 }
+
 /*---- Tick Sizes Class ---- */
 .radio.xsm .tick {
-  @apply size-[9px];
+  @apply size-[9px] min-h-[9px] min-w-[9px];
 }
+
 .radio.sm .tick {
-  @apply size-[10px];
+  @apply size-[10px] min-h-[10px] min-w-[10px];
 }
+
 .radio.md .tick {
-  @apply size-[12px];
+  @apply size-[12px] min-h-[12px] min-w-[12px];
 }
+
 .radio.lg .tick {
-  @apply size-[14px];
+  @apply size-[14px] min-h-[14px] min-w-[14px];
 }

@@ -43,7 +43,7 @@
 }
 
 .hierarchical-dropdown-panel {
-  @apply absolute left-0 top-[calc(100%+4px)] w-full min-w-[250px] max-w-[320px] bg-white border border-[#E3E3E7] rounded-xl shadow-lg z-[99] overflow-hidden cursor-default p-2.5;
+  @apply absolute left-0 top-[calc(100%+4px)] w-full min-w-[250px] max-w-full bg-white border border-[#E3E3E7] rounded-xl shadow-lg z-[99] overflow-hidden cursor-default p-2.5;
 }
 
 .hierarchical-dropdown-panel-fixed {
@@ -55,7 +55,7 @@
 }
 
 .hierarchical-search-wrapper {
-  @apply flex items-center border border-[#E3E3E7] rounded-md px-3 py-[7px] bg-white transition-colors focus-within:border-[#6B7080];
+  @apply flex items-center border border-[#E3E3E7] rounded-md px-3 py-[7px] bg-white transition-colors focus-within:border-[#E3E3E7];
 }
 
 .hierarchical-search-input {
@@ -63,7 +63,7 @@
 }
 
 .hierarchical-back {
-  @apply w-full text-left px-2.5 py-2 text-sm text-[#141414] hover:bg-[#F8F8F8] rounded-md transition-colors mt-1 flex items-center gap-1.5;
+  @apply w-full text-left px-2.5 py-2 text-sm text-[#141414] bg-[#F8F8F8] rounded-md transition-colors mt-1 flex items-center gap-1.5;
 }
 
 .hierarchical-options-list {

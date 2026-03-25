@@ -3,7 +3,8 @@
 
     <!-- Page size dropdown -->
 
-    <div class="flex gap-3 items-center">
+
+    <div class="flex gap-3 items-center pagination">
       <p class="text-xs text-[#141414] font-medium md:block hidden">Rows per page</p>
         <bk-select
           [items]="pageSizesList"
@@ -14,6 +15,7 @@
           [(ngModel)]="pageSize"
           [dropdownPosition]="'top'"
           (change)="changeSize($event)"
+          [variation]="'sm'"
           >
         </bk-select>
     </div>

@@ -13,6 +13,7 @@ export interface TabItem {
   direction?: TabIconDirection;
   iconTooltip?: string | string[];
   iconTooltipDirection?: 'left' | 'right' | 'top' | 'bottom';
+  error?: boolean;
 }
 
 @Component({

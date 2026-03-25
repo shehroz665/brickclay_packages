@@ -1,21 +1,17 @@
-<div class="bk-select-container">
-
-  @if(label){
-  <label
-    class="bk-select-label"
-    (click)="openFromLabel($event)">
-    {{ label }}
-    @if (required) {
-      <span class="bk-select-label-required">*</span>
-    }
-  </label>
+<div class="bk-select-container" [ngClass]="variation">
+  @if (label) {
+    <label class="bk-select-label" (click)="openFromLabel($event)">
+      {{ label }}
+      @if (required) {
+        <span class="bk-select-label-required">*</span>
+      }
+    </label>
   }
 
   <div
     #controlWrapper
     class="bk-select-control"
     [ngClass]="{ 'bk-has-error': hasError }"
-
     tabindex="0"
     (keydown)="onKeyDown($event)"
     [class.bk-focused]="isOpen()"
@@ -24,7 +20,7 @@
   >
     <!-- Icon (Always visible if set) -->
     @if (iconSrc) {
-      <img [src]="iconSrc" [alt]="iconAlt" class="shrink-0"/>
+      <img [src]="iconSrc" [alt]="iconAlt" class="shrink-0" />
     }
     <div class="bk-value-container">
       @if (selectedOptions().length === 0) {
@@ -34,42 +30,80 @@
         <div class="bk-value-chips">
           @for (opt of selectedOptions().slice(0, maxLabels()); track $index) {
             <div class="bk-multi-badge-item me-0.5">
-              <span class="bk-multi-badge-item-text" [style.color]="resolveColor(opt)">{{ resolveLabel(opt) }}</span>
+              <span class="bk-multi-badge-item-text" [style.color]="resolveColor(opt)">{{
+                resolveLabel(opt)
+              }}</span>
 
               <button type="button" (mousedown)="removeOption(opt, $event)">
-                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none">
-                  <path d="M6.625 0.625L0.625 6.625M0.625 0.625L6.625 6.625" stroke="#BBBDC5" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="8"
+                  height="8"
+                  viewBox="0 0 8 8"
+                  fill="none"
+                >
+                  <path
+                    d="M6.625 0.625L0.625 6.625M0.625 0.625L6.625 6.625"
+                    stroke="#BBBDC5"
+                    stroke-width="1.25"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
                 </svg>
               </button>
             </div>
           }
           @if (selectedOptions().length > maxLabels()) {
-            <div class="bk-multi-badge-item"><span
-              class="bk-multi-badge-item-text"
-              bkTooltipPosition="top"
-              [bkTooltip]="getRemainingItems()">+{{ selectedOptions().length - maxLabels() }}</span></div>
+            <div class="bk-multi-badge-item">
+              <span
+                class="bk-multi-badge-item-text"
+                bkTooltipPosition="top"
+                [bkTooltip]="getRemainingItems()"
+                >+{{ selectedOptions().length - maxLabels() }}</span
+              >
+            </div>
           }
         </div>
       }
       @if (!multiple() && selectedOptions().length > 0) {
         <div class="bk-value-label-single" [style.color]="resolveColor(selectedOptions()[0])">
-          {{ resolveLabel(selectedOptions()[0]) }}</div>
+          {{ resolveLabel(selectedOptions()[0]) }}
+        </div>
       }
     </div>
     <div class="bk-actions">
       @if (clearable() && selectedOptions().length > 0 && !disabled()) {
         <span class="bk-clear-wrapper" (mousedown)="handleClear($event)" title="Clear">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18"
-                                                                                                           y1="6" x2="6"
-                                                                                                           y2="18"></line><line
-            x1="6" y1="6" x2="18" y2="18"></line></svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
         </span>
       }
       <span class="bk-arrow-wrapper" [class.bk-open]="isOpen()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path
-          d="m6 9 6 6 6-6"/></svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="m6 9 6 6 6-6" />
+        </svg>
       </span>
     </div>
   </div>
@@ -80,7 +114,6 @@
       class="bk-dropdown-panel"
       [attr.data-position]="dropdownPosition()"
       (scroll)="onScroll($event)"
-
       [style.position]="appendToBody() ? 'fixed' : 'absolute'"
       [style.top]="getTop()"
       [style.bottom]="getBottom()"
@@ -88,19 +121,34 @@
       [style.width]="appendToBody() ? dropdownStyle().width : '100%'"
       [class.bk-grouped]="groupBy()"
     >
-
-
       @if (searchable()) {
         <div class="bk-dropdown-search mb-1">
           <div class="bk-search-wrapper">
-            <svg class="text-[#BBBDC5] mr-2" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                 stroke-linejoin="round">
+            <svg
+              class="text-[#BBBDC5] mr-2"
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
-            <input #searchInput type="text" class="bk-search-input" [value]="searchTerm()" [placeholder]="'Search...'"
-                   (input)="onSearchInput($event)" (keydown)="onKeyDown($event)" (click)="$event.stopPropagation()">
+            <input
+              #searchInput
+              type="text"
+              class="bk-search-input"
+              [value]="searchTerm()"
+              [placeholder]="'Search...'"
+              (input)="onSearchInput($event)"
+              (keydown)="onKeyDown($event)"
+              (click)="$event.stopPropagation()"
+            />
           </div>
         </div>
       }
@@ -108,24 +156,33 @@
         @if (loading()) {
           <div class="bk-option-disabled">{{ loadingText() }}</div>
         } @else {
-          @if (allSelect()){
-
-          @if (multiple() && filteredItems().length > 0) {
-            <div class="bk-option" (mousedown)="toggleSelectAll($event)" [class.bk-selected]="isAllSelected()">
-              <div class="flex-1 flex justify-between">
-                <span>Select All</span>
-                @if (isAllSelected()) {
-                  <svg class="text-[#141414]" width="17" height="17" viewBox="0 0 24 24" fill="none"
-                       stroke="currentColor" stroke-width="2.5">
-                    <polyline points="20 6 9 17 4 12"/>
-                  </svg>
-                }
+          @if (allSelect()) {
+            @if (multiple() && filteredItems().length > 0) {
+              <div
+                class="bk-option"
+                (mousedown)="toggleSelectAll($event)"
+                [class.bk-selected]="isAllSelected()"
+              >
+                <div class="flex-1 flex justify-between">
+                  <span>Select All</span>
+                  @if (isAllSelected()) {
+                    <svg
+                      class="text-[#141414]"
+                      width="17"
+                      height="17"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  }
+                </div>
               </div>
-            </div>
-          }
+            }
           }
           @for (group of groupedItems(); track $index) {
-
             @if (group.group) {
               <div class="bk-option-group">
                 {{ group.group }}
@@ -133,20 +190,32 @@
             }
 
             @for (item of group.items; track $index) {
-              <div #optionsRef class="bk-option" [class.bk-selected]="isItemSelected(item)" [class.bk-marked]="$index === markedIndex()" (click)="handleSelection(item, $event)">
+              <div
+                #optionsRef
+                class="bk-option"
+                [class.bk-selected]="isItemSelected(item)"
+                [class.bk-marked]="$index === markedIndex()"
+                (click)="handleSelection(item, $event)"
+              >
                 <div class="flex-1 flex justify-between">
                   <span [style.color]="resolveColor(item)">{{ resolveLabel(item) }}</span>
 
                   @if (isItemSelected(item)) {
-                    <svg class="text-[#141414]" width="17" height="17" viewBox="0 0 24 24"
-                         fill="none" stroke="currentColor" stroke-width="2.5">
-                      <polyline points="20 6 9 17 4 12"/>
+                    <svg
+                      class="text-[#141414]"
+                      width="17"
+                      height="17"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
                     </svg>
                   }
                 </div>
               </div>
             }
-
           }
 
           @if (filteredItems().length === 0) {
@@ -154,14 +223,11 @@
           }
         }
       </div>
-
     </div>
   }
-  @if(hasError){
+  @if (hasError) {
     @if (errorMessage) {
       <p class="bk-select-error">{{ errorMessage }}</p>
     }
   }
-
-
 </div>
