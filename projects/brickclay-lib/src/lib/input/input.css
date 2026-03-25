@@ -19,7 +19,7 @@
 
 /* Input field base styles */
 .input-field {
-  @apply w-full py-2.5 px-3 text-sm border rounded-[4px] outline-none transition-all duration-200 bg-white shadow-input;
+  @apply w-full py-2.5 px-3 text-sm border rounded-[4px] outline-none transition-all duration-200 bg-white;
   height: 40px;
   box-sizing: border-box;
 }

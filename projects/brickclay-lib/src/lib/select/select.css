@@ -6,7 +6,7 @@
 
 /* Control */
 .bk-select-control {
-  @apply flex items-center justify-between gap-2 w-full bg-white border border-[#E3E3E7] rounded transition-all duration-200 cursor-pointer shadow-input;
+  @apply flex items-center justify-between gap-2 w-full bg-white border border-[#E3E3E7] rounded transition-all duration-200 cursor-pointer;
 
   &.bk-focused {
     @apply border-[#6B7080] shadow-none z-10;
