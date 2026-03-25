@@ -3,6 +3,7 @@
   <button type="button" [class.active]="calendarVariant === 'single'" (click)="calendarVariant = 'single'">Single date</button>
   <button type="button" [class.active]="calendarVariant === 'dual'" (click)="calendarVariant = 'dual'">Dual (range)</button>
   <button type="button" [class.active]="calendarVariant === 'timeOnly'" (click)="calendarVariant = 'timeOnly'">Time only</button>
+  <button type="button" [class.active]="calendarVariant === 'input'" (click)="calendarVariant = 'input'">Input</button>
 </div>
 
 @switch (calendarVariant) {
@@ -96,5 +97,50 @@
     </div>
 
   }
-}
+  @case ('input') {
+<bk-input
+            [id]="'number-input-0'"
+            [name]="'number-input-0'"
+            [(ngModel)]="number"
+            type="text"
+            label="Number"
+            [required]="true"
+            autoComplete="off"
+            placeholder="Enter a number"
+            mask="000-000-0000"
+            [dropSpecialCharacters]="dropSpecialCharacters"
+            >
+          </bk-input>
+          {{number }}
 
+
+          <bk-input
+            [id]="'cnic-input-1'"
+            [name]="'cnic-input-1'"
+            [(ngModel)]="cnicString1"
+            [type]="'text'"
+            label="CNIC"
+            [required]="true"
+            placeholder="00000-0000000-0"
+            mask="00000-0000000-0"
+            hint="This is a hint text to help user."
+            >
+          </bk-input>
+          {{cnicString1}}
+
+                  <bk-input
+        [id]="'phone-input-1'"
+        [name]="'phone-input-1'"
+        [type]="'text'"
+        [(ngModel)]="countryPhone1"
+        label="Phone Number"
+        [required]="true"
+        [countryCode]="'US'"
+        [phone]="true"
+        placeholder="(555) 000-000"
+        hint="This is a hint text to help user.">
+        </bk-input>
+        {{countryPhone1}}
+
+  }
+}

@@ -1,3 +1,4 @@
+import { BkInput } from './../../projects/brickclay-lib/src/lib/input/input';
 import { BkValidator } from './../../projects/brickclay-lib/src/lib/validator/validator';
 import { CalendarSelection } from './../../projects/brickclay-lib/src/lib/calender/components/custom-calendar/custom-calendar.component';
 import { BkCheckbox } from './../../projects/brickclay-lib/src/lib/checkbox/checkbox';
@@ -20,10 +21,10 @@ export class FuelCardModel {
   lkpFuelCardTypeName?: string;
   lkpStatusName?: string;
 }
-export type CalendarVariant = 'single' | 'dual' | 'timeOnly';
+export type CalendarVariant = 'single' | 'dual' | 'timeOnly' | 'input';
 @Component({
   selector: 'app-root',
-  imports: [CalendarModule, FormsModule, CommonModule, BkValidator],
+  imports: [CalendarModule, FormsModule, CommonModule, BkValidator,BkInput],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
@@ -32,10 +33,12 @@ export type CalendarVariant = 'single' | 'dual' | 'timeOnly';
 export class App implements OnInit {
   singleDatefromSelection: CalendarSelection = new CalendarSelection();
   singleDatetoSelection: CalendarSelection = new CalendarSelection();
-
+ number:string= '1112345678';
+ cnicString1 :string="1234512345671";
+  dropSpecialCharacters = true;
   calenderSelection: CalendarSelection = new CalendarSelection();
   dualDateSelection: CalendarSelection = new CalendarSelection();
-
+countryPhone1 :string="+1 (111) 111-1111";
   /** Which calendar variant to show: single date, dual (range), or time picker only. */
   calendarVariant: CalendarVariant = 'single';
 

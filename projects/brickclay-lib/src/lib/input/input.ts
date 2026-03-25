@@ -128,6 +128,7 @@ export class BkInput implements OnInit, OnDestroy, ControlValueAccessor {
   @Input() id!: string ;
   @Input() name!: string ;
   @Input() mask: string | null= null;
+  @Input() dropSpecialCharacters: boolean | string[] | readonly string[] = false;
   @Input() autoComplete : BkInputAutoComplete = 'off';
   @Input() label: string = '';
   @Input() placeholder: string = 'stephend@i2cinc.com';
@@ -218,10 +219,39 @@ export class BkInput implements OnInit, OnDestroy, ControlValueAccessor {
   private onChange = (value: any) => {};
   private onTouched = () => {};
 
+  private applyDropSpecialCharacters(viewValue: string): string {
+    if (!viewValue) return '';
+
+    // Align with ngx-mask semantics: when enabled, remove special mask characters from model.
+    if (this.dropSpecialCharacters) {
+      return viewValue.replace(/[^0-9A-Za-z]/g, '');
+    }
+
+    if (Array.isArray(this.dropSpecialCharacters)) {
+      if (this.dropSpecialCharacters.length === 0) return viewValue;
+      const escaped = this.dropSpecialCharacters
+        .map((c) => c.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+        .join('');
+      const re = new RegExp(`[${escaped}]`, 'g');
+      return viewValue.replace(re, '');
+    }
+
+    return viewValue;
+  }
+
   writeValue(value: any): void {
     const str = (value === null || value === undefined) ? '' : String(value);
     this.value = str;
     this.inputValue = str;
+
+    // If ngx-mask is active, trigger it to format the view value.
+    if (this.maskValue && this.inputField?.nativeElement) {
+      setTimeout(() => {
+        if (!this.inputField?.nativeElement) return;
+        this.inputField.nativeElement.value = str;
+        this.inputField.nativeElement.dispatchEvent(new Event('input', { bubbles: true }));
+      }, 0);
+    }
   }
 
   registerOnChange(fn: any): void {
@@ -286,10 +316,18 @@ export class BkInput implements OnInit, OnDestroy, ControlValueAccessor {
     this.blur.emit(event);
   }
   handleInput(event: Event): void {
-    const val = (event.target as HTMLInputElement).value;
-    this.inputValue = val;
-    this.value = val;
-    const out = this.type === 'number' ? (val === '' ? null : Number(val)) : val;
+    const viewVal = (event.target as HTMLInputElement).value ?? '';
+    // Keep the displayed value masked.
+    this.inputValue = viewVal;
+
+    // Decide what to write to the model.
+    const modelRaw = this.applyDropSpecialCharacters(viewVal);
+    this.value = modelRaw;
+
+    const out =
+      this.type === 'number'
+        ? (modelRaw === '' ? null : Number(modelRaw))
+        : modelRaw;
     this.onChange(out);
     this.input.emit(event);
   }
