@@ -5,13 +5,21 @@
       <input
         type="text"
         class="time-input"
-        [value]="value"
+        [value]="getDisplayValue()"
         [placeholder]="placeholder"
+        [disabled]="disabled ? true : null"
         readonly
         (click)="togglePicker()">
       <span class="time-icon">
         <img alt="timer" class="timer-icon" [src]='brickclayIcons.timerIcon'/>
       </span>
+      <button
+        type="button"
+        class="time-clear-btn"
+        *ngIf="clearable && hasValue && !disabled"
+        (click)="clear(); $event.stopPropagation()"
+        title="Clear time"
+        aria-label="Clear time">×</button>
       <div class="custom-time-picker-dropdown" *ngIf="showPicker">
         <div class="custom-time-picker" [ngClass]="position === 'left' ? 'left-position' : 'right-position'">
           <!-- Hours Column -->
@@ -27,11 +35,11 @@
             </div>
           </div>
           <span class="time-separator">:</span>
-          <!-- Minutes Column -->
+          <!-- Minutes Column (cyclic wheel: 59 -> 00) -->
           <div class="time-column">
-            <div class="time-scroll" #timeScroll>
+            <div class="time-scroll time-wheel" #minuteScroll (scroll)="onMinuteWheelScroll()">
               <div
-                *ngFor="let m of getMinutes()"
+                *ngFor="let m of wheelMinutes"
                 class="time-item"
                 [class.selected]="currentMinute === m"
                 (click)="onMinuteChange(m)">
@@ -51,7 +59,7 @@
                 {{ ap }}
               </div>
             </div>
-          </div>
+          }
         </div>
       </div>
     </div>

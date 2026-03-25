@@ -2,6 +2,8 @@
   [class]="buttonClasses"
   [disabled]="disabled"
   (click)="onClick($event)"
+  (mouseenter)="onMouseEnter()"
+  (mouseleave)="onMouseLeave()"
 >
     <img [src]="icon" [alt]="alt" class="icon" />
 </button>

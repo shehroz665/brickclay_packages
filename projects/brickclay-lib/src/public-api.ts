@@ -83,3 +83,5 @@ export * from './lib/file-picker/file-picker';
 export * from './lib/file-card/file-card';
 //Pagination
 export * from './lib/pagination/pagination';
+//Loader
+export * from './lib/loader/loader';

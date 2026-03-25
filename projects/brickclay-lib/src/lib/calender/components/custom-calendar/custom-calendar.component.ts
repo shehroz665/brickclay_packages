@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, HostListener, OnChanges, SimpleChanges, ViewChild, ElementRef, forwardRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
-import { CalendarManagerService } from '../../services/calendar-manager.service';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormsModule, Validator, AbstractControl, ValidationErrors } from '@angular/forms';
+import { BkCalendarManagerService } from '../../services/calendar-manager.service';
 import { Subscription } from 'rxjs';
 import { BkTimePicker } from '../time-picker/time-picker.component';
 import moment from 'moment';
@@ -33,9 +33,14 @@ export class CalendarSelection {
       useExisting: forwardRef(() => BkCustomCalendar),
       multi: true,
     },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => BkCustomCalendar),
+      multi: true,
+    },
   ],
 })
-export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlValueAccessor {
+export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlValueAccessor, Validator {
 
   // Basic Options
   @Input() enableTimepicker = false;
@@ -52,7 +57,8 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
   @Input() drop: 'up' | 'down' = 'down';
   @Input() dualCalendar = false;
   @Input() showRanges = true;
-  @Input() timeFormat: 12 | 24 = 24;
+  @Input() timeFormat: 12 | 24 = 12;
+  @Input() clearableTime: boolean = false;
   @Input() enableSeconds = false;
   @Input() customRanges?: Record<string, CalendarRange>;
   @Input() multiDateSelection = false; // NEW: Enable multi-date selection
@@ -133,6 +139,13 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
   /** Current end time string in 12-hour format with AM/PM (e.g. "2:00 AM"). Synced with ngModel/CalendarSelection. */
   endTime: string | null = null;
 
+  /** ngModel binding for single-calendar time picker (null = no time). */
+  singleTimeModel: string | null = null;
+  /** ngModel binding for dual-calendar start time picker (null = no time). */
+  startTimeModel: string | null = null;
+  /** ngModel binding for dual-calendar end time picker (null = no time). */
+  endTimeModel: string | null = null;
+
   // Track open time-picker within this calendar (for single-open behavior)
   openTimePickerId: string | null = null;
   closePickerCounter: { [key: string]: number } = {};
@@ -145,7 +158,7 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
   private closeAllSubscription?: Subscription;
   private closeFn?: () => void;
 
-  constructor(private calendarManager: CalendarManagerService) { }
+  constructor(private calendarManager: BkCalendarManagerService) {}
 
   // --- ControlValueAccessor implementation ---
   writeValue(value: CalendarSelection | null): void {
@@ -165,6 +178,19 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
     this.disabled = isDisabled;
   }
 
+  /** Validator: when required is true, value must have a date selected. */
+  validate(control: AbstractControl): ValidationErrors | null {
+    if (!this.required) return null;
+    const value = control.value as CalendarSelection | null;
+    if (!value) return { required: true };
+    if (this.multiDateSelection) {
+      if (!value.selectedDates || value.selectedDates.length === 0) return { required: true };
+    } else {
+      if (!value.startDate) return { required: true };
+    }
+    return null;
+  }
+
   /** Call from template when control loses focus (for CVA touched state). */
   markAsTouched(): void {
     this.onTouched();
@@ -178,6 +204,9 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
       this.startTime = null;
       this.endTime = null;
       this.selectedDates = [];
+      this.singleTimeModel = null;
+      this.startTimeModel = null;
+      this.endTimeModel = null;
       this.month = this.today.getMonth();
       this.year = this.today.getFullYear();
       this.generateCalendar();
@@ -271,6 +300,14 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
 
     if (this.startDate && this.endDate) {
       this.checkAndSetActiveRange();
+    }
+
+    // Sync ngModel values for embedded time pickers (null when no time set)
+    if (!this.dualCalendar) {
+      this.singleTimeModel = this.startTime ?? null;
+    } else {
+      this.startTimeModel = this.startTime ?? null;
+      this.endTimeModel = this.endTime ?? null;
     }
   }
 
@@ -548,16 +585,16 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
       return;
     }
 
-    // Apply time if timepicker is enabled (convert 12-hour to 24-hour)
+    // Apply time only when user has already selected a time; otherwise keep time null (date at midnight)
     if (this.enableTimepicker) {
       if (this.dualCalendar) {
-        // For dual calendar, use separate start/end times
-        // If no startDate OR endDate exists, we're selecting start date
         const isStart = !this.startDate || !!this.endDate;
-        this.applyTimeToDate(selected, isStart);
+        if (isStart && this.startTime != null) this.applyTimeToDate(selected, true);
+        else if (!isStart && this.endTime != null) this.applyTimeToDate(selected, false);
+        else selected.setHours(0, 0, this.selectedSecond);
       } else {
-        // For single calendar, always use selected time for start
-        this.applyTimeToDate(selected, true);
+        if (this.startTime != null) this.applyTimeToDate(selected, true);
+        else selected.setHours(0, 0, this.selectedSecond);
       }
     }
 
@@ -567,9 +604,10 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
       this.endDate = null;
       // Activate Custom Range when manually selecting dates
       this.activeRange = 'Custom Range';
-      // Apply time immediately if timepicker is enabled
+      // Apply time only if user has already picked a time; otherwise keep time null
       if (this.enableTimepicker) {
-        this.applyTimeToDate(this.startDate, true);
+        if (this.startTime != null) this.applyTimeToDate(this.startDate, true);
+        else this.startDate.setHours(0, 0, this.selectedSecond);
       }
       if (this.autoApply) {
         this.apply();
@@ -891,8 +929,8 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
     const selection: CalendarSelection = {
       startDate: this.startDate ? this.formatDateToString(this.startDate) : null,
       endDate: this.endDate ? this.formatDateToString(this.endDate) : null,
-      startTime: this.startTime ?? (this.startDate ? this.formatTimeToAmPm(this.startHour, this.startMinute, this.startAMPM) : null),
-      endTime: this.endTime ?? (this.endDate ? this.formatTimeToAmPm(this.endHour, this.endMinute, this.endAMPM) : null),
+      startTime: this.startTime ?? null,
+      endTime: this.endTime ?? null,
     };
 
     if (this.multiDateSelection && this.selectedDates.length > 0) {
@@ -1124,34 +1162,19 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
     // Prefer moment formatting for consistent display
     let dateStr = moment(this.startDate).format(this.displayFormat);
 
-    if (this.enableTimepicker && !this.dualCalendar) {
-      const hr = this.startDate.getHours().toString().padStart(2, '0');
-      const min = this.startDate.getMinutes().toString().padStart(2, '0');
-      dateStr += ` ${hr}:${min}`;
-      if (this.enableSeconds) {
-        const sec = this.startDate.getSeconds().toString().padStart(2, '0');
-        dateStr += `:${sec}`;
-      }
+    // Only show time when user has selected a time; use startTime/endTime strings so 12:00 AM shows as "12:00 AM" not "00:00"
+    if (this.enableTimepicker && !this.dualCalendar && this.startTime != null) {
+      dateStr += ` ${this.startTime}`;
     }
 
     if (this.endDate && !this.singleDatePicker) {
       let endStr = moment(this.endDate).format(this.displayFormat);
       if (this.enableTimepicker) {
-        if (this.dualCalendar) {
-          const startHr = this.startDate.getHours().toString().padStart(2, '0');
-          const startMin = this.startDate.getMinutes().toString().padStart(2, '0');
-          dateStr += ` ${startHr}:${startMin}`;
-          if (this.enableSeconds) {
-            const startSec = this.startDate.getSeconds().toString().padStart(2, '0');
-            dateStr += `:${startSec}`;
-          }
+        if (this.dualCalendar && this.startTime != null) {
+          dateStr += ` ${this.startTime}`;
         }
-        const endHr = this.endDate.getHours().toString().padStart(2, '0');
-        const endMin = this.endDate.getMinutes().toString().padStart(2, '0');
-        endStr += ` ${endHr}:${endMin}`;
-        if (this.enableSeconds) {
-          const endSec = this.endDate.getSeconds().toString().padStart(2, '0');
-          endStr += `:${endSec}`;
+        if (this.endTime != null) {
+          endStr += ` ${this.endTime}`;
         }
       }
       return `${dateStr} - ${endStr}`;
@@ -1242,7 +1265,18 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
   }
 
   // NEW: Handle BkTimePicker change for single calendar
-  onSingleTimePickerChange(time: string) {
+  onSingleTimePickerChange(time: string | null) {
+    if (time == null || time === '') {
+      this.startTime = null;
+      this.selectedHour = 1;
+      this.selectedMinute = 0;
+      this.selectedAMPM = 'AM';
+      if (this.startDate) {
+        this.startDate.setHours(0, 0, this.selectedSecond);
+      }
+      this.emitSelection();
+      return;
+    }
     const { hour12, minute, ampm } = this.parsePickerTimeString(time);
 
     this.selectedHour = hour12;
@@ -1251,7 +1285,6 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
 
     const timeStr = this.formatTimeToAmPm(hour12, minute, ampm);
     this.startTime = timeStr;
-
 
     if (this.startDate) {
       let h24 = hour12;
@@ -1264,7 +1297,24 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
   }
 
   // NEW: Handle BkTimePicker change for dual calendar
-  onDualTimePickerChange(time: string, isStart = true) {
+  onDualTimePickerChange(time: string | null, isStart = true) {
+    if (time == null || time === '') {
+      if (isStart) {
+        this.startTime = null;
+        this.startHour = 1;
+        this.startMinute = 0;
+        this.startAMPM = 'AM';
+        if (this.startDate) this.startDate.setHours(0, 0, this.startSecond);
+      } else {
+        this.endTime = null;
+        this.endHour = 2;
+        this.endMinute = 0;
+        this.endAMPM = 'AM';
+        if (this.endDate) this.endDate.setHours(0, 0, this.endSecond);
+      }
+      this.emitSelection();
+      return;
+    }
     const { hour12, minute, ampm } = this.parsePickerTimeString(time);
     const timeStr = this.formatTimeToAmPm(hour12, minute, ampm);
 

@@ -1,6 +1,6 @@
 /* Tabs Container */
 .tabs-container {
-  @apply w-full;
+  @apply w-full overflow-x-auto whitespace-nowrap;
 }
 
 /* Tabs List */

@@ -1,7 +1,7 @@
 <div class="relative">
 
-  <bk-button [size]="'xsm'" [variant]="'secondary'" [leftIcon]="'../../../../assets/icons/columns-black.svg'"
-    (click)="filterButtonClicked($event)" [label]="'Columns'" [buttonClass]="'!text-black'"></bk-button>
+  <bk-button [size]="'md'" [variant]="'secondary'" [leftIcon]="'../../../../assets/icons/select-column.svg'"
+    (click)="filterButtonClicked($event)" [label]="'Columns'" [buttonClass]="`text-black ${buttonClass}`"></bk-button>
 
   <!-- Dropdown Box -->
   @if(isOpened){

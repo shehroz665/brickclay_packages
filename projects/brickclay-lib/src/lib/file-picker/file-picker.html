@@ -76,7 +76,7 @@
         'file-picker__text-primary-bold--default': pickerState === 'default',
         'file-picker__text-primary-bold--active': pickerState === 'active',
         'file-picker__text-primary-bold--disabled': pickerState === 'disabled'
-      }">Click to upload</span> or drag and drop
+      }">Click to upload</span>{{draggable ? ' or drag and drop' : '' }}
   </p>
   <p
     class="file-picker__text-secondary"
@@ -84,7 +84,7 @@
       'file-picker__text-secondary--default': pickerState === 'default',
       'file-picker__text-secondary--active': pickerState === 'active',
       'file-picker__text-secondary--disabled': pickerState === 'disabled'
-    }">SVG, PNG, JPG or GIF (max. 800x400px)</p>
+    }">{{description}}</p>
   </div>
 
   @if (hasError) {

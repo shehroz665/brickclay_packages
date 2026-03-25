@@ -3,9 +3,6 @@ import { CommonModule } from '@angular/common';
 import { BkCustomCalendar } from './components/custom-calendar/custom-calendar.component';
 import { BkScheduledDatePicker } from './components/scheduled-date-picker/scheduled-date-picker.component';
 import { BkTimePicker } from './components/time-picker/time-picker.component';
-
-
-
 /**
  * Optional NgModule wrapper for projects that prefer module-based usage.
  *
@@ -22,12 +19,14 @@ import { BkTimePicker } from './components/time-picker/time-picker.component';
     CommonModule,
     BkCustomCalendar,
     BkScheduledDatePicker,
-    BkTimePicker
+    BkTimePicker,
+
   ],
   exports: [
     BkCustomCalendar,
     BkScheduledDatePicker,
-    BkTimePicker
+    BkTimePicker,
+
   ]
 })
 export class CalendarModule {}

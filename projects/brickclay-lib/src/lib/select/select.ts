@@ -441,9 +441,11 @@ export class BkSelect implements ControlValueAccessor {
     return key && typeof item === 'object' ? item[key] : null;
   }
 
-  getRemainingItems(): string[] | [] {
-     return this.selectedOptions().slice(this.maxLabels()).map((x)=> x.label);
-  }
+  getRemainingItems(): string | string[] {
+      return this.selectedOptions()
+        .slice(this.maxLabels())
+        .map((x) => this.resolveLabel(x));
+    }
 
 
 }

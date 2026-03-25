@@ -1,8 +1,9 @@
 <button
   [attr.type]="type"
-  [class]="buttonClasses"
   [disabled]="disabled || loading"
   (click)="onClick($event)"
+  class="{{buttonClasses}}"
+  [ngClass]="{ 'btn-shadow': shadow }"
 >
   @if (leftIcon) {
     <img [src]="leftIcon" [alt]="iconAlt" class="icon shrink-0" />

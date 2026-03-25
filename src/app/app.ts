@@ -1,3 +1,4 @@
+import { BkInput } from './../../projects/brickclay-lib/src/lib/input/input';
 import { BkValidator } from './../../projects/brickclay-lib/src/lib/validator/validator';
 import { CalendarSelection } from './../../projects/brickclay-lib/src/lib/calender/components/custom-calendar/custom-calendar.component';
 import { BkCheckbox } from './../../projects/brickclay-lib/src/lib/checkbox/checkbox';
@@ -20,16 +21,31 @@ export class FuelCardModel {
   lkpFuelCardTypeName?: string;
   lkpStatusName?: string;
 }
-
+export type CalendarVariant = 'single' | 'dual' | 'timeOnly' | 'input';
 @Component({
   selector: 'app-root',
-  imports: [CalendarModule, FormsModule, CommonModule, BkValidator],
+  imports: [CalendarModule, FormsModule, CommonModule, BkValidator,BkInput],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
+
+
 export class App implements OnInit {
-  singleDateSelection: CalendarSelection = new CalendarSelection();
+  singleDatefromSelection: CalendarSelection = new CalendarSelection();
+  singleDatetoSelection: CalendarSelection = new CalendarSelection();
+ number:string= '1112345678';
+ cnicString1 :string="1234512345671";
+  dropSpecialCharacters = true;
   calenderSelection: CalendarSelection = new CalendarSelection();
+  dualDateSelection: CalendarSelection = new CalendarSelection();
+countryPhone1 :string="+1 (111) 111-1111";
+  /** Which calendar variant to show: single date, dual (range), or time picker only. */
+  calendarVariant: CalendarVariant = 'single';
+
+  /** Bound to time picker when variant is 'timeOnly'. */
+  timeOnlyValue = '09:04 AM';
+  timeOnlyValue1 = '13:04:56';
+  // timeOnlyValue : string | null= '13:08';
 
   constructor() {}
 
@@ -37,9 +53,17 @@ export class App implements OnInit {
     this.calenderSelection.startDate = '2026-02-21';
     this.calenderSelection.endDate = '2026-03-22';
 
-    this.singleDateSelection.startDate='2026-02-21'
-    this.singleDateSelection.startTime='3:02 AM';
+    // this.singleDatefromSelection.startDate='2026-02-21'
+    // this.singleDatetoSelection.endDate='2026-03-21'
 
+
+    // this.singleDateSelection.startTime='3:02 AM';
+
+  }
+
+  onCalenderSelected(event: any, calendarId: string):void{
+    this.dualDateSelection.startDate  = event.startDate;
+    this.dualDateSelection.endDate = event.endDate;
   }
 
   onCalendarSelected(event: any, calendarId: string) {
@@ -50,8 +74,15 @@ export class App implements OnInit {
 
   onSingleCalenderSelected(event: any, calendarId: string) {
     debugger;
-    this.singleDateSelection.startDate = event.startDate;
-    this.singleDateSelection.endDate = event.endDate;
+    if(calendarId==='to'){
+    this.singleDatetoSelection.startDate = event.startDate;
+    this.singleDatetoSelection.endDate = event.endDate;
+    }
+    else if(calendarId==='from'){
+    this.singleDatefromSelection.startDate = event.startDate;
+    this.singleDatefromSelection.endDate = event.endDate;
+    }
+
   }
 
   get singleDateHasError(): boolean {
