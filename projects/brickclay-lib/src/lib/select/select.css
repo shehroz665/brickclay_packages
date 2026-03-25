@@ -23,11 +23,11 @@
 }
 
 .bk-select-container.default .bk-select-control{
-  @apply px-3 py-2.5
+  @apply px-3 py-2.5;
 }
 
 .bk-select-container.sm .bk-select-control{
-  @apply px-3 py-[5px]
+  @apply px-3 py-[5px];
 }
 
 .bk-select-control.bk-has-error {
@@ -51,11 +51,11 @@
 }
 
 .bk-select-container.default .bk-select-control .bk-value-label-single{
-  @apply text-[14px] !leading-[18px]
+  @apply text-[14px] !leading-[18px];
 }
 
 .bk-select-container.sm .bk-select-control .bk-value-label-single{
-  @apply text-xs
+  @apply text-xs;
 }
 
 /* --- NEW: Multi Select Chips --- */
