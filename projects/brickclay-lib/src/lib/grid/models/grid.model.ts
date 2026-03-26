@@ -39,6 +39,8 @@ export interface TableAction<T = any> {
   size: BadgeSize;
   dot: 'left' | 'right' | 'none';
   customClass: string;
+  toolTipLabel?: string | string[];
+  tooltipPosition?: 'left' | 'right' | 'top' | 'bottom';
  }
 
  export interface TableIcon {

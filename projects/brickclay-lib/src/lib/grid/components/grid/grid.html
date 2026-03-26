@@ -75,7 +75,9 @@
                     @if (badge) {
                        <bk-badge [label]="badge.label" [variant]="badge.variant"
                        [size]="badge.size" [color]="badge.color" [dot]="badge.dot"
-                       [customClass]="badge.customClass"></bk-badge>
+                       [customClass]="badge.customClass"
+                       [bkTooltip]="badge.toolTipLabel || ''"
+                       [bkTooltipPosition]="badge.tooltipPosition || 'top'"></bk-badge>
                     }
 
                 }
