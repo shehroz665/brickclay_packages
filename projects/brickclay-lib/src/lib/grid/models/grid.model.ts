@@ -20,7 +20,7 @@ export interface TableColumn<T = any> {
 export interface TableAction<T = any> {
   name: string;       // e.g. edit, delete
   icon: string;
-  tooltip?: string;
+  tooltip: string;
   tooltipPosition?: 'left' | 'right' | 'top' | 'bottom';
   hasPermission: boolean;
   /** Dynamic visibility */
