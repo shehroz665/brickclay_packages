@@ -22,6 +22,8 @@
   @apply w-full py-2.5 px-3 text-sm border rounded-[4px] outline-none transition-all duration-200 bg-white;
   height: 40px;
   box-sizing: border-box;
+  box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+
 }
 
 /* Default/Initial State */
@@ -139,7 +141,7 @@
 }
 
 .input-phone-dropdown-item {
-  @apply w-full px-5 py-2.5 text-center text-xs leading-[18px] text-[#6B7080] hover:bg-[#F9FAFA] transition-colors duration-200 border-none bg-transparent;
+  @apply w-full px-5 py-2.5 text-center text-xs leading-[18px] text-[#6B7080] hover:bg-[#F9FAFA] transition-colors duration-200 border-none bg-transparent truncate;
 }
 
 .input-phone-dropdown-item--active {
@@ -150,6 +152,7 @@
 .input-icon {
   @apply absolute left-3 top-1/2 -translate-y-1/2 w-6 h-6 pointer-events-none size-6;
 }
+
 /* When phone selector is present, adjust icon position */
 .input-wrapper--phone .input-icon {
   @apply left-[80px];
@@ -187,6 +190,7 @@
 .input-password-icon {
   @apply w-5 h-5 pointer-events-none;
 }
+
 /* URL Prefix - Absolute Positioned Inside Input */
 .input-url-prefix {
   @apply absolute left-0 top-0 bottom-0 py-2.5 px-3 text-sm text-[#6B7080] bg-white border flex items-center transition-colors duration-200 pointer-events-none;
@@ -228,4 +232,29 @@
 /* Error message */
 .input-error {
   @apply text-xs text-[#E7000B] font-normal;
+}
+
+/* width */
+.input-container ::-webkit-scrollbar {
+  width: 4px;
+}
+
+/* Track */
+.input-container ::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 8px;
+  width: 8px;
+}
+
+/* Handle */
+.input-container ::-webkit-scrollbar-thumb {
+  background: #D6D7DC;
+  border-radius: 8px;
+  transition: 0.3s ease-in-out;
+
+}
+
+/* Handle on hover */
+.input-container ::-webkit-scrollbar-thumb:hover {
+  background: #909090;
 }
