@@ -31,12 +31,16 @@
   border: 1px solid #d1d5db;
   border-radius: 4px;
   font-family: 'Inter', sans-serif;
-  color: #6F737B;
+  color: #707280;
   background: #ffffff;
   transition: all 0.2s;
   width: 100%;
   box-sizing: border-box;
   cursor: pointer;
+}
+
+.time-input::placeholder {
+  color: #6B7080;
 }
 
 .time-input-group.default .time-input {
@@ -45,10 +49,9 @@
 }
 
 .time-input-group.lg .time-input {
-  font-size: 12px;
+  font-size: 14px;
   padding: 10px 40px 10px 12px;
 }
-
 
 .time-input:focus {
   outline: none;
@@ -88,6 +91,7 @@
 .time-input-group.default .time-clear-btn {
   top: 5px;
 }
+
 .time-input-group.lg .time-clear-btn {
   top: 10px;
 }
