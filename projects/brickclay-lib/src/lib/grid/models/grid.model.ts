@@ -21,6 +21,7 @@ export interface TableAction<T = any> {
   name: string;       // e.g. edit, delete
   icon: string;
   tooltip: string;
+  tooltipPosition: 'left' | 'right' | 'top' | 'bottom';
   hasPermission: boolean;
   /** Dynamic visibility */
   visible?: boolean | ((row: T) => boolean);

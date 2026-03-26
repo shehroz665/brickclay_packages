@@ -102,7 +102,7 @@
                 @if (isActionVisible(action, row)) {
                   <button
                     bkTooltip="{{ action.tooltip }}"
-                    bkTooltipPosition="top"
+                    [bkTooltipPosition]="action.tooltipPosition || 'top'"
                     class="size-6 flex items-center justify-center rounded hover:bg-[#F8F8FA]"
                     (click)="emitAction(action, row)"
                     [disabled]="isActionDisabled(action, row)"
