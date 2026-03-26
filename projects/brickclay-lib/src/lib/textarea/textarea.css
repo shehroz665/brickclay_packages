@@ -4,3 +4,7 @@
     background-color: rgb(244 244 246);
     color: rgb(161 163 174);
 }
+
+.bk-textarea-shadow {
+    box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+}

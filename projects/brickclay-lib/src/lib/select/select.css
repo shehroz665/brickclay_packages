@@ -7,6 +7,8 @@
 /* Control */
 .bk-select-control {
   @apply flex items-center justify-between gap-2 w-full bg-white border border-[#E3E3E7] rounded transition-all duration-200 cursor-pointer;
+  box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+
 
   &.bk-focused {
     @apply border-[#6B7080] shadow-none z-10;
@@ -16,17 +18,18 @@
     @apply cursor-not-allowed;
     border-color: rgb(227 227 231);
     background-color: rgb(244 244 246);
-    .bk-placeholder{
+
+    .bk-placeholder {
       color: rgb(161 163 174);
     }
   }
 }
 
-.bk-select-container.default .bk-select-control{
+.bk-select-container.default .bk-select-control {
   @apply px-3 py-2.5;
 }
 
-.bk-select-container.sm .bk-select-control{
+.bk-select-container.sm .bk-select-control {
   @apply px-3 py-[5px];
 }
 
@@ -47,14 +50,14 @@
 
 /* --- NEW: Single Value --- */
 .bk-value-label-single {
-  @apply font-normal  text-[#141414] truncate w-full;
+  @apply font-normal text-[#141414] truncate w-full;
 }
 
-.bk-select-container.default .bk-select-control .bk-value-label-single{
+.bk-select-container.default .bk-select-control .bk-value-label-single {
   @apply text-[14px] !leading-[18px];
 }
 
-.bk-select-container.sm .bk-select-control .bk-value-label-single{
+.bk-select-container.sm .bk-select-control .bk-value-label-single {
   @apply text-xs;
 }
 
