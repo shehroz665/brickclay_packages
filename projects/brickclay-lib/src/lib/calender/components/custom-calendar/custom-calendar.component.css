@@ -723,3 +723,10 @@
   line-height: 20px;
 
 }
+
+.calendar-input:disabled {
+  cursor: not-allowed;
+  border-color: rgb(227 227 231);
+  background-color: rgb(244 244 246);
+  color: rgb(161 163 174);
+}

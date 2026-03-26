@@ -101,8 +101,8 @@
               @for (action of getRowActions(row); track action.name) {
                 @if (isActionVisible(action, row)) {
                   <button
-                    bkTooltip="{{ action.tooltip }}"
-                    [bkTooltipPosition]="action.tooltipPosition || 'top'"
+                    [bkTooltip]="action?.tooltip || []"
+                    [bkTooltipPosition]="action?.tooltipPosition || 'top'"
                     class="size-6 flex items-center justify-center rounded hover:bg-[#F8F8FA]"
                     (click)="emitAction(action, row)"
                     [disabled]="isActionDisabled(action, row)"
