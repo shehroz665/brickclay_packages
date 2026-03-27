@@ -70,7 +70,7 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
   @Input() appendToBody = false; // When true, positions popup with fixed so it isn't clipped inside dialogs/overflow
   @Input() isDisplayCrossIcon = true; // NEW: Show/Hide clear (X) icon
   @Input() hasError = false; // NEW: Show/Hide clear (X) icon
-  @Input() errorMessage = ''
+  @Input() errorMessage  = ''
   @Output() selected = new EventEmitter<CalendarSelection>();
 
   @ViewChild('inputWrapper') inputWrapper!: ElementRef<HTMLDivElement>;
@@ -91,9 +91,9 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
   @Input() required = false;
 
   /** CVA: called when form control value is set (e.g. ngModel binding) */
-  private onChange: (value: CalendarSelection | null) => void = () => { };
+  private onChange: (value: CalendarSelection | null) => void = () => {};
   /** CVA: called when control is touched (blur / close) */
-  private onTouched: () => void = () => { };
+  private onTouched: () => void = () => {};
   disabled = false;
 
   brickclayIcons = BrickclayIcons;
@@ -793,12 +793,12 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
     this.endDate = null;
     this.startTime = null;
     this.endTime = null;
-    // Time picker for single calendar (12-hour format: 1-12)
+  // Time picker for single calendar (12-hour format: 1-12)
     this.selectedHour = 1;
     this.selectedMinute = 0;
     this.selectedSecond = 0;
     this.selectedAMPM = 'AM';
-    // NEW: Separate time pickers for dual calendar (12-hour format: 1-12)
+  // NEW: Separate time pickers for dual calendar (12-hour format: 1-12)
     this.startHour = 1;
     this.startMinute = 0;
     this.startSecond = 0;
@@ -1065,8 +1065,8 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
     // Check if it's today (highlight today by default if no date selected)
     const today = new Date();
     const isToday = cellDate.getFullYear() === today.getFullYear() &&
-      cellDate.getMonth() === today.getMonth() &&
-      cellDate.getDate() === today.getDate();
+                    cellDate.getMonth() === today.getMonth() &&
+                    cellDate.getDate() === today.getDate();
 
     // If no startDate is set and it's today, highlight it
     if (!this.startDate && isToday) {
@@ -1145,8 +1145,8 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
     const today = new Date();
     const cellDate = new Date(year, month, day);
     return cellDate.getFullYear() === today.getFullYear() &&
-      cellDate.getMonth() === today.getMonth() &&
-      cellDate.getDate() === today.getDate();
+           cellDate.getMonth() === today.getMonth() &&
+           cellDate.getDate() === today.getDate();
   }
 
   getDisplayValue(): string {
@@ -1845,9 +1845,5 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
     const mm = (date.getMonth() + 1).toString().padStart(2, '0'); // month is 0-based
     const dd = date.getDate().toString().padStart(2, '0');
     return `${yyyy}-${mm}-${dd}`;
-  }
-
-  get showClearIcon(): boolean {
-    return this.isDisplayCrossIcon && !this.disabled && !!this.getDisplayValue();
   }
 }

@@ -1,9 +1,4 @@
-<div
-  class="calendar-container relative"
-  [class.open]="show"
-  [class.inline-mode]="inline"
-  [class.disabled]="disabled"
->
+<div class="calendar-container relative" [class.open]="show" [class.inline-mode]="inline" [class.disabled]="disabled">
   <!-- Input field -->
   <div #inputWrapper class="input-wrapper" *ngIf="!inline">
     <input
@@ -16,60 +11,32 @@
       [placeholder]="placeholder"
       [attr.disabled]="disabled ? true : null"
       [class.hasError]="hasError"
-      class="calendar-input"
-    />
-    <!-- *ngIf="!getDisplayValue()" -->
+      class="calendar-input">
+      <!-- *ngIf="!getDisplayValue()" -->
 
-    <span class="calendar-icon">
-      <img alt="calendar" class="calendar-icon-img" [src]="brickclayIcons.calenderIcon" />
+    <span class="calendar-icon" >
+      <img alt="calendar" class="calendar-icon-img" [src]='brickclayIcons.calenderIcon'/>
     </span>
-    <!-- <button
-      type="button"
-      class="clear-btn"
-      *ngIf="getDisplayValue() && isDisplayCrossIcon"
-      (click)="clear(); $event.stopPropagation()"
-      title="Clear"
-    >
-      ×
-    </button> -->
-    @if (showClearIcon) {
-      <button class="clear-btn" (click)="clear(); $event.stopPropagation()" title="Clear">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
-    }
+    <button type="button" class="clear-btn" *ngIf="getDisplayValue() && isDisplayCrossIcon" (click)="clear(); $event.stopPropagation()" title="Clear">×</button>
   </div>
 
   <!-- Calendar Popup / Inline -->
-  <div
-    class="calendar-popup"
-    [class.inline-calendar]="inline"
-    [class.append-to-body]="appendToBody && !inline"
-    [style.position]="appendToBody && !inline ? 'fixed' : null"
-    [style.top]="appendToBody && !inline && drop !== 'up' ? dropdownStyle.top : null"
-    [style.bottom]="appendToBody && !inline && drop === 'up' ? dropdownStyle.bottom : null"
-    [style.left]="appendToBody && !inline ? dropdownStyle.left : null"
-    [ngClass]="{
-      'position-right': !inline && !appendToBody && opens === 'right',
-      'position-center': !inline && !appendToBody && opens === 'center',
-      'drop-up': !inline && drop === 'up',
-      'has-ranges': showRanges && customRanges,
-      'dual-calendar-mode': dualCalendar,
-    }"
-    *ngIf="inline || show"
-  >
+  <div class="calendar-popup"
+       [class.inline-calendar]="inline"
+       [class.append-to-body]="appendToBody && !inline"
+       [style.position]="appendToBody && !inline ? 'fixed' : null"
+       [style.top]="appendToBody && !inline && drop !== 'up' ? dropdownStyle.top : null"
+       [style.bottom]="appendToBody && !inline && drop === 'up' ? dropdownStyle.bottom : null"
+       [style.left]="appendToBody && !inline ? dropdownStyle.left : null"
+       [ngClass]="{
+         'position-right': !inline && !appendToBody && opens === 'right',
+         'position-center': !inline && !appendToBody && opens === 'center',
+         'drop-up': !inline && drop === 'up',
+         'has-ranges': showRanges && customRanges,
+         'dual-calendar-mode': dualCalendar
+       }"
+       *ngIf="inline || show">
+
     <!-- RANGES -->
     <div class="ranges" *ngIf="showRanges && customRanges">
       <button
@@ -78,261 +45,205 @@
         [class.active]="activeRange === rangeKey"
         [class.custom-range]="rangeKey === 'Custom Range'"
         class="range-btn"
-        [disabled]="rangeKey === 'Custom Range'"
-      >
+        [disabled]="rangeKey === 'Custom Range'">
         {{ rangeKey }}
       </button>
     </div>
-    <div class="" [ngClass]="showRanges ? 'w-100 flex-grow-1' : ''">
-      <!-- SINGLE CALENDAR -->
-      <div *ngIf="!dualCalendar" class="calendar-wrapper">
-        <div class="header">
-          <!-- <button (click)="prevMonth()" class="nav-btn" type="button">
+<div class="" [ngClass]="showRanges ? 'w-100 flex-grow-1' : ''">
+
+
+    <!-- SINGLE CALENDAR -->
+    <div *ngIf="!dualCalendar" class="calendar-wrapper">
+      <div class="header">
+        <!-- <button (click)="prevMonth()" class="nav-btn" type="button">
           <img src="assets/calender/pagination-left-gray.svg" alt="arrow-left" class="arrow-left">
         </button> -->
-          <button class="nav-btn" type="button" (click)="prevMonth()" matTooltip="Prev month">
-            <img alt="prev" class="h-3 w-3" [src]="brickclayIcons.arrowleft" />
-          </button>
-          <span class="month-year">{{ getMonthName(month) }} {{ year }}</span>
-          <!-- <button (click)="nextMonth()" class="nav-btn" type="button">
+        <button class="nav-btn" type="button" (click)="prevMonth()" matTooltip="Prev month"
+                    >
+                    <img alt="prev" class="h-3 w-3" [src]="brickclayIcons.arrowleft"/>
+                </button>
+        <span class="month-year">{{ getMonthName(month) }} {{ year }}</span>
+        <!-- <button (click)="nextMonth()" class="nav-btn" type="button">
           <img src="assets/calender/pagination-right-gray.svg" alt="arrow-right" class="arrow-right">
         </button> -->
-          <button class="nav-btn" type="button" (click)="nextMonth()" matTooltip="Next month">
-            <img alt="next" class="h-3 w-3" [src]="brickclayIcons.arrowRight" />
-            <!--<img src="assets/calender/pagination-right-gray.svg" alt="next" class="h-3 w-3" /> -->
+        <button class="nav-btn" type="button" (click)="nextMonth()" matTooltip="Next month"
+                    >
+                   <img alt="next" class="h-3 w-3"  [src]='brickclayIcons.arrowRight'/>
+                    <!--<img src="assets/calender/pagination-right-gray.svg" alt="next" class="h-3 w-3" /> -->
+                </button>
+      </div>
+
+      <table class="calendar-table">
+        <thead>
+          <tr>
+            <th *ngFor="let d of ['Mo','Tu','We','Th','Fr','Sa','Su']" class="weekday-header">{{ d }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let week of calendar">
+            <td
+              *ngFor="let dayObj of week"
+              (click)="dayObj.currentMonth && !isDateDisabled(year, month, dayObj.day) && selectDate(dayObj.day)"
+              (mouseenter)="dayObj.currentMonth && !isDateDisabled(year, month, dayObj.day) && onDateHover(dayObj.day, false)"
+              (mouseleave)="onDateLeave()"
+              [class.active]="dayObj.currentMonth && isDateSelected(year, month, dayObj.day)"
+              [class.in-range]="dayObj.currentMonth && isDateInRange(year, month, dayObj.day)"
+              [class.other-month]="!dayObj.currentMonth"
+              [class.disabled]="isDateDisabled(year, month, dayObj.day)"
+              [class.multi-selected]="multiDateSelection && isDateInMultiSelection(year, month, dayObj.day)"
+              [class.today]="dayObj.currentMonth && isToday(year, month, dayObj.day)"
+              class="calendar-day">
+              {{ dayObj.day }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Single Calendar Time Picker -->
+      <div *ngIf="enableTimepicker" class="timepicker-section">
+        <div class="timepicker-label">Time</div>
+        <div class="timepicker-controls">
+          <bk-time-picker
+            pickerId="single-time"
+            [timeFormat]="timeFormat"
+            [clearable]="clearableTime"
+            [label]="''"
+            [ngModel]="singleTimeModel"
+            (ngModelChange)="onSingleTimePickerChange($event); singleTimeModel=$event"
+            [closePicker]="shouldClosePicker('single-time')"
+            (pickerOpened)="onTimePickerOpened($event)"
+            (pickerClosed)="onTimePickerClosed($event)">
+          </bk-time-picker>
+        </div>
+      </div>
+    </div>
+
+    <!-- DUAL CALENDAR -->
+    <div class="dual-calendar" *ngIf="dualCalendar">
+      <!-- LEFT CALENDAR -->
+      <div class="calendar-left">
+        <div class="header">
+          <button (click)="prevLeftMonth()" class="nav-btn" type="button">
+            <img alt="arrow-left" class="arrow-left" [src]="brickclayIcons.arrowleft"/>
+          </button>
+          <span class="month-year">{{ getMonthName(leftMonth) }} {{ leftYear }}</span>
+          <button (click)="nextLeftMonth()" class="nav-btn" type="button">
+            <img alt="arrow-right" class="arrow-right" [src]='brickclayIcons.arrowRight'/>
           </button>
         </div>
-
         <table class="calendar-table">
           <thead>
             <tr>
-              <th
-                *ngFor="let d of ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']"
-                class="weekday-header"
-              >
-                {{ d }}
-              </th>
+              <th *ngFor="let d of ['Mo','Tu','We','Th','Fr','Sa','Su']" class="weekday-header">{{ d }}</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let week of calendar">
+            <tr *ngFor="let week of leftCalendar">
               <td
                 *ngFor="let dayObj of week"
-                (click)="
-                  dayObj.currentMonth &&
-                    !isDateDisabled(year, month, dayObj.day) &&
-                    selectDate(dayObj.day)
-                "
-                (mouseenter)="
-                  dayObj.currentMonth &&
-                    !isDateDisabled(year, month, dayObj.day) &&
-                    onDateHover(dayObj.day, false)
-                "
+                (click)="dayObj.currentMonth && !isDateDisabled(leftYear, leftMonth, dayObj.day) && selectDate(dayObj.day, false)"
+                (mouseenter)="dayObj.currentMonth && !isDateDisabled(leftYear, leftMonth, dayObj.day) && onDateHover(dayObj.day, false)"
                 (mouseleave)="onDateLeave()"
-                [class.active]="dayObj.currentMonth && isDateSelected(year, month, dayObj.day)"
-                [class.in-range]="dayObj.currentMonth && isDateInRange(year, month, dayObj.day)"
+                [class.active]="dayObj.currentMonth && isDateSelected(leftYear, leftMonth, dayObj.day)"
+                [class.in-range]="dayObj.currentMonth && isDateInRange(leftYear, leftMonth, dayObj.day)"
                 [class.other-month]="!dayObj.currentMonth"
-                [class.disabled]="isDateDisabled(year, month, dayObj.day)"
-                [class.multi-selected]="
-                  multiDateSelection && isDateInMultiSelection(year, month, dayObj.day)
-                "
-                [class.today]="dayObj.currentMonth && isToday(year, month, dayObj.day)"
-                class="calendar-day"
-              >
+                [class.disabled]="isDateDisabled(leftYear, leftMonth, dayObj.day)"
+                [class.multi-selected]="multiDateSelection && isDateInMultiSelection(leftYear, leftMonth, dayObj.day)"
+                [class.today]="dayObj.currentMonth && isToday(leftYear, leftMonth, dayObj.day)"
+                class="calendar-day">
                 {{ dayObj.day }}
               </td>
             </tr>
           </tbody>
         </table>
 
-        <!-- Single Calendar Time Picker -->
+        <!-- Start Time Picker for Dual Calendar -->
         <div *ngIf="enableTimepicker" class="timepicker-section">
-          <div class="timepicker-label">Time</div>
+          <div class="timepicker-label">Start Time</div>
           <div class="timepicker-controls">
             <bk-time-picker
-              pickerId="single-time"
+              pickerId="dual-start"
               [timeFormat]="timeFormat"
               [clearable]="clearableTime"
               [label]="''"
-              [ngModel]="singleTimeModel"
-              (ngModelChange)="onSingleTimePickerChange($event); singleTimeModel = $event"
-              [closePicker]="shouldClosePicker('single-time')"
+              [ngModel]="startTimeModel"
+              (ngModelChange)="onDualTimePickerChange($event, true); startTimeModel=$event"
+              [closePicker]="shouldClosePicker('dual-start')"
               (pickerOpened)="onTimePickerOpened($event)"
-              (pickerClosed)="onTimePickerClosed($event)"
-            >
+              (pickerClosed)="onTimePickerClosed($event)">
             </bk-time-picker>
           </div>
         </div>
       </div>
 
-      <!-- DUAL CALENDAR -->
-      <div class="dual-calendar" *ngIf="dualCalendar">
-        <!-- LEFT CALENDAR -->
-        <div class="calendar-left">
-          <div class="header">
-            <button (click)="prevLeftMonth()" class="nav-btn" type="button">
-              <img alt="arrow-left" class="arrow-left" [src]="brickclayIcons.arrowleft" />
-            </button>
-            <span class="month-year">{{ getMonthName(leftMonth) }} {{ leftYear }}</span>
-            <button (click)="nextLeftMonth()" class="nav-btn" type="button">
-              <img alt="arrow-right" class="arrow-right" [src]="brickclayIcons.arrowRight" />
-            </button>
-          </div>
-          <table class="calendar-table">
-            <thead>
-              <tr>
-                <th
-                  *ngFor="let d of ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']"
-                  class="weekday-header"
-                >
-                  {{ d }}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let week of leftCalendar">
-                <td
-                  *ngFor="let dayObj of week"
-                  (click)="
-                    dayObj.currentMonth &&
-                      !isDateDisabled(leftYear, leftMonth, dayObj.day) &&
-                      selectDate(dayObj.day, false)
-                  "
-                  (mouseenter)="
-                    dayObj.currentMonth &&
-                      !isDateDisabled(leftYear, leftMonth, dayObj.day) &&
-                      onDateHover(dayObj.day, false)
-                  "
-                  (mouseleave)="onDateLeave()"
-                  [class.active]="
-                    dayObj.currentMonth && isDateSelected(leftYear, leftMonth, dayObj.day)
-                  "
-                  [class.in-range]="
-                    dayObj.currentMonth && isDateInRange(leftYear, leftMonth, dayObj.day)
-                  "
-                  [class.other-month]="!dayObj.currentMonth"
-                  [class.disabled]="isDateDisabled(leftYear, leftMonth, dayObj.day)"
-                  [class.multi-selected]="
-                    multiDateSelection && isDateInMultiSelection(leftYear, leftMonth, dayObj.day)
-                  "
-                  [class.today]="dayObj.currentMonth && isToday(leftYear, leftMonth, dayObj.day)"
-                  class="calendar-day"
-                >
-                  {{ dayObj.day }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+      <!-- RIGHT CALENDAR -->
+      <div class="calendar-right">
+        <div class="header">
+          <button (click)="prevRightMonth()" class="nav-btn" type="button">
+            <img alt="arrow-left" class="arrow-left"  [src]="brickclayIcons.arrowleft"/>
+          </button>
+          <span class="month-year">{{ getMonthName(rightMonth) }} {{ rightYear }}</span>
+          <button (click)="nextRightMonth()" class="nav-btn" type="button">
+              <img alt="arrow-right" class="arrow-right" [src]='brickclayIcons.arrowRight'/>
+          </button>
+        </div>
+        <table class="calendar-table">
+          <thead>
+            <tr>
+              <th *ngFor="let d of ['Mo','Tu','We','Th','Fr','Sa','Su']" class="weekday-header">{{ d }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let week of rightCalendar">
+              <td
+                *ngFor="let dayObj of week"
+                (click)="dayObj.currentMonth && !isDateDisabled(rightYear, rightMonth, dayObj.day) && selectDate(dayObj.day, true)"
+                (mouseenter)="dayObj.currentMonth && !isDateDisabled(rightYear, rightMonth, dayObj.day) && onDateHover(dayObj.day, true)"
+                (mouseleave)="onDateLeave()"
+                [class.active]="dayObj.currentMonth && isDateSelected(rightYear, rightMonth, dayObj.day)"
+                [class.in-range]="dayObj.currentMonth && isDateInRange(rightYear, rightMonth, dayObj.day)"
+                [class.other-month]="!dayObj.currentMonth"
+                [class.disabled]="isDateDisabled(rightYear, rightMonth, dayObj.day)"
+                [class.multi-selected]="multiDateSelection && isDateInMultiSelection(rightYear, rightMonth, dayObj.day)"
+                [class.today]="dayObj.currentMonth && isToday(rightYear, rightMonth, dayObj.day)"
+                class="calendar-day">
+                {{ dayObj.day }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
-          <!-- Start Time Picker for Dual Calendar -->
-          <div *ngIf="enableTimepicker" class="timepicker-section">
-            <div class="timepicker-label">Start Time</div>
-            <div class="timepicker-controls">
-              <bk-time-picker
-                pickerId="dual-start"
-                [timeFormat]="timeFormat"
-                [clearable]="clearableTime"
-                [label]="''"
-                [ngModel]="startTimeModel"
-                (ngModelChange)="onDualTimePickerChange($event, true); startTimeModel = $event"
-                [closePicker]="shouldClosePicker('dual-start')"
-                (pickerOpened)="onTimePickerOpened($event)"
-                (pickerClosed)="onTimePickerClosed($event)"
-              >
-              </bk-time-picker>
-            </div>
+        <!-- End Time Picker for Dual Calendar -->
+        <div *ngIf="enableTimepicker" class="timepicker-section">
+          <div class="timepicker-label">End Time</div>
+          <div class="timepicker-controls">
+            <bk-time-picker
+              pickerId="dual-end"
+              [timeFormat]="timeFormat"
+              [clearable]="clearableTime"
+              [label]="''"
+              [ngModel]="endTimeModel"
+              (ngModelChange)="onDualTimePickerChange($event, false); endTimeModel=$event"
+              [closePicker]="shouldClosePicker('dual-end')"
+              (pickerOpened)="onTimePickerOpened($event)"
+              (pickerClosed)="onTimePickerClosed($event)">
+            </bk-time-picker>
           </div>
         </div>
-
-        <!-- RIGHT CALENDAR -->
-        <div class="calendar-right">
-          <div class="header">
-            <button (click)="prevRightMonth()" class="nav-btn" type="button">
-              <img alt="arrow-left" class="arrow-left" [src]="brickclayIcons.arrowleft" />
-            </button>
-            <span class="month-year">{{ getMonthName(rightMonth) }} {{ rightYear }}</span>
-            <button (click)="nextRightMonth()" class="nav-btn" type="button">
-              <img alt="arrow-right" class="arrow-right" [src]="brickclayIcons.arrowRight" />
-            </button>
-          </div>
-          <table class="calendar-table">
-            <thead>
-              <tr>
-                <th
-                  *ngFor="let d of ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']"
-                  class="weekday-header"
-                >
-                  {{ d }}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let week of rightCalendar">
-                <td
-                  *ngFor="let dayObj of week"
-                  (click)="
-                    dayObj.currentMonth &&
-                      !isDateDisabled(rightYear, rightMonth, dayObj.day) &&
-                      selectDate(dayObj.day, true)
-                  "
-                  (mouseenter)="
-                    dayObj.currentMonth &&
-                      !isDateDisabled(rightYear, rightMonth, dayObj.day) &&
-                      onDateHover(dayObj.day, true)
-                  "
-                  (mouseleave)="onDateLeave()"
-                  [class.active]="
-                    dayObj.currentMonth && isDateSelected(rightYear, rightMonth, dayObj.day)
-                  "
-                  [class.in-range]="
-                    dayObj.currentMonth && isDateInRange(rightYear, rightMonth, dayObj.day)
-                  "
-                  [class.other-month]="!dayObj.currentMonth"
-                  [class.disabled]="isDateDisabled(rightYear, rightMonth, dayObj.day)"
-                  [class.multi-selected]="
-                    multiDateSelection && isDateInMultiSelection(rightYear, rightMonth, dayObj.day)
-                  "
-                  [class.today]="dayObj.currentMonth && isToday(rightYear, rightMonth, dayObj.day)"
-                  class="calendar-day"
-                >
-                  {{ dayObj.day }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <!-- End Time Picker for Dual Calendar -->
-          <div *ngIf="enableTimepicker" class="timepicker-section">
-            <div class="timepicker-label">End Time</div>
-            <div class="timepicker-controls">
-              <bk-time-picker
-                pickerId="dual-end"
-                [timeFormat]="timeFormat"
-                [clearable]="clearableTime"
-                [label]="''"
-                [ngModel]="endTimeModel"
-                (ngModelChange)="onDualTimePickerChange($event, false); endTimeModel = $event"
-                [closePicker]="shouldClosePicker('dual-end')"
-                (pickerOpened)="onTimePickerOpened($event)"
-                (pickerClosed)="onTimePickerClosed($event)"
-              >
-              </bk-time-picker>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- FOOTER -->
-      <div class="footer" *ngIf="!inline && showCancelApply">
-        <button *ngIf="showCancel" (click)="cancel()" class="btn-cancel" type="button">
-          Cancel
-        </button>
-        <button (click)="apply()" class="btn-apply" type="button">Apply</button>
       </div>
     </div>
+
+    <!-- FOOTER -->
+    <div class="footer" *ngIf="!inline && showCancelApply">
+      <button *ngIf="showCancel" (click)="cancel()" class="btn-cancel" type="button">Cancel</button>
+      <button (click)="apply()" class="btn-apply" type="button">Apply</button>
+    </div>
+
+  </div>
+
   </div>
 </div>
 
-@if (hasError) {
-  <p class="calender-error">{{ errorMessage }}</p>
+@if (hasError){
+<p class="calender-error">{{errorMessage}}</p>
 }
