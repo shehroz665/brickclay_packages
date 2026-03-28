@@ -128,6 +128,8 @@ export class BkPagination implements OnChanges {
   }
 
   changeSize(event: any) {
+    this.activePage = 1;
+    this.activePageChange.emit(this.activePage);
     this.changePageSize.emit(this.pageSize);
 
     // ✅ Recalculate pages on size change
