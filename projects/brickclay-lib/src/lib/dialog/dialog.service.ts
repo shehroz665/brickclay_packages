@@ -314,7 +314,26 @@ export class BkDialogService {
 
     // Backdrop click
     if (config.closeOnBackdrop !== false) {
-      ref.backdropClick().subscribe(() => ref.close());
+      ref.backdropClick().subscribe((event: any) => {
+        // Only the top-most dialog should react to backdrop clicks
+        if (this.getTopDialog() !== ref) {
+          return;
+        }
+
+        // Prevent this click from leaking to underlying overlays
+        try {
+          if (event) {
+            if (typeof event.preventDefault === 'function') event.preventDefault();
+            if (typeof event.stopPropagation === 'function') event.stopPropagation();
+            if (typeof event.stopImmediatePropagation === 'function') event.stopImmediatePropagation();
+          }
+        } catch {
+          // no-op
+        }
+
+        // Defer close so CDK finishes dispatching this event on the top overlay
+        setTimeout(() => ref.close());
+      });
     }
 
     // ESC key
@@ -322,8 +341,17 @@ export class BkDialogService {
       ref.keydownEvents()
         .pipe(filter((e: KeyboardEvent) => e.key === 'Escape' || e.key === 'Esc'))
         .subscribe((e: KeyboardEvent) => {
-          e.preventDefault();
-          ref.close();
+          // Only the top-most dialog should react to ESC
+          if (this.getTopDialog() !== ref) {
+            return;
+          }
+          try {
+            if (typeof e.preventDefault === 'function') e.preventDefault();
+            if (typeof e.stopPropagation === 'function') e.stopPropagation();
+          } catch {
+            // no-op
+          }
+          setTimeout(() => ref.close());
         });
     }
   }
