@@ -39,7 +39,7 @@ export class BkSelect implements ControlValueAccessor {
   bindLabel = input<string>('label');
   bindValue = input<string>('');
   placeholder = input<string>('');
-  notFoundText = input<string>('No items found');
+  notFoundText = input<string>('No records found');
   loadingText = input<string>('Loading...');
   clearAllText = input<string>('Clear all');
   groupBy = input<string>(''); // NEW
