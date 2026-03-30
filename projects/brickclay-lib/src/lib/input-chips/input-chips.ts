@@ -206,14 +206,14 @@ export class BkInputChips implements ControlValueAccessor, AfterViewInit {
     if (!this.disabled) {
     this.isFocused = true;
     }
-    this.onChange([...this.badges]);
+    // this.onChange([...this.badges]);
     this.focus.emit(event);
   }
 
   handleBlur(event:Event): void {
     this.isFocused = false;
     this.onTouched();
-    this.onChange([...this.badges]);
+    // this.onChange([...this.badges]);
     this.blur.emit(event);
   }
 
