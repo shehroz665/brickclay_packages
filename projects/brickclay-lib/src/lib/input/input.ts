@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 import {
+  AfterViewInit,
   Component,
   Input,
   OnInit,
@@ -122,7 +123,7 @@ export interface CountryOption {
     }
   ]
 })
-export class BkInput implements OnInit, OnDestroy, ControlValueAccessor {
+export class BkInput implements OnInit, OnDestroy, AfterViewInit, ControlValueAccessor {
 
   // =================== Inputs (all your original ones) ===================
   @Input() id!: string ;
@@ -175,11 +176,14 @@ export class BkInput implements OnInit, OnDestroy, ControlValueAccessor {
   @ViewChild('dropdownRef') dropdownRef?: ElementRef;
   @ViewChild('selectRef') selectRef?: ElementRef;
   @ViewChild('inputField') inputField?: ElementRef<HTMLInputElement>;
+  @ViewChild(NgxMaskDirective) maskDirective?: NgxMaskDirective;
 
   // =================== Internal State ===================
   isFocused: boolean = false;
   inputValue: string = '';
   isDropdownOpen: boolean = false;
+  private pendingMaskedValue: string | null = null;
+  private isPropagatingViewValue = false;
 
 
   // =================== Output Emitter ===================
@@ -242,16 +246,17 @@ export class BkInput implements OnInit, OnDestroy, ControlValueAccessor {
   writeValue(value: any): void {
     const str = (value === null || value === undefined) ? '' : String(value);
     this.value = str;
-    this.inputValue = str;
-
-    // If ngx-mask is active, trigger it to format the view value.
-    if (this.maskValue && this.inputField?.nativeElement) {
-      setTimeout(() => {
-        if (!this.inputField?.nativeElement) return;
-        this.inputField.nativeElement.value = str;
-        this.inputField.nativeElement.dispatchEvent(new Event('input', { bubbles: true }));
-      }, 0);
+    if (!this.maskValue) {
+      this.inputValue = str;
+      this.pendingMaskedValue = null;
+      return;
     }
+
+    // When the value came from this component's own input event, the masked view is
+    // already correct. Re-applying it here can reset the caret position.
+    if (this.isPropagatingViewValue) return;
+
+    void this.writeMaskedViewValue(str);
   }
 
   registerOnChange(fn: any): void {
@@ -281,6 +286,12 @@ export class BkInput implements OnInit, OnDestroy, ControlValueAccessor {
 
       if (country) this.selectedCountry = country;
       document.addEventListener('closeAllPhoneDropdowns', this.closeAllDropdownsHandler);
+    }
+  }
+
+  ngAfterViewInit(): void {
+    if (this.maskValue) {
+      void this.writeMaskedViewValue(this.pendingMaskedValue ?? this.value);
     }
   }
 
@@ -328,7 +339,11 @@ export class BkInput implements OnInit, OnDestroy, ControlValueAccessor {
       this.type === 'number'
         ? (modelRaw === '' ? null : Number(modelRaw))
         : modelRaw;
+    this.isPropagatingViewValue = true;
     this.onChange(out);
+    queueMicrotask(() => {
+      this.isPropagatingViewValue = false;
+    });
     this.input.emit(event);
   }
 
@@ -381,12 +396,7 @@ selectCountry(country: CountryOption): void {
   this.onChange(newPhone);
 
   setTimeout(() => {
-    if (this.inputField?.nativeElement) {
-      this.inputField.nativeElement.value = newPhone;
-      this.inputField.nativeElement.dispatchEvent(
-        new Event('input', { bubbles: true })
-      );
-    }
+    void this.writeMaskedViewValue(newPhone);
   }, 0);
 }
 
@@ -428,6 +438,19 @@ selectCountry(country: CountryOption): void {
   get currentInputType(): string {
     if (this.password) return this.showPassword ? 'text' : 'password';
     return this.type;
+  }
+
+  private async writeMaskedViewValue(value: string): Promise<void> {
+    this.pendingMaskedValue = value;
+
+    if (!this.maskValue || !this.maskDirective || !this.inputField?.nativeElement) {
+      this.inputValue = value;
+      return;
+    }
+
+    await this.maskDirective.writeValue(value);
+    this.inputValue = this.inputField.nativeElement.value ?? '';
+    this.pendingMaskedValue = null;
   }
 
 
