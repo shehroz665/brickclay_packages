@@ -243,6 +243,15 @@ export class BkInput implements OnInit, OnDestroy, ControlValueAccessor {
     const str = (value === null || value === undefined) ? '' : String(value);
     this.value = str;
     this.inputValue = str;
+
+    // If ngx-mask is active, trigger it to format the view value.
+    if (this.maskValue && this.inputField?.nativeElement) {
+      setTimeout(() => {
+        if (!this.inputField?.nativeElement) return;
+        this.inputField.nativeElement.value = str;
+        this.inputField.nativeElement.dispatchEvent(new Event('input', { bubbles: true }));
+      }, 0);
+    }
   }
 
   registerOnChange(fn: any): void {
@@ -370,6 +379,15 @@ selectCountry(country: CountryOption): void {
   this.inputValue = newPhone;
   this.value = newPhone;
   this.onChange(newPhone);
+
+  setTimeout(() => {
+    if (this.inputField?.nativeElement) {
+      this.inputField.nativeElement.value = newPhone;
+      this.inputField.nativeElement.dispatchEvent(
+        new Event('input', { bubbles: true })
+      );
+    }
+  }, 0);
 }
 
 
