@@ -23,6 +23,9 @@ export class BkGrid<T = any> {
   @Input() result!: T[];
   @Input() actions: TableAction<T>[] | ((row: T) => TableAction<T>[]) = [];
   @Input() customClass: string = 'h-[calc(100vh-260px)]';
+  @Input() showNoRecords: boolean = false;
+  @Input() noRecordFoundHeight: string = '';
+
   @Output() change = new EventEmitter<{
     row: T;
     column: TableColumn<T>
@@ -126,6 +129,14 @@ export class BkGrid<T = any> {
     return typeof column.icons === 'function' ? column.icons(row) : column.icons;
   }
 
+  /* ================= Tooltip ================= */
+
+  getTooltipValue(row: T, column: TableColumn<T>): string {
+    if (column.toolTipField) {
+      return String(row[column.toolTipField] ?? '');
+    }
+    return '';
+  }
   /* ================= Actions ================= */
 
   getRowActions(row: T, column?: TableColumn<T>): TableAction<T>[] {

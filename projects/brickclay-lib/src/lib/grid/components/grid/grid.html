@@ -1,53 +1,52 @@
-<div
-  #tableScrollContainer
-  cdkScrollable
-  class="overflow-y-auto"
-  [ngClass]="customClass"
-  >
-
+<div #tableScrollContainer cdkScrollable class="overflow-y-auto" [ngClass]="customClass">
   <table class="min-w-full text-sm text-left text-gray-800 table-auto border-collapse">
-
     <!-- ================= HEADER ================= -->
-  <thead>
-    <tr>
-      @for (col of columns; track col.header;let i=$index;) {
-        @if (isColumnVisible(col)) {
-          <th
-            class="grid-header sticky top-[-1px] cursor-pointer"
-            [class.action-sticky]="col.sticky"
-            [class.z-10]="col.sticky"
-            [ngClass]="col.headerClass"
-            [ngClass]="col.cellClass"
-            (click)="sort(col,i)"
-          >
-            <span class="flex items-center gap-1"
-              [ngClass]="sortColumn === col.field
-                ? (sortDirection === 'asc' ? 'grid-asc' : 'grid-desc')
-                : ''">
-              {{ col.header }}
-              @if (col.sortable) {
-                <span class="grid-sort-icon"></span>
-              }
-            </span>
-          </th>
+    <thead>
+      <tr>
+        @for (col of columns; track col.header; let i = $index) {
+          @if (isColumnVisible(col)) {
+            <th
+              class="grid-header sticky top-[-1px]"
+              [class.cursor-pointer]="col.sortable"
+              [class.cursor-default]="!col.sortable"
+              [class.action-sticky]="col.sticky"
+              [class.z-10]="col.sticky"
+              [ngClass]="col.headerClass"
+              [ngClass]="col.cellClass"
+              (click)="sort(col, i)"
+            >
+              <span
+                class="flex items-center gap-1"
+                [ngClass]="
+                  sortColumn === col.field
+                    ? sortDirection === 'asc'
+                      ? 'grid-asc'
+                      : 'grid-desc'
+                    : ''
+                "
+              >
+                {{ col.header }}
+                @if (col.sortable) {
+                  <span class="grid-sort-icon"></span>
+                }
+              </span>
+            </th>
+          }
         }
-      }
 
-      @if (actions.length) {
-        <th class="grid-header sticky top-0 action-sticky z-10 !bg-[#FBFBFC] w-20">
-          Action
-        </th>
-      }
-    </tr>
-  </thead>
+        @if (actions.length) {
+          <th class="grid-header sticky top-0 action-sticky z-10 !bg-[#FBFBFC] w-20">Action</th>
+        }
+      </tr>
+    </thead>
 
     <!-- ================= BODY ================= -->
     <tbody
       cdkDropList
       [cdkDropListDisabled]="!draggable"
       [cdkDropListData]="result || []"
-      (cdkDropListDropped)="dropList($event)">
-
+      (cdkDropListDropped)="dropList($event)"
+    >
       @for (row of result; track row; let rowIndex = $index) {
         <tr
           cdkDrag
@@ -55,13 +54,19 @@
           [cdkDragDisabled]="!draggable"
           (cdkDragStarted)="onDragStart($event)"
           (cdkDragMoved)="onDragMoved($event)"
-          class="" [ngClass]="{ 'cursor-move ': draggable }">
-
+          class=""
+          [ngClass]="{ 'cursor-move ': draggable }"
+        >
           @for (col of columns; track col.header; let colIndex = $index) {
             @if (isColumnVisible(col)) {
               <td class="grid-cell text-nowrap" [ngClass]="col.cellClass">
                 @if (draggable && colIndex === firstVisibleColumnIndex) {
-                  <span cdkDragHandle class="mr-2 text-gray-400" [ngClass]="{ 'cursor-move': draggable }">☰</span>
+                  <span
+                    cdkDragHandle
+                    class="mr-2 text-gray-400"
+                    [ngClass]="{ 'cursor-move': draggable }"
+                    >☰</span
+                  >
                 }
                 @if (col.checkbox) {
                   <bk-checkbox
@@ -69,25 +74,35 @@
                     [ngModel]="getCheckboxValue(row, col)"
                     (ngModelChange)="setCheckboxValue(row, col, $event)"
                   ></bk-checkbox>
-                }
-                @else if(col.badges){
+                } @else if (col.badges) {
                   @let badge = getBadge(row, col);
-                    @if (badge) {
-                       <bk-badge [label]="badge.label" [variant]="badge.variant"
-                       [size]="badge.size" [color]="badge.color" [dot]="badge.dot"
-                       [customClass]="badge.customClass"
-                       [bkTooltip]="badge.toolTipLabel || ''"
-                       [bkTooltipPosition]="badge.tooltipPosition || 'top'"></bk-badge>
-                    }
-
-                }
-                @else if (col.icons) {
+                  @if (badge) {
+                    <bk-badge
+                      [label]="badge.label"
+                      [variant]="badge.variant"
+                      [size]="badge.size"
+                      [color]="badge.color"
+                      [dot]="badge.dot"
+                      [customClass]="badge.customClass"
+                      [bkTooltip]="badge.toolTipLabel || ''"
+                      [bkTooltipPosition]="badge.tooltipPosition || 'top'"
+                    ></bk-badge>
+                  }
+                } @else if (col.icons) {
                    @let iconsList = getIcons(row, col);
                   <div class="flex justify-center items-center gap-2">
                     @for (icon of iconsList; track $index) {
                     <img [src]="icon.url" class="size-4 cursor-pointer" [bkTooltip]="icon.toolTipLabel || []" [bkTooltipPosition]="icon.tooltipPosition || 'top'" />
                     }
                   </div>
+                }
+                @else if (col.toolTipField) {
+                  <span
+                    [bkTooltip]="getTooltipValue(row, col)"
+                    [bkTooltipPosition]="col.toolTipPosition || 'top'"
+                  >
+                    {{ getCellValue(row, col) }}
+                  </span>
                 }
                 @else {
                    {{ getCellValue(row, col) }}
@@ -96,32 +111,32 @@
             }
           }
 
-        @if (getRowActions(row).length) {
-          <td class="grid-cell action-sticky text-center">
-            <div class="flex items-center justify-center gap-1.5">
-
-              @for (action of getRowActions(row); track action.name) {
-                @if (isActionVisible(action, row)) {
-                  <button
-                    [bkTooltip]="action.tooltip"
-                    [bkTooltipPosition]="action?.tooltipPosition || 'top'"
-                    class="size-6 flex items-center justify-center rounded hover:bg-[#F8F8FA]"
-                    (click)="emitAction(action, row)"
-                    [disabled]="isActionDisabled(action, row)"
-                  >
-                    <img
-                      [src]="action.icon"
-                      width="14"
-                      height="14"
-                      alt="action-icon"
-                    />
-                  </button>
+          @if (getRowActions(row).length) {
+            <td class="grid-cell action-sticky text-center">
+              <div class="flex items-center justify-center gap-1.5">
+                @for (action of getRowActions(row); track action.name) {
+                  @if (isActionVisible(action, row)) {
+                    <button
+                      [bkTooltip]="action.tooltip"
+                      [bkTooltipPosition]="action?.tooltipPosition || 'top'"
+                      class="size-6 flex items-center justify-center rounded hover:bg-[#F8F8FA]"
+                      (click)="emitAction(action, row)"
+                      [disabled]="isActionDisabled(action, row)"
+                    >
+                      <img [src]="action.icon" width="14" height="14" alt="action-icon" />
+                    </button>
+                  }
                 }
-              }
-
-            </div>
+              </div>
+            </td>
+          }
+        </tr>
+      }
+      @if(showNoRecords) {
+        <tr>
+          <td [attr.colspan]="columns.length + (actions.length ? 1 : 0)" class="text-center py-10 {{noRecordFoundHeight}}">
+            No records found
           </td>
-        }
         </tr>
       }
     </tbody>

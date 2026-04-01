@@ -15,6 +15,10 @@ export interface TableColumn<T = any> {
   visible?: boolean; // default: true
   actions?: TableAction[] | ((row: T) => TableAction[]);
   checkbox?:boolean;
+  /** Field whose value is shown as a tooltip on the cell */
+  toolTipField?: keyof T;
+  /** Position of the tooltip */
+  toolTipPosition?: 'left' | 'right' | 'top' | 'bottom';
 }
 
 export interface TableAction<T = any> {
