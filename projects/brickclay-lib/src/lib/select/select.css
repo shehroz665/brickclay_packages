@@ -66,10 +66,15 @@
 /* Badge Item */
 .bk-multi-badge-item {
   @apply inline-flex items-center gap-1.5 px-1.5 py-0.5 bg-white border border-[#E3E3E7] rounded-[4px];
+  max-width: 120px;
+  min-width: 0;
 }
 
 .bk-multi-badge-item-text {
-  @apply text-[10px] leading-[14px] font-normal text-[#6B7080];
+  @apply text-[10px] leading-[12px] font-normal text-[#6B7080];
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Badge Close Button */
@@ -112,12 +117,12 @@
 }
 
 .bk-options-list {
-  @apply max-h-60 overflow-auto relative flex flex-col gap-0.5;
+  @apply max-h-60 overflow-y-auto overflow-x-hidden relative flex flex-col gap-0.5;
 }
 
 /* Options */
 .bk-option {
-  @apply flex items-center p-2.5 cursor-pointer transition-colors font-normal text-sm text-[#141414];
+  @apply flex items-center p-2.5 cursor-pointer transition-colors font-normal text-sm text-[#141414] min-w-0;
 
   &:hover,
   &.bk-marked {
@@ -127,6 +132,10 @@
   &.bk-selected {
     @apply bg-[#F8F8F8] rounded-md;
   }
+}
+
+.bk-option .bk-option-label {
+  @apply line-clamp-1 break-all;
 }
 
 .bk-grouped .bk-option {

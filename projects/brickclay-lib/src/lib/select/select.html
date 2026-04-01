@@ -27,7 +27,7 @@
         <div class="bk-placeholder">{{ placeholder() }}</div>
       }
       @if (multiple() && selectedOptions().length > 0) {
-        <div class="bk-value-chips">
+        <div class="bk-value-chips flex gap-0.5 flex-wrap h-[18px] overflow-y-auto">
           @for (opt of selectedOptions().slice(0, maxLabels()); track $index) {
             <div class="bk-multi-badge-item me-0.5">
               <span class="bk-multi-badge-item-text" [style.color]="resolveColor(opt)">{{
@@ -164,7 +164,7 @@
                 [class.bk-selected]="isAllSelected()"
               >
                 <div class="flex-1 flex justify-between">
-                  <span>Select All</span>
+                  <span class="line-clamp-1" >Select All</span>
                   @if (isAllSelected()) {
                     <svg
                       class="text-[#141414]"
@@ -197,12 +197,12 @@
                 [class.bk-marked]="$index === markedIndex()"
                 (click)="handleSelection(item, $event)"
               >
-                <div class="flex-1 flex justify-between">
-                  <span [style.color]="resolveColor(item)">{{ resolveLabel(item) }}</span>
+                <div class="flex-1 flex justify-between gap-2 min-w-0">
+                  <span class="bk-option-label min-w-0" [style.color]="resolveColor(item)">{{ resolveLabel(item) }}</span>
 
                   @if (isItemSelected(item)) {
                     <svg
-                      class="text-[#141414]"
+                      class="text-[#141414] shrink-0"
                       width="17"
                       height="17"
                       viewBox="0 0 24 24"
