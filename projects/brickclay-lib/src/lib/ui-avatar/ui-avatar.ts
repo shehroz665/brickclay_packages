@@ -33,6 +33,10 @@ export class BkAvatar implements OnChanges, ControlValueAccessor {
   @Input() src: string | null = null;
   @Input() alt = 'Avatar';
   @Input() name = '';
+  @Input() initialsOverride = '';
+  @Input() tooltipContent: string | string[] | null = null;
+  @Input() bgColor: string | null = null;
+  @Input() textColor: string | null = null;
 
   @Input() size: AvatarSize = 'md';
   @Input() variant: AvatarVariant = 'gray';
@@ -83,8 +87,8 @@ export class BkAvatar implements OnChanges, ControlValueAccessor {
 
   // ---------- Lifecycle ----------
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['name']) {
-      this.initials = this.getInitials(this.name);
+    if (changes['name'] || changes['initialsOverride']) {
+      this.initials = this.initialsOverride || this.getInitials(this.name);
     }
     // Reset error state whenever a new src arrives via @Input
     if (changes['src']) {
@@ -121,6 +125,21 @@ export class BkAvatar implements OnChanges, ControlValueAccessor {
     ].join(' ');
   }
 
+  get containerStyles(): Record<string, string> | null {
+    const styles: Record<string, string> = {};
+    if (this.bgColor) {
+      styles['background'] = this.bgColor;
+    }
+    if (this.textColor) {
+      styles['color'] = this.textColor;
+    }
+    return Object.keys(styles).length ? styles : null;
+  }
+
+  get resolvedTooltip(): string | string[] {
+    return this.tooltipContent ?? this.name;
+  }
+
   get dotClasses(): string {
     return [
       'avatar-dot',
@@ -133,7 +152,10 @@ export class BkAvatar implements OnChanges, ControlValueAccessor {
   // ---------- Utils ----------
   private getInitials(name: string): string {
     if (!name?.trim()) return '';
-    const parts = name.trim().split(/\s+/);
+    const normalized = name.includes(',')
+      ? name.split(',').map(part => part.trim()).filter(Boolean).reverse().join(' ')
+      : name.trim();
+    const parts = normalized.split(/\s+/);
     if (parts.length === 1) {
       return parts[0].slice(0, 2).toUpperCase();
     }

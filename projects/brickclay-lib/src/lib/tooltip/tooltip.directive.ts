@@ -91,15 +91,25 @@ export class BKTooltipDirective implements OnInit, OnChanges, OnDestroy {
   }
 
 
-  @HostListener('mouseleave')
+@HostListener('mouseleave')
   onMouseLeave() {
+    this.hideTooltip();
+  }
+
+  private hideTooltip() {
     if (this.tooltipElement) {
       this.setStyle(this.tooltipElement, {
         visibility: 'hidden',
         opacity: '0',
       });
-      this.renderer.removeStyle(document.body, 'overflow-x'); // ✅ restore scroll when tooltip hides
+      this.renderer.removeStyle(document.body, 'overflow-x');
     }
+  }
+
+  @HostListener('mousedown')
+  @HostListener('touchstart')
+  onInteract() {
+    this.hideTooltip();
   }
 
   @HostListener('window:scroll')
@@ -289,3 +299,4 @@ export class BKTooltipDirective implements OnInit, OnChanges, OnDestroy {
     });
   }
 }
+

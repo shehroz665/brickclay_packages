@@ -11,10 +11,11 @@
               [class.cursor-default]="!col.sortable"
               [class.action-sticky]="col.sticky"
               [class.z-10]="col.sticky"
-              [ngClass]="col.headerClass"
-              [ngClass]="col.cellClass"
+              class="{{ col.headerClass }} {{ col.cellClass }}"
               (click)="sort(col, i)"
             >
+              <!-- [ngClass]="col.headerClass"
+              [ngClass]="col.cellClass" -->
               <span
                 class="flex items-center gap-1"
                 [ngClass]="
@@ -89,23 +90,27 @@
                     ></bk-badge>
                   }
                 } @else if (col.icons) {
-                   @let iconsList = getIcons(row, col);
+                  @let iconsList = getIcons(row, col);
                   <div class="flex justify-center items-center gap-2">
                     @for (icon of iconsList; track $index) {
-                    <img [src]="icon.url" class="size-4 cursor-pointer" [bkTooltip]="icon.toolTipLabel || []" [bkTooltipPosition]="icon.tooltipPosition || 'top'" />
+                      <img
+                        [src]="icon.url"
+                        class="size-4"
+                        [ngClass]="{ 'cursor-pointer': icon.url }"
+                        [bkTooltip]="icon.toolTipLabel || []"
+                        [bkTooltipPosition]="icon.tooltipPosition || 'top'"
+                      />
                     }
                   </div>
-                }
-                @else if (col.toolTipField) {
+                } @else if (col.toolTipField) {
                   <span
                     [bkTooltip]="getTooltipValue(row, col)"
                     [bkTooltipPosition]="col.toolTipPosition || 'top'"
                   >
                     {{ getCellValue(row, col) }}
                   </span>
-                }
-                @else {
-                   {{ getCellValue(row, col) }}
+                } @else {
+                  {{ getCellValue(row, col) }}
                 }
               </td>
             }
@@ -132,10 +137,23 @@
           }
         </tr>
       }
-      @if(showNoRecords) {
+      @if (showNoRecords) {
         <tr>
-          <td [attr.colspan]="columns.length + (actions.length ? 1 : 0)" class="text-center py-10 {{noRecordFoundHeight}}">
-            No records found
+          <td
+            [attr.colspan]="columns.length + (actions.length ? 1 : 0)"
+            class="text-center py-10 {{ noRecordFoundHeight }}"
+          >
+            <div class="flex flex-col justify-center items-center w-full h-auto">
+              <img
+                src="./assets/media/logos/no-data-found.jpg"
+                class="mb-3 w-96"
+                alt="No data found"
+              />
+
+              <span class="block text-sm leading-3 text-center font-semibold text-[#60646C] mt-2"
+                >Data may be empty, or try adjusting your filter.</span
+              >
+            </div>
           </td>
         </tr>
       }
