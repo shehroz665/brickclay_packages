@@ -17,7 +17,7 @@
     <span class="calendar-icon" >
       <img alt="calendar" class="calendar-icon-img" [src]='brickclayIcons.calenderIcon'/>
     </span>
-    <button type="button" class="clear-btn" *ngIf="getDisplayValue() && isDisplayCrossIcon" (click)="clear(); $event.stopPropagation()" title="Clear">×</button>
+    <button type="button" class="clear-btn" *ngIf="getDisplayValue() && isDisplayCrossIcon && !disabled" (click)="clear(); $event.stopPropagation()" title="Clear">×</button>
   </div>
 
   <!-- Calendar Popup / Inline -->
