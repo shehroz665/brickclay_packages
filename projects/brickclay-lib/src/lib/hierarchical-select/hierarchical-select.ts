@@ -65,6 +65,8 @@ export class BkHierarchicalSelect implements ControlValueAccessor {
   searchable = input<boolean>(false);
   /** When true, dropdown is positioned fixed and sized to the trigger (use inside modals/popups). */
   appendToBody = input<boolean>(false);
+  /** Open above or below the trigger (also used when appendToBody is true for fixed coordinates). */
+  dropdownPosition = input<'bottom' | 'top'>('bottom');
   /** Key for option color (e.g. "color"). When set, option label and selected value use this color. */
   colorKey = input<string>('');
   /** Whether to show clear button when a value is selected. */
@@ -206,7 +208,7 @@ export class BkHierarchicalSelect implements ControlValueAccessor {
     } else {
       this.breadcrumb.set([]);
     }
-    if (this.appendToBody() && this.controlWrapper?.nativeElement) {
+    if (this.appendToBody()) {
       this.updatePosition();
     }
     this.isOpen.set(true);
@@ -218,25 +220,33 @@ export class BkHierarchicalSelect implements ControlValueAccessor {
     const el = this.controlWrapper?.nativeElement;
     if (!el) return;
     const rect = el.getBoundingClientRect();
-    this.dropdownStyle.set({
-      top: `${rect.bottom + 4}px`,
-      bottom: undefined,
-      left: `${rect.left}px`,
-      width: `${rect.width}px`,
-    });
+
+    if (this.dropdownPosition() === 'bottom') {
+      this.dropdownStyle.set({
+        top: `${rect.bottom + 4}px`,
+        bottom: undefined,
+        left: `${rect.left}px`,
+        width: `${rect.width}px`,
+      });
+    } else {
+      this.dropdownStyle.set({
+        top: undefined,
+        bottom: `${window.innerHeight - rect.top + 4}px`,
+        left: `${rect.left}px`,
+        width: `${rect.width}px`,
+      });
+    }
   }
 
-  getDropdownTop(): string | null {
-    if (this.appendToBody()) return this.dropdownStyle().top ?? null;
-    return '105%';
+  /** Fixed positioning when appendToBody; inset placement uses CSS + .hierarchical-select-field. */
+  getTop(): string | null {
+    if (!this.appendToBody()) return null;
+    return this.dropdownStyle().top ?? null;
   }
 
-  getDropdownLeft(): string | null {
-    return this.appendToBody() ? this.dropdownStyle().left : null;
-  }
-
-  getDropdownWidth(): string | null {
-    return this.appendToBody() ? this.dropdownStyle().width : null;
+  getBottom(): string | null {
+    if (!this.appendToBody()) return null;
+    return this.dropdownStyle().bottom ?? null;
   }
 
   @HostListener('window:scroll')

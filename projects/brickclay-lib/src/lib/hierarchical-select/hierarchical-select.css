@@ -2,6 +2,11 @@
   @apply relative w-full box-border;
 }
 
+/* Positioning context for the dropdown: trigger height only (not label), so top/bottom + % work. */
+.hierarchical-select-field {
+  @apply relative w-full;
+}
+
 .hierarchical-select-control {
   @apply flex items-center justify-between gap-2 w-full bg-white border border-[#E3E3E7] rounded transition-all duration-200 px-3 py-2.5 cursor-pointer;
 }
@@ -43,7 +48,18 @@
 }
 
 .hierarchical-dropdown-panel {
-  @apply absolute left-0 top-[calc(100%+4px)] w-full min-w-[250px] max-w-full bg-white border border-[#E3E3E7] rounded-xl shadow-lg z-[99] overflow-hidden cursor-default p-2.5;
+  @apply absolute left-0 w-full min-w-[250px] max-w-full bg-white border border-[#E3E3E7] rounded-xl shadow-lg z-[99] overflow-hidden cursor-default p-2.5;
+}
+
+/* Inset dropdown: anchor to .hierarchical-select-field (trigger), not the outer container + label. */
+.hierarchical-dropdown-panel[data-position='bottom'] {
+  top: calc(100% + 4px);
+  bottom: auto;
+}
+
+.hierarchical-dropdown-panel[data-position='top'] {
+  bottom: calc(100% + 4px);
+  top: auto;
 }
 
 .hierarchical-dropdown-panel-fixed {
