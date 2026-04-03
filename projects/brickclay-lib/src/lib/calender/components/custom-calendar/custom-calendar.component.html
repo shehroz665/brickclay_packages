@@ -21,31 +21,37 @@
   </div>
 
   <!-- Calendar Popup / Inline -->
-  <div class="calendar-popup"
+  <div #calendarPopup
+       class="calendar-popup"
        [class.inline-calendar]="inline"
        [class.append-to-body]="appendToBody && !inline"
        [style.position]="appendToBody && !inline ? 'fixed' : null"
-       [style.top]="appendToBody && !inline && drop !== 'up' ? dropdownStyle.top : null"
-       [style.bottom]="appendToBody && !inline && drop === 'up' ? dropdownStyle.bottom : null"
+       [style.top]="appendToBody && !inline && !popupPlacementAbove ? dropdownStyle.top : null"
+       [style.bottom]="appendToBody && !inline && popupPlacementAbove ? dropdownStyle.bottom : null"
        [style.left]="appendToBody && !inline ? dropdownStyle.left : null"
+       tabindex="0"
+       (keydown)="onCalendarPopupKeydown($event)"
        [ngClass]="{
          'position-right': !inline && !appendToBody && opens === 'right',
          'position-center': !inline && !appendToBody && opens === 'center',
-         'drop-up': !inline && drop === 'up',
+         'drop-up': !inline && popupPlacementAbove,
          'has-ranges': showRanges && customRanges,
          'dual-calendar-mode': dualCalendar
        }"
        *ngIf="inline || show">
 
     <!-- RANGES -->
-    <div class="ranges" *ngIf="showRanges && customRanges">
+    <div class="ranges" *ngIf="showRanges && customRanges" role="listbox" aria-label="Date ranges">
       <button
+        type="button"
         *ngFor="let rangeKey of rangeOrder"
         (click)="chooseRange(rangeKey)"
+        (keydown)="onRangeButtonKeydown($event, rangeKey)"
         [class.active]="activeRange === rangeKey"
         [class.custom-range]="rangeKey === 'Custom Range'"
         class="range-btn"
-        [disabled]="rangeKey === 'Custom Range'">
+        role="option"
+        [attr.aria-selected]="activeRange === rangeKey">
         {{ rangeKey }}
       </button>
     </div>
@@ -73,16 +79,17 @@
                 </button>
       </div>
 
-      <table class="calendar-table">
+      <table class="calendar-table" role="grid" [attr.aria-label]="getMonthName(month) + ' ' + year">
         <thead>
-          <tr>
-            <th *ngFor="let d of ['Mo','Tu','We','Th','Fr','Sa','Su']" class="weekday-header">{{ d }}</th>
+          <tr role="row">
+            <th *ngFor="let d of resolvedWeekDayLabels" class="weekday-header" scope="col" role="columnheader">{{ d }}</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let week of calendar">
+          <tr *ngFor="let week of calendar" role="row">
             <td
               *ngFor="let dayObj of week"
+              role="gridcell"
               (click)="dayObj.currentMonth && !isDateDisabled(year, month, dayObj.day) && selectDate(dayObj.day)"
               (mouseenter)="dayObj.currentMonth && !isDateDisabled(year, month, dayObj.day) && onDateHover(dayObj.day, false)"
               (mouseleave)="onDateLeave()"
@@ -92,6 +99,7 @@
               [class.disabled]="isDateDisabled(year, month, dayObj.day)"
               [class.multi-selected]="multiDateSelection && isDateInMultiSelection(year, month, dayObj.day)"
               [class.today]="dayObj.currentMonth && isToday(year, month, dayObj.day)"
+              [class.calendar-day-keyboard-focus]="dayObj.currentMonth && isKeyboardFocusedCell(year, month, dayObj.day)"
               class="calendar-day">
               {{ dayObj.day }}
             </td>
@@ -131,16 +139,17 @@
             <img alt="arrow-right" class="arrow-right" [src]='brickclayIcons.arrowRight'/>
           </button>
         </div>
-        <table class="calendar-table">
+        <table class="calendar-table" role="grid" [attr.aria-label]="getMonthName(leftMonth) + ' ' + leftYear">
           <thead>
-            <tr>
-              <th *ngFor="let d of ['Mo','Tu','We','Th','Fr','Sa','Su']" class="weekday-header">{{ d }}</th>
+            <tr role="row">
+              <th *ngFor="let d of resolvedWeekDayLabels" class="weekday-header" scope="col" role="columnheader">{{ d }}</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let week of leftCalendar">
+            <tr *ngFor="let week of leftCalendar" role="row">
               <td
                 *ngFor="let dayObj of week"
+                role="gridcell"
                 (click)="dayObj.currentMonth && !isDateDisabled(leftYear, leftMonth, dayObj.day) && selectDate(dayObj.day, false)"
                 (mouseenter)="dayObj.currentMonth && !isDateDisabled(leftYear, leftMonth, dayObj.day) && onDateHover(dayObj.day, false)"
                 (mouseleave)="onDateLeave()"
@@ -150,6 +159,7 @@
                 [class.disabled]="isDateDisabled(leftYear, leftMonth, dayObj.day)"
                 [class.multi-selected]="multiDateSelection && isDateInMultiSelection(leftYear, leftMonth, dayObj.day)"
                 [class.today]="dayObj.currentMonth && isToday(leftYear, leftMonth, dayObj.day)"
+                [class.calendar-day-keyboard-focus]="dayObj.currentMonth && isKeyboardFocusedCell(leftYear, leftMonth, dayObj.day)"
                 class="calendar-day">
                 {{ dayObj.day }}
               </td>
@@ -187,16 +197,17 @@
               <img alt="arrow-right" class="arrow-right" [src]='brickclayIcons.arrowRight'/>
           </button>
         </div>
-        <table class="calendar-table">
+        <table class="calendar-table" role="grid" [attr.aria-label]="getMonthName(rightMonth) + ' ' + rightYear">
           <thead>
-            <tr>
-              <th *ngFor="let d of ['Mo','Tu','We','Th','Fr','Sa','Su']" class="weekday-header">{{ d }}</th>
+            <tr role="row">
+              <th *ngFor="let d of resolvedWeekDayLabels" class="weekday-header" scope="col" role="columnheader">{{ d }}</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let week of rightCalendar">
+            <tr *ngFor="let week of rightCalendar" role="row">
               <td
                 *ngFor="let dayObj of week"
+                role="gridcell"
                 (click)="dayObj.currentMonth && !isDateDisabled(rightYear, rightMonth, dayObj.day) && selectDate(dayObj.day, true)"
                 (mouseenter)="dayObj.currentMonth && !isDateDisabled(rightYear, rightMonth, dayObj.day) && onDateHover(dayObj.day, true)"
                 (mouseleave)="onDateLeave()"
@@ -206,6 +217,7 @@
                 [class.disabled]="isDateDisabled(rightYear, rightMonth, dayObj.day)"
                 [class.multi-selected]="multiDateSelection && isDateInMultiSelection(rightYear, rightMonth, dayObj.day)"
                 [class.today]="dayObj.currentMonth && isToday(rightYear, rightMonth, dayObj.day)"
+                [class.calendar-day-keyboard-focus]="dayObj.currentMonth && isKeyboardFocusedCell(rightYear, rightMonth, dayObj.day)"
                 class="calendar-day">
                 {{ dayObj.day }}
               </td>
@@ -236,7 +248,7 @@
     <!-- FOOTER -->
     <div class="footer" *ngIf="!inline && showCancelApply">
       <button *ngIf="showCancel" (click)="cancel()" class="btn-cancel" type="button">Cancel</button>
-      <button (click)="apply()" class="btn-apply" type="button">Apply</button>
+      <button (click)="apply()" class="btn-apply" type="button" [disabled]="disabled || isDualRangeApplyBlocked">Apply</button>
     </div>
 
   </div>

@@ -26,6 +26,7 @@
             [appendToBody]="true"
             [showCancelApply]="false"
             [autoApply]="true"
+            [isDisplayCrossIcon]="true"
             #ValidFrom="ngModel"
           >
           </bk-custom-calendar>
@@ -76,8 +77,9 @@
   @case ('dual') {
     <div style="max-width: 600px;">
       <bk-custom-calendar [(ngModel)]="calenderSelection" [required]="true" [dualCalendar]="true" [singleDatePicker]="false"
-        [showRanges]="false" [enableTimepicker]="false" [displayFormat]="'MM/DD/YYYY'" placeholder="Select a date range"
-        #calender="ngModel" (selected)="onCalendarSelected($event,'dual-calender')"
+        [showRanges]="true" [enableTimepicker]="false" [displayFormat]="'MM/DD/YYYY'" placeholder="Select a date range"
+        #calender="ngModel" (selected)="onCalendarSelected($event,'dual-calender')" [customRanges]="customRanges" [rangeOrder]="rangeOrder"
+        [weekDayLabels]="[ 'Sun','Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat',]"
         [hasError]="!!(calender?.invalid && (calender?.touched || calender?.dirty))"></bk-custom-calendar>
       <bk-validator [control]="calender" label="Date range"></bk-validator>
       <p class="mt-5">Value: {{ calenderSelection | json }}</p>

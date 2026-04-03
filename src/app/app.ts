@@ -9,6 +9,7 @@ import { CalendarModule } from './../../projects/brickclay-lib/src/lib/calender/
 import { Component, OnInit, signal, ViewChild } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { BkCalendarManagerService, CalendarRange } from '../../projects/brickclay-lib/src/lib/calender/services/calendar-manager.service';
 
 export class FuelCardModel {
   fuelCardKey!: number;
@@ -47,18 +48,35 @@ countryPhone1 :string="+1 (111) 111-1111";
   timeOnlyValue1 = '13:04:56';
   // timeOnlyValue : string | null= '13:08';
 
-  constructor() {}
+  customRanges: Record<string, CalendarRange> = {};
+  rangeOrder: string[] = [];
+
+  constructor(protected calenderManager: BkCalendarManagerService) {}
 
   ngOnInit(): void {
     this.calenderSelection.startDate = '2026-02-21';
     this.calenderSelection.endDate = '2026-03-22';
-
+    this.initializeCustomRanges();
     // this.singleDatefromSelection.startDate='2026-02-21'
     // this.singleDatetoSelection.endDate='2026-03-21'
 
 
     // this.singleDateSelection.startTime='3:02 AM';
 
+  }
+
+  initializeCustomRanges() {
+    const { customRanges, rangeOrder } = this.calenderManager.getCustomRanges();
+
+    this.customRanges = customRanges || {};
+    this.rangeOrder = rangeOrder || [];
+    //add Last 60 Days to custom ranges
+    const today = new Date();
+    this.customRanges['Last 60 Days'] = {
+      start: this.calenderManager.addDays(today, -59),
+      end: today,
+    };
+    this.rangeOrder.push('Last 60 Days');
   }
 
   onCalenderSelected(event: any, calendarId: string):void{

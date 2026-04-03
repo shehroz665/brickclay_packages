@@ -1,15 +1,13 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, HostListener, OnChanges, SimpleChanges, ViewChild, ElementRef, forwardRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormsModule, Validator, AbstractControl, ValidationErrors } from '@angular/forms';
-import { BkCalendarManagerService } from '../../services/calendar-manager.service';
+import { BkCalendarManagerService, CalendarRange } from '../../services/calendar-manager.service';
 import { Subscription } from 'rxjs';
 import { BkTimePicker } from '../time-picker/time-picker.component';
 import moment from 'moment';
 import { BrickclayIcons } from '../../../assets/icons';
-export interface CalendarRange {
-  start: Date;
-  end: Date;
-}
+
+export type { CalendarRange } from '../../services/calendar-manager.service';
 
 export class CalendarSelection {
   startDate: string | null = null;
@@ -54,6 +52,8 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
   @Input() customRangeDirection = false;
   @Input() lockStartDate = false;
   @Input() position: 'center' | 'left' | 'right' = 'left';
+  /** Vertical placement relative to the input. Takes precedence over {@link drop} for default bottom placement. */
+  @Input() popupPosition: 'top' | 'bottom' = 'bottom';
   @Input() drop: 'up' | 'down' = 'down';
   @Input() dualCalendar = false;
   @Input() showRanges = true;
@@ -61,6 +61,8 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
   @Input() clearableTime: boolean = false;
   @Input() enableSeconds = false;
   @Input() customRanges?: Record<string, CalendarRange>;
+  /** Column headers for weekdays; index 0 is the first column. Default Monday–Sunday. */
+  @Input() weekDayLabels: string[] = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   @Input() multiDateSelection = false; // NEW: Enable multi-date selection
   @Input() maxDate?: Date; // NEW: Maximum selectable date
   @Input() minDate?: Date; // NEW: Minimum selectable date
@@ -74,9 +76,12 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
   @Output() selected = new EventEmitter<CalendarSelection>();
 
   @ViewChild('inputWrapper') inputWrapper!: ElementRef<HTMLDivElement>;
+  @ViewChild('calendarPopup') calendarPopupRef?: ElementRef<HTMLDivElement>;
 
   /** Used when appendToBody is true to position the popup in viewport coordinates */
   dropdownStyle: { top?: string; bottom?: string; left?: string } = {};
+  /** Resolved after layout; used for CSS `drop-up` and appendToBody positioning with viewport flip */
+  popupPlacementAbove = false;
   @Output() opened = new EventEmitter<void>();
   @Output() closed = new EventEmitter<void>();
   @Input() showCancelApply = true;
@@ -150,15 +155,71 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
   openTimePickerId: string | null = null;
   closePickerCounter: { [key: string]: number } = {};
 
-  defaultRanges: Record<string, CalendarRange> = {};
   activeRange: string | null = null; // Track which range is currently active
-  rangeOrder: string[] = []; // Maintain order of ranges
+  @Input() rangeOrder: string[] = []; // Maintain order of ranges
+
+  /** Keyboard roving focus for date grid (local date, midnight) */
+  keyboardFocusDate: Date | null = null;
 
   private unregisterFn?: () => void;
   private closeAllSubscription?: Subscription;
   private closeFn?: () => void;
 
   constructor(private calendarManager: BkCalendarManagerService) {}
+
+  /** Weekday headers; falls back to Mon–Sun if the input is not length 7. */
+  get resolvedWeekDayLabels(): string[] {
+    const d = this.weekDayLabels;
+    if (d?.length === 7) return d;
+    return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  }
+
+  /** When dual range mode, Apply is blocked until both endpoints exist. */
+  get isDualRangeApplyBlocked(): boolean {
+    if (!this.dualCalendar || this.singleDatePicker || this.multiDateSelection) return false;
+    return !this.startDate || !this.endDate;
+  }
+
+  /** User preference before viewport adjustment (legacy `drop` still applies when `popupPosition` is `bottom`). */
+  private preferPopupAbove(): boolean {
+    return this.popupPosition === 'top' || (this.popupPosition === 'bottom' && this.drop === 'up');
+  }
+
+  private resolveCustomRangesFromInputsOrService(): void {
+    const svc = this.calendarManager.getCustomRanges();
+    if (!this.customRanges) {
+      this.customRanges = { ...svc.customRanges! };
+      this.rangeOrder = [...svc.rangeOrder];
+    } else {
+      if (!this.rangeOrder?.length) {
+        const keys = Object.keys(this.customRanges);
+        const ordered = svc.rangeOrder.filter(k => keys.includes(k));
+        const rest = keys.filter(k => !ordered.includes(k));
+        this.rangeOrder = [...ordered, ...rest];
+      }
+      if (!this.customRanges['Custom Range']) {
+        this.customRanges['Custom Range'] = { start: new Date(), end: new Date() };
+      }
+    }
+  }
+
+  private labelToJsWeekday(label: string): number {
+    const key = label.replace(/\./g, '').trim().toLowerCase();
+    const map: Record<string, number> = {
+      sun: 0, sunday: 0, su: 0,
+      mon: 1, monday: 1, mo: 1,
+      tue: 2, tues: 2, tuesday: 2, tu: 2,
+      wed: 3, wednesday: 3, we: 3,
+      thu: 4, thur: 4, thurs: 4, thursday: 4, th: 4,
+      fri: 5, friday: 5, fr: 5,
+      sat: 6, saturday: 6, sa: 6,
+    };
+    return map[key] ?? 1;
+  }
+
+  private getWeekStartDayIndex(): number {
+    return this.labelToJsWeekday(this.resolvedWeekDayLabels[0] ?? 'Mon');
+  }
 
   // --- ControlValueAccessor implementation ---
   writeValue(value: CalendarSelection | null): void {
@@ -334,26 +395,15 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
   onWindowEvents() {
     if (this.show && this.appendToBody) {
       this.close();
+      return;
+    }
+    if (this.show && !this.inline && !this.appendToBody) {
+      setTimeout(() => this.refreshPopupPlacement(), 0);
     }
   }
 
   ngOnInit() {
-    if (!this.customRanges) {
-      this.initializeDefaultRanges();
-    } else {
-      // If customRanges is provided via @Input, set the order based on the keys
-      // Maintain the desired order if keys match, otherwise use provided order
-      const desiredOrder = ['Today', 'Yesterday', 'Last 7 Days', 'Last 30 Days', 'This Month', 'Last Month', 'Custom Range'];
-      const providedKeys = Object.keys(this.customRanges);
-      // Check if Custom Range exists, if not add it
-      if (!this.customRanges['Custom Range']) {
-        this.customRanges['Custom Range'] = { start: new Date(), end: new Date() };
-      }
-      // Build order: first add desired order items that exist, then add any remaining
-      this.rangeOrder = desiredOrder.filter(key => providedKeys.includes(key) || key === 'Custom Range');
-      const remaining = providedKeys.filter(key => !this.rangeOrder.includes(key));
-      this.rangeOrder = [...this.rangeOrder, ...remaining];
-    }
+    this.resolveCustomRangesFromInputsOrService();
     if (this.dualCalendar) this.initializeDual();
     else this.generateCalendar();
 
@@ -373,6 +423,7 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
     // If inline mode, always show calendar
     if (this.inline) {
       this.show = true;
+      setTimeout(() => this.initKeyboardFocus(), 0);
     }
 
     // Register this calendar instance with the manager service
@@ -394,6 +445,20 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
   ngOnChanges(changes: SimpleChanges) {
     if (changes['selectedValue']) {
       this.applyValueToState(this.selectedValue ?? null);
+    }
+    if (changes['customRanges'] || changes['rangeOrder']) {
+      this.resolveCustomRangesFromInputsOrService();
+    }
+    if (changes['weekDayLabels'] && !changes['weekDayLabels'].firstChange) {
+      this.regenerateCalendarsForWeekStart();
+    }
+  }
+
+  private regenerateCalendarsForWeekStart(): void {
+    if (this.dualCalendar) {
+      this.generateDualCalendars();
+    } else {
+      this.generateCalendar();
     }
   }
 
@@ -440,21 +505,6 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
     this.activeRange = 'Custom Range';
   }
 
-  initializeDefaultRanges() {
-    const today = new Date();
-    this.customRanges = {
-      'Today': { start: new Date(today.getFullYear(), today.getMonth(), today.getDate()), end: new Date(today.getFullYear(), today.getMonth(), today.getDate()) },
-      'Yesterday': { start: this.addDays(today, -1), end: this.addDays(today, -1) },
-      'Last 7 Days': { start: this.addDays(today, -6), end: today },
-      'Last 30 Days': { start: this.addDays(today, -29), end: today },
-      'This Month': { start: new Date(today.getFullYear(), today.getMonth(), 1), end: today },
-      'Last Month': { start: new Date(today.getFullYear(), today.getMonth() - 1, 1), end: new Date(today.getFullYear(), today.getMonth(), 0) },
-      'Custom Range': { start: new Date(), end: new Date() }, // Placeholder, won't be used for selection
-    };
-    // Set the order of ranges
-    this.rangeOrder = ['Today', 'Yesterday', 'Last 7 Days', 'Last 30 Days', 'This Month', 'Last Month', 'Custom Range'];
-  }
-
   initializeTimeFromDate(date: Date, isStart: boolean) {
     // Always use 12-hour format
     const hours24 = date.getHours();
@@ -494,14 +544,20 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
     this.show = !this.show;
 
     if (this.show) {
-      if (this.appendToBody && this.inputWrapper?.nativeElement) {
-        this.updatePosition();
-      }
       // If opening, close all other calendars first
       if (!wasOpen && this.closeFn) {
         this.calendarManager.closeAllExcept(this.closeFn);
       }
       this.disableHighlight = false;
+      setTimeout(() => {
+        this.initKeyboardFocus();
+        this.calendarPopupRef?.nativeElement?.focus({ preventScroll: true });
+        if (this.appendToBody && this.inputWrapper?.nativeElement) {
+          this.updatePosition();
+        } else if (!this.inline) {
+          this.refreshPopupPlacement();
+        }
+      }, 0);
       this.opened.emit();
     } else {
       this.closed.emit();
@@ -512,16 +568,214 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
   updatePosition() {
     if (!this.inputWrapper?.nativeElement) return;
     const rect = this.inputWrapper.nativeElement.getBoundingClientRect();
-    if (this.drop === 'up') {
+    const popupH = this.calendarPopupRef?.nativeElement?.offsetHeight ?? 360;
+    const placeAbove = this.computePlacementAbove(rect, popupH);
+    this.popupPlacementAbove = placeAbove;
+    const gap = 4;
+    if (placeAbove) {
       this.dropdownStyle = {
-        bottom: `${window.innerHeight - rect.top + 4}px`,
-        left: `${rect.left}px`
+        bottom: `${window.innerHeight - rect.top + gap}px`,
+        left: `${rect.left}px`,
       };
     } else {
       this.dropdownStyle = {
-        top: `${rect.bottom + 4}px`,
-        left: `${rect.left}px`
+        top: `${rect.bottom + gap}px`,
+        left: `${rect.left}px`,
       };
+    }
+  }
+
+  /** Non–append-to-body: set `popupPlacementAbove` for CSS `drop-up` with viewport flip. */
+  refreshPopupPlacement(): void {
+    if (!this.inputWrapper?.nativeElement) return;
+    const rect = this.inputWrapper.nativeElement.getBoundingClientRect();
+    const popupH = this.calendarPopupRef?.nativeElement?.offsetHeight ?? 360;
+    this.popupPlacementAbove = this.computePlacementAbove(rect, popupH);
+  }
+
+  private computePlacementAbove(rect: DOMRect, popupHeight: number): boolean {
+    const gap = 12;
+    const spaceBelow = window.innerHeight - rect.bottom - gap;
+    const spaceAbove = rect.top - gap;
+    const preferAbove = this.preferPopupAbove();
+    if (preferAbove) {
+      return spaceAbove >= popupHeight || spaceAbove >= spaceBelow;
+    }
+    if (spaceBelow >= popupHeight || spaceBelow >= spaceAbove) return false;
+    return true;
+  }
+
+  /** Normalize to local midnight and clamp to min/max selectable day. */
+  private clampCalendarDayToSelectableRange(d: Date): Date {
+    let x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    if (this.minDate) {
+      const min = new Date(this.minDate.getFullYear(), this.minDate.getMonth(), this.minDate.getDate());
+      if (x < min) x = new Date(min.getFullYear(), min.getMonth(), min.getDate());
+    }
+    if (this.maxDate) {
+      const max = new Date(this.maxDate.getFullYear(), this.maxDate.getMonth(), this.maxDate.getDate());
+      if (x > max) x = new Date(max.getFullYear(), max.getMonth(), max.getDate());
+    }
+    return x;
+  }
+
+  private initKeyboardFocus(): void {
+    if (!this.inline && !this.show) return;
+    const base =
+      this.startDate ??
+      this.endDate ??
+      new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate());
+    const d = this.clampCalendarDayToSelectableRange(
+      new Date(base.getFullYear(), base.getMonth(), base.getDate())
+    );
+    this.keyboardFocusDate = d;
+    this.ensureKeyboardFocusVisible();
+  }
+
+  /**
+   * After clearing values, drop stale keyboard highlight (was last start/end) and reset the
+   * visible month(s) to today (clamped). Move DOM focus to the popup when open, else the input.
+   */
+  private resetCalendarFocusAfterClear(): void {
+    const todayLocal = new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate());
+    this.keyboardFocusDate = this.clampCalendarDayToSelectableRange(todayLocal);
+
+    if (this.dualCalendar) {
+      this.leftMonth = this.keyboardFocusDate.getMonth();
+      this.leftYear = this.keyboardFocusDate.getFullYear();
+      this.rightMonth = this.leftMonth + 1;
+      this.rightYear = this.leftYear;
+      if (this.rightMonth > 11) {
+        this.rightMonth = 0;
+        this.rightYear++;
+      }
+      this.generateDualCalendars();
+    } else {
+      this.month = this.keyboardFocusDate.getMonth();
+      this.year = this.keyboardFocusDate.getFullYear();
+      this.generateCalendar();
+    }
+
+    this.scheduleDomFocusAfterClear();
+  }
+
+  private scheduleDomFocusAfterClear(): void {
+    setTimeout(() => {
+      if (this.show || this.inline) {
+        this.calendarPopupRef?.nativeElement?.focus({ preventScroll: true });
+        return;
+      }
+      const inputEl = this.inputWrapper?.nativeElement?.querySelector<HTMLInputElement>('.calendar-input');
+      inputEl?.focus({ preventScroll: true });
+    }, 0);
+  }
+
+  private ensureKeyboardFocusVisible(): void {
+    if (!this.keyboardFocusDate) return;
+    const fd = this.keyboardFocusDate;
+    if (!this.dualCalendar) {
+      if (fd.getMonth() !== this.month || fd.getFullYear() !== this.year) {
+        this.month = fd.getMonth();
+        this.year = fd.getFullYear();
+        this.generateCalendar();
+      }
+      return;
+    }
+    const fm = fd.getMonth();
+    const fy = fd.getFullYear();
+    const inLeft = fm === this.leftMonth && fy === this.leftYear;
+    const inRight = fm === this.rightMonth && fy === this.rightYear;
+    if (inLeft || inRight) return;
+    this.leftMonth = fm;
+    this.leftYear = fy;
+    this.rightMonth = fm + 1;
+    this.rightYear = fy;
+    if (this.rightMonth > 11) {
+      this.rightMonth = 0;
+      this.rightYear++;
+    }
+    this.generateDualCalendars();
+  }
+
+  private moveKeyboardFocus(deltaDays: number): void {
+    if (!this.keyboardFocusDate) this.initKeyboardFocus();
+    if (!this.keyboardFocusDate) return;
+    let next = this.addDays(this.keyboardFocusDate, deltaDays);
+    if (this.minDate) {
+      const min = new Date(this.minDate.getFullYear(), this.minDate.getMonth(), this.minDate.getDate());
+      if (next < min) next = min;
+    }
+    if (this.maxDate) {
+      const max = new Date(this.maxDate.getFullYear(), this.maxDate.getMonth(), this.maxDate.getDate());
+      if (next > max) next = max;
+    }
+    this.keyboardFocusDate = new Date(next.getFullYear(), next.getMonth(), next.getDate());
+    this.ensureKeyboardFocusVisible();
+  }
+
+  /**
+   * When focus is inside a real control (button, link, field), do not intercept keys here.
+   * Otherwise this handler's preventDefault (Enter/Space) blocks native button activation and
+   * bubbled Enter still runs applyKeyboardSelection — breaking keyboard parity with click.
+   */
+  private isKeyboardEventFromInteractiveDescendant(event: KeyboardEvent): boolean {
+    const t = event.target;
+    if (!(t instanceof Element)) return false;
+    return !!t.closest(
+      'button, a[href], input, select, textarea, [contenteditable="true"], bk-time-picker'
+    );
+  }
+
+  onCalendarPopupKeydown(event: KeyboardEvent): void {
+    if (this.disabled) return;
+    if (event.key === 'Tab') return;
+    if (this.isKeyboardEventFromInteractiveDescendant(event)) {
+      return;
+    }
+
+    const k = event.key;
+    if (k === 'ArrowLeft' || k === 'ArrowRight' || k === 'ArrowUp' || k === 'ArrowDown' || k === 'Enter' || k === ' ') {
+      event.preventDefault();
+    }
+    if (k === 'ArrowLeft') this.moveKeyboardFocus(-1);
+    else if (k === 'ArrowRight') this.moveKeyboardFocus(1);
+    else if (k === 'ArrowUp') this.moveKeyboardFocus(-7);
+    else if (k === 'ArrowDown') this.moveKeyboardFocus(7);
+    else if (k === 'Enter' || k === ' ') this.applyKeyboardSelection();
+  }
+
+  private applyKeyboardSelection(): void {
+    if (!this.keyboardFocusDate) return;
+    const day = this.keyboardFocusDate.getDate();
+    if (this.dualCalendar) {
+      const fr = this.keyboardFocusDate.getMonth() === this.rightMonth && this.keyboardFocusDate.getFullYear() === this.rightYear;
+      const fl = this.keyboardFocusDate.getMonth() === this.leftMonth && this.keyboardFocusDate.getFullYear() === this.leftYear;
+      if (fr) this.selectDate(day, true);
+      else if (fl) this.selectDate(day, false);
+      else {
+        this.ensureKeyboardFocusVisible();
+        const fr2 = this.keyboardFocusDate.getMonth() === this.rightMonth && this.keyboardFocusDate.getFullYear() === this.rightYear;
+        this.selectDate(day, fr2);
+      }
+    } else {
+      this.selectDate(day, false);
+    }
+  }
+
+  isKeyboardFocusedCell(year: number, month: number, day: number): boolean {
+    if (!this.keyboardFocusDate || !day) return false;
+    return (
+      this.keyboardFocusDate.getFullYear() === year &&
+      this.keyboardFocusDate.getMonth() === month &&
+      this.keyboardFocusDate.getDate() === day
+    );
+  }
+
+  onRangeButtonKeydown(event: KeyboardEvent, rangeKey: string): void {
+    if (event.key === ' ' || event.key === 'Enter') {
+      event.preventDefault();
+      event.stopPropagation();
+      this.chooseRange(rangeKey);
     }
   }
 
@@ -578,6 +832,8 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
     // Check min/max date constraints
     if (this.minDate && selected < this.minDate) return;
     if (this.maxDate && selected > this.maxDate) return;
+
+    this.keyboardFocusDate = new Date(selected.getFullYear(), selected.getMonth(), selected.getDate());
 
     // Multi-date selection mode
     if (this.multiDateSelection) {
@@ -746,6 +1002,7 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
 
   apply() {
     if (this.disabled) return;
+    if (this.isDualRangeApplyBlocked) return;
     // Format minute inputs to 2 digits before applying
     this.formatAllMinuteInputs();
 
@@ -784,6 +1041,7 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
     this.startDate = null;
     this.endDate = null;
     this.selectedDates = [];
+    this.resetCalendarFocusAfterClear();
     this.close();
   }
 
@@ -810,24 +1068,17 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
     this.selectedDates = [];
     this.activeRange = null; // Clear active range
 
-    // Reset right calendar to original position (next month after left) when end date is cleared
-    if (this.dualCalendar && !this.endDate) {
-      this.rightMonth = this.leftMonth + 1;
-      this.rightYear = this.leftYear;
-      if (this.rightMonth > 11) {
-        this.rightMonth = 0;
-        this.rightYear++;
-      }
-      this.generateDualCalendars();
-    }
+    this.resetCalendarFocusAfterClear();
 
     this.emitSelection();
   }
 
   chooseRange(key: string) {
     if (this.disabled || !this.customRanges) return;
-    // Don't allow selecting "Custom Range" directly - it's only activated when manually selecting dates
-    if (key === 'Custom Range') return;
+    if (key === 'Custom Range') {
+      this.activeRange = 'Custom Range';
+      return;
+    }
     const r = this.customRanges[key];
     if (!r) return;
     this.startDate = new Date(r.start);
@@ -888,6 +1139,12 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
         this.year = this.endDate.getFullYear();
       }
       this.generateCalendar();
+    }
+
+    if (this.endDate) {
+      this.keyboardFocusDate = new Date(this.endDate.getFullYear(), this.endDate.getMonth(), this.endDate.getDate());
+    } else if (this.startDate) {
+      this.keyboardFocusDate = new Date(this.startDate.getFullYear(), this.startDate.getMonth(), this.startDate.getDate());
     }
 
     this.emitSelection();
@@ -1016,17 +1273,16 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
   }
 
   buildCalendar(year: number, month: number): { day: number, currentMonth: boolean }[][] {
-    const firstDay = new Date(year, month, 1).getDay();
+    const weekStart = this.getWeekStartDayIndex();
+    const firstDayJs = new Date(year, month, 1).getDay();
+    const offset = (firstDayJs - weekStart + 7) % 7;
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const prevMonthDays = new Date(year, month, 0).getDate();
 
     const grid: { day: number, currentMonth: boolean }[][] = [];
     let row: { day: number, currentMonth: boolean }[] = [];
 
-    // Adjust first day (0 = Sunday, 1 = Monday, etc.)
-    const adjustedFirstDay = firstDay === 0 ? 6 : firstDay - 1; // Make Monday = 0
-
-    for (let i = adjustedFirstDay - 1; i >= 0; i--) {
+    for (let i = offset - 1; i >= 0; i--) {
       row.push({ day: prevMonthDays - i, currentMonth: false });
     }
     for (let d = 1; d <= daysInMonth; d++) {
