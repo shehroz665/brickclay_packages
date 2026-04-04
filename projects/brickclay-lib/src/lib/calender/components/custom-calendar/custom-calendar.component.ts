@@ -180,6 +180,34 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
     return !this.startDate || !this.endDate;
   }
 
+  /**
+   * Popup single-date with manual Apply: do not push to ngModel / (selected) until Apply.
+   * Inline calendars have no Apply footer, so they always commit immediately.
+   */
+  private shouldDeferSingleDateCommit(): boolean {
+    return this.singleDatePicker && !this.autoApply && !this.inline;
+  }
+
+  private emitSelectionUnlessSingleDateDeferred(): void {
+    if (this.shouldDeferSingleDateCommit()) return;
+    this.emitSelection();
+  }
+
+  /** Discard in-popup draft and restore last committed value from {@link selectedValue}. */
+  private revertSingleDateDraftIfNeeded(): void {
+    if (this.shouldDeferSingleDateCommit()) {
+      this.applyValueToState(this.selectedValue ?? null);
+    }
+  }
+
+  private finishPopupDismissal(): void {
+    if (this.inline) return;
+    this.revertSingleDateDraftIfNeeded();
+    this.show = false;
+    this.onTouched();
+    this.closed.emit();
+  }
+
   /** User preference before viewport adjustment (legacy `drop` still applies when `popupPosition` is `bottom`). */
   private preferPopupAbove(): boolean {
     return this.popupPosition === 'top' || (this.popupPosition === 'bottom' && this.drop === 'up');
@@ -257,6 +285,30 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
     this.onTouched();
   }
 
+  /** Clears embedded time picker ngModels, spinner state, raw minute typing, and forces dropdowns closed. */
+  private resetEmbeddedTimePickerUiState(): void {
+    this.singleTimeModel = null;
+    this.startTimeModel = null;
+    this.endTimeModel = null;
+    this.selectedHour = 1;
+    this.selectedMinute = 0;
+    this.selectedSecond = 0;
+    this.selectedAMPM = 'AM';
+    this.startHour = 1;
+    this.startMinute = 0;
+    this.startSecond = 0;
+    this.startAMPM = 'AM';
+    this.endHour = 2;
+    this.endMinute = 0;
+    this.endSecond = 0;
+    this.endAMPM = 'AM';
+    this.minuteInputValues = {};
+    this.openTimePickerId = null;
+    for (const id of ['single-time', 'dual-start', 'dual-end'] as const) {
+      this.closePickerCounter[id] = (this.closePickerCounter[id] || 0) + 1;
+    }
+  }
+
   /** Apply CalendarSelection to internal state (startDate, endDate, startTime, endTime, selectedDates, calendar view). */
   private applyValueToState(value: CalendarSelection | null): void {
     if (!value) {
@@ -265,9 +317,8 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
       this.startTime = null;
       this.endTime = null;
       this.selectedDates = [];
-      this.singleTimeModel = null;
-      this.startTimeModel = null;
-      this.endTimeModel = null;
+      this.activeRange = null;
+      this.resetEmbeddedTimePickerUiState();
       this.month = this.today.getMonth();
       this.year = this.today.getFullYear();
       this.generateCalendar();
@@ -339,8 +390,13 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
       this.selectedMinute = this.startMinute;
       this.selectedAMPM = this.startAMPM;
     } else if (this.startDate) {
+      // Date-only committed value: keep startTime null; sync spinners for UX only (not emitted until user sets time).
       this.initializeTimeFromDate(this.startDate, true);
-      this.startTime = this.formatTimeToAmPm(this.startHour, this.startMinute, this.startAMPM);
+      if (!this.dualCalendar) {
+        this.selectedHour = this.startHour;
+        this.selectedMinute = this.startMinute;
+        this.selectedAMPM = this.startAMPM;
+      }
     }
 
     if (this.endTime) {
@@ -356,7 +412,6 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
       }
     } else if (this.endDate) {
       this.initializeTimeFromDate(this.endDate, false);
-      this.endTime = this.formatTimeToAmPm(this.endHour, this.endMinute, this.endAMPM);
     }
 
     if (this.startDate && this.endDate) {
@@ -407,9 +462,14 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
     if (this.dualCalendar) this.initializeDual();
     else this.generateCalendar();
 
-    // Initialize time from existing dates if available
+    // Initialize spinner state from existing dates (does not set startTime/endTime — those stay null until user picks time).
     if (this.startDate) {
       this.initializeTimeFromDate(this.startDate, true);
+      if (!this.dualCalendar) {
+        this.selectedHour = this.startHour;
+        this.selectedMinute = this.startMinute;
+        this.selectedAMPM = this.startAMPM;
+      }
     }
     if (this.endDate) {
       this.initializeTimeFromDate(this.endDate, false);
@@ -560,7 +620,7 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
       }, 0);
       this.opened.emit();
     } else {
-      this.closed.emit();
+      this.finishPopupDismissal();
     }
   }
 
@@ -780,13 +840,10 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
   }
 
   close() {
-    // Don't close if inline mode is enabled
     if (this.inline) {
       return;
     }
-    this.show = false;
-    this.onTouched();
-    this.closed.emit();
+    this.finishPopupDismissal();
   }
 
   onDateHover(day: number | null, fromRight = false) {
@@ -869,8 +926,7 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
         this.apply();
         if (this.closeOnAutoApply && !this.inline) this.close();
       } else {
-        // Always emit selection event even if autoApply is false (especially for inline calendars)
-        this.emitSelection();
+        this.emitSelectionUnlessSingleDateDeferred();
       }
       return;
     }
@@ -1006,22 +1062,20 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
     // Format minute inputs to 2 digits before applying
     this.formatAllMinuteInputs();
 
-    // Apply time to dates
+    // Apply time only when the user has an explicit time string (avoids inventing "12:00 AM" from picker defaults).
     if (this.enableTimepicker) {
       if (this.dualCalendar) {
-        // Dual calendar with separate start/end times (always 12-hour format)
-        if (this.startDate) {
+        if (this.startDate && this.startTime != null) {
           this.applyTimeToDate(this.startDate, true);
         }
-        if (this.endDate) {
+        if (this.endDate && this.endTime != null) {
           this.applyTimeToDate(this.endDate, false);
         }
       } else {
-        // Single calendar with time (always 12-hour format)
-        if (this.startDate) {
+        if (this.startDate && this.startTime != null) {
           this.applyTimeToDate(this.startDate, true);
         }
-        if (this.endDate && !this.singleDatePicker) {
+        if (this.endDate && !this.singleDatePicker && this.startTime != null) {
           this.applyTimeToDate(this.endDate, true);
         }
       }
@@ -1038,6 +1092,10 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
 
   cancel() {
     if (this.disabled) return;
+    if (this.shouldDeferSingleDateCommit()) {
+      this.finishPopupDismissal();
+      return;
+    }
     this.startDate = null;
     this.endDate = null;
     this.selectedDates = [];
@@ -1051,22 +1109,9 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
     this.endDate = null;
     this.startTime = null;
     this.endTime = null;
-  // Time picker for single calendar (12-hour format: 1-12)
-    this.selectedHour = 1;
-    this.selectedMinute = 0;
-    this.selectedSecond = 0;
-    this.selectedAMPM = 'AM';
-  // NEW: Separate time pickers for dual calendar (12-hour format: 1-12)
-    this.startHour = 1;
-    this.startMinute = 0;
-    this.startSecond = 0;
-    this.startAMPM = 'AM';
-    this.endHour = 2;
-    this.endMinute = 0;
-    this.endSecond = 0;
-    this.endAMPM = 'AM';
     this.selectedDates = [];
-    this.activeRange = null; // Clear active range
+    this.activeRange = null;
+    this.resetEmbeddedTimePickerUiState();
 
     this.resetCalendarFocusAfterClear();
 
@@ -1147,8 +1192,12 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
       this.keyboardFocusDate = new Date(this.startDate.getFullYear(), this.startDate.getMonth(), this.startDate.getDate());
     }
 
-    this.emitSelection();
-    if (this.autoApply || this.closeOnAutoApply) {
+    this.emitSelectionUnlessSingleDateDeferred();
+    if (this.shouldDeferSingleDateCommit()) {
+      if (this.autoApply) {
+        this.apply();
+      }
+    } else if (this.autoApply || this.closeOnAutoApply) {
       this.close();
     }
   }
@@ -1530,7 +1579,7 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
       if (this.startDate) {
         this.startDate.setHours(0, 0, this.selectedSecond);
       }
-      this.emitSelection();
+      this.emitSelectionUnlessSingleDateDeferred();
       return;
     }
     const { hour12, minute, ampm } = this.parsePickerTimeString(time);
@@ -1549,7 +1598,7 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
       this.startDate.setHours(h24, minute, this.selectedSecond);
     }
 
-    this.emitSelection();
+    this.emitSelectionUnlessSingleDateDeferred();
   }
 
   // NEW: Handle BkTimePicker change for dual calendar
@@ -1628,7 +1677,7 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
     this.selectedMinute = m;
     if (this.startDate) {
       this.startDate.setHours(h, m, this.selectedSecond);
-      this.emitSelection();
+      this.emitSelectionUnlessSingleDateDeferred();
     }
   }
 
@@ -1768,7 +1817,7 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
       if (this.selectedAMPM === 'PM' && h < 12) h += 12;
       if (this.selectedAMPM === 'AM' && h === 12) h = 0;
       this.startDate.setHours(h, this.selectedMinute, this.selectedSecond);
-      this.emitSelection();
+      this.emitSelectionUnlessSingleDateDeferred();
     }
   }
 
@@ -1783,7 +1832,7 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
       if (this.selectedAMPM === 'PM' && h < 12) h += 12;
       if (this.selectedAMPM === 'AM' && h === 12) h = 0;
       this.startDate.setHours(h, this.selectedMinute, this.selectedSecond);
-      this.emitSelection();
+      this.emitSelectionUnlessSingleDateDeferred();
     }
   }
 
@@ -1794,7 +1843,7 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
       if (this.selectedAMPM === 'PM' && h < 12) h += 12;
       if (this.selectedAMPM === 'AM' && h === 12) h = 0;
       this.startDate.setHours(h, this.selectedMinute, this.selectedSecond);
-      this.emitSelection();
+      this.emitSelectionUnlessSingleDateDeferred();
     }
   }
 
@@ -1805,7 +1854,7 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
       if (this.selectedAMPM === 'PM' && h < 12) h += 12;
       if (this.selectedAMPM === 'AM' && h === 12) h = 0;
       this.startDate.setHours(h, this.selectedMinute, this.selectedSecond);
-      this.emitSelection();
+      this.emitSelectionUnlessSingleDateDeferred();
     }
   }
 
@@ -1816,7 +1865,7 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
       if (this.selectedAMPM === 'PM' && h < 12) h += 12;
       if (this.selectedAMPM === 'AM' && h === 12) h = 0;
       this.startDate.setHours(h, this.selectedMinute, this.selectedSecond);
-      this.emitSelection();
+      this.emitSelectionUnlessSingleDateDeferred();
     }
   }
 
@@ -1847,7 +1896,7 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
         if (this.selectedAMPM === 'PM' && h < 12) h += 12;
         if (this.selectedAMPM === 'AM' && h === 12) h = 0;
         this.startDate.setHours(h, this.selectedMinute, this.selectedSecond);
-        this.emitSelection();
+        this.emitSelectionUnlessSingleDateDeferred();
       }
     } else if (isStart) {
       this.startHour = value;
@@ -1897,7 +1946,7 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
         if (this.selectedAMPM === 'PM' && h < 12) h += 12;
         if (this.selectedAMPM === 'AM' && h === 12) h = 0;
         this.startDate.setHours(h, this.selectedMinute, this.selectedSecond);
-        this.emitSelection();
+        this.emitSelectionUnlessSingleDateDeferred();
       }
     } else if (isStart) {
       this.startHour = value;
@@ -1993,7 +2042,7 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
         if (this.selectedAMPM === 'PM' && h < 12) h += 12;
         if (this.selectedAMPM === 'AM' && h === 12) h = 0;
         this.startDate.setHours(h, this.selectedMinute, this.selectedSecond);
-        this.emitSelection();
+        this.emitSelectionUnlessSingleDateDeferred();
       }
     } else if (isStart) {
       this.startMinute = value;

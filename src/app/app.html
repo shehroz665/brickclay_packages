@@ -1,7 +1,12 @@
 <div class="variant-switcher">
   <label>Variant:</label>
   <button type="button" [class.active]="calendarVariant === 'single'" (click)="calendarVariant = 'single'">Single date</button>
+  <button type="button" [class.active]="calendarVariant === 'singleApply'" (click)="calendarVariant = 'singleApply'">Single + Apply</button>
+  <button type="button" [class.active]="calendarVariant === 'singleTime'" (click)="calendarVariant = 'singleTime'">Single + time</button>
+  <button type="button" [class.active]="calendarVariant === 'singleTimeApply'" (click)="calendarVariant = 'singleTimeApply'">Single + time + Apply</button>
   <button type="button" [class.active]="calendarVariant === 'dual'" (click)="calendarVariant = 'dual'">Dual (range)</button>
+  <button type="button" [class.active]="calendarVariant === 'dualTime'" (click)="calendarVariant = 'dualTime'">Dual + time</button>
+  <button type="button" [class.active]="calendarVariant === 'dualTimeApply'" (click)="calendarVariant = 'dualTimeApply'">Dual + time + Apply</button>
   <button type="button" [class.active]="calendarVariant === 'timeOnly'" (click)="calendarVariant = 'timeOnly'">Time only</button>
   <button type="button" [class.active]="calendarVariant === 'input'" (click)="calendarVariant = 'input'">Input</button>
 </div>
@@ -74,15 +79,164 @@
       <p class="mt-5">Value: {{ singleDatefromSelection | json }}</p>
     </div> -->
   }
+  @case ('singleApply') {
+    <div style="max-width: 420px;">
+      <p class="mb-2 text-sm opacity-80">
+        Single date with <code>[autoApply]="false"</code> and footer visible: the model and <code>(selected)</code> update only when you click Apply.
+        Closing the popup or Cancel restores the last committed value.
+      </p>
+      <label class="field-label" for="singleApply">Appointment date</label>
+      <p class="mt-4">Committed value: {{ singleDateApplySelection | json }}</p>
+      <bk-custom-calendar
+        id="singleApply"
+        name="singleApply"
+        [(ngModel)]="singleDateApplySelection"
+        (selected)="onSingleCalenderSelected($event, 'apply')"
+        [dualCalendar]="false"
+        [singleDatePicker]="true"
+        [showRanges]="false"
+        [enableTimepicker]="false"
+        [autoApply]="false"
+        [showCancelApply]="true"
+        [showCancel]="true"
+        placeholder="Pick a date, then Apply"
+        [displayFormat]="'MM/DD/YYYY'"
+        [appendToBody]="true"
+        #singleApplyCal="ngModel"
+      />
+      <bk-validator [control]="singleApplyCal" [label]="'Appointment date'" />
+
+    </div>
+  }
+  @case ('singleTime') {
+    <div style="max-width: 420px;">
+      <p class="mb-2 text-sm opacity-80">
+        Single date with <code>[enableTimepicker]="true"</code> and <code>[autoApply]="true"</code> (no Apply footer): date and time commit as you pick them.
+      </p>
+      <label class="field-label" for="singleTime">Date and time</label>
+      <p class="mt-4">Value: {{ singleDateTimeSelection | json }}</p>
+      <bk-custom-calendar
+        id="singleTime"
+        name="singleTime"
+        [(ngModel)]="singleDateTimeSelection"
+        (selected)="onSingleCalenderSelected($event, 'time')"
+        [dualCalendar]="false"
+        [singleDatePicker]="true"
+        [showRanges]="false"
+        [enableTimepicker]="true"
+        [timeFormat]="12"
+        [autoApply]="true"
+        [showCancelApply]="false"
+        placeholder="Select date and time"
+        [displayFormat]="'MM/DD/YYYY'"
+        [appendToBody]="true"
+        #singleTimeCal="ngModel"
+      />
+      <bk-validator [control]="singleTimeCal" [label]="'Date and time'" />
+    </div>
+  }
+  @case ('singleTimeApply') {
+    <div style="max-width: 420px;">
+      <p class="mb-2 text-sm opacity-80">
+        Single date + time with <code>[autoApply]="false"</code>: both update in the model only when you click Apply. Close or Cancel restores the last committed value.
+      </p>
+      <label class="field-label" for="singleTimeApply">Date and time</label>
+      <p class="mt-4">Committed value: {{ singleDateTimeApplySelection | json }}</p>
+      <bk-custom-calendar
+        id="singleTimeApply"
+        name="singleTimeApply"
+        [(ngModel)]="singleDateTimeApplySelection"
+        (selected)="onSingleCalenderSelected($event, 'timeApply')"
+        [dualCalendar]="false"
+        [singleDatePicker]="true"
+        [showRanges]="false"
+        [enableTimepicker]="true"
+        [timeFormat]="12"
+        [autoApply]="false"
+        [showCancelApply]="true"
+        [showCancel]="true"
+
+        placeholder="Pick date & time, then Apply"
+        [displayFormat]="'MM/DD/YYYY'"
+        [appendToBody]="true"
+        #singleTimeApplyCal="ngModel"
+      />
+      <bk-validator [control]="singleTimeApplyCal" [label]="'Date and time'" />
+    </div>
+  }
   @case ('dual') {
     <div style="max-width: 600px;">
+        <p class="mt-5">Value: {{ calenderSelection | json }}</p>
       <bk-custom-calendar [(ngModel)]="calenderSelection" [required]="true" [dualCalendar]="true" [singleDatePicker]="false"
         [showRanges]="true" [enableTimepicker]="false" [displayFormat]="'MM/DD/YYYY'" placeholder="Select a date range"
-        #calender="ngModel" (selected)="onCalendarSelected($event,'dual-calender')" [customRanges]="customRanges" [rangeOrder]="rangeOrder"
+        #calender="ngModel" (selected)="onCalendarSelected($event,'dual-calender')" [customRanges]="customRanges" [rangeOrder]="rangeOrder" [closeOnAutoApply]="true"
         [weekDayLabels]="[ 'Sun','Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat',]"
         [hasError]="!!(calender?.invalid && (calender?.touched || calender?.dirty))"></bk-custom-calendar>
       <bk-validator [control]="calender" label="Date range"></bk-validator>
-      <p class="mt-5">Value: {{ calenderSelection | json }}</p>
+
+    </div>
+  }
+  @case ('dualTime') {
+    <div style="max-width: 720px;">
+      <p class="mb-2 text-sm opacity-80">
+        Dual month range with separate start/end <code>bk-time-picker</code> controls,
+        <code>[enableTimepicker]="true"</code>, and <code>[autoApply]="true"</code> (no Apply footer). Values update as you complete the range and set times.
+      </p>
+      <p class="mt-4">Value: {{ dualCalendarTimeSelection | json }}</p>
+      <bk-custom-calendar
+        name="dualTime"
+        [(ngModel)]="dualCalendarTimeSelection"
+        (selected)="onCalendarSelected($event, 'dual-time')"
+        [required]="true"
+        [dualCalendar]="true"
+        [singleDatePicker]="false"
+        [showRanges]="true"
+        [enableTimepicker]="true"
+        [timeFormat]="12"
+        [clearableTime]="true"
+        [autoApply]="true"
+        [showCancelApply]="false"
+        [closeOnAutoApply]="true"
+        placeholder="Select range with times"
+        [displayFormat]="'MM/DD/YYYY'"
+        [appendToBody]="true"
+        [customRanges]="customRanges"
+        [rangeOrder]="rangeOrder"
+        [weekDayLabels]="['Sun','Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']"
+        #dualTimeCal="ngModel"
+      />
+      <bk-validator [control]="dualTimeCal" label="Date range with times" />
+    </div>
+  }
+  @case ('dualTimeApply') {
+    <div style="max-width: 720px;">
+      <p class="mb-2 text-sm opacity-80">
+        Dual range + time with <code>[autoApply]="false"</code> and Apply/Cancel: dates and times commit together when you click Apply.
+      </p>
+      <p class="mt-4">Committed value: {{ dualCalendarTimeApplySelection | json }}</p>
+      <bk-custom-calendar
+        name="dualTimeApply"
+        [(ngModel)]="dualCalendarTimeApplySelection"
+        (selected)="onCalendarSelected($event, 'dual-time-apply')"
+        [required]="true"
+        [dualCalendar]="true"
+        [singleDatePicker]="false"
+        [showRanges]="true"
+        [enableTimepicker]="true"
+        [timeFormat]="12"
+        [clearableTime]="true"
+        [autoApply]="false"
+        [showCancelApply]="true"
+        [showCancel]="true"
+        placeholder="Pick range & times, then Apply"
+        [displayFormat]="'MM/DD/YYYY'"
+        [appendToBody]="true"
+        [customRanges]="customRanges"
+        [rangeOrder]="rangeOrder"
+        [weekDayLabels]="['Sun','Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']"
+        #dualTimeApplyCal="ngModel"
+      />
+      <bk-validator [control]="dualTimeApplyCal" label="Date range with times" />
     </div>
   }
   @case ('timeOnly') {
