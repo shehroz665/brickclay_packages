@@ -1092,14 +1092,14 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
 
   cancel() {
     if (this.disabled) return;
-    if (this.shouldDeferSingleDateCommit()) {
-      this.finishPopupDismissal();
-      return;
-    }
-    this.startDate = null;
-    this.endDate = null;
-    this.selectedDates = [];
-    this.resetCalendarFocusAfterClear();
+    // if (this.shouldDeferSingleDateCommit()) {
+    //   this.finishPopupDismissal();
+    //   return;
+    // }
+    // this.startDate = null;
+    // this.endDate = null;
+    // this.selectedDates = [];
+    // this.resetCalendarFocusAfterClear();
     this.close();
   }
 
