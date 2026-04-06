@@ -4,6 +4,7 @@ import {
   output,
   signal,
   computed,
+  effect,
   ViewChild,
   ElementRef,
   HostListener,
@@ -71,6 +72,8 @@ export class BkHierarchicalSelect implements ControlValueAccessor {
   colorKey = input<string>('');
   /** Whether to show clear button when a value is selected. */
   clearable = input<boolean>(true);
+  /** Optional anchor key to scope dropdown to one subtree (e.g. module/category key). */
+  restrictKey = input<any>(null);
   hasError = input<boolean>(false);
 
   /** Emit full selected node. */
@@ -85,6 +88,21 @@ export class BkHierarchicalSelect implements ControlValueAccessor {
   @ViewChild('controlWrapper') controlWrapper!: ElementRef<HTMLDivElement>;
 
   private el = inject(ElementRef);
+
+  constructor() {
+    effect(() => {
+      const list = this.items();
+      const value = this.valueSignal();
+
+      if (value == null) {
+        this.selected.set(null);
+        return;
+      }
+
+      const node = this.findNodeByValue(list ?? [], value);
+      this.selected.set(node ?? null);
+    });
+  }
 
   isOpen = signal(false);
   dropdownStyle = signal<{ top?: string; bottom?: string; left: string; width: string }>({
@@ -102,6 +120,23 @@ export class BkHierarchicalSelect implements ControlValueAccessor {
     const list = this.items();
     const stack = this.breadcrumb();
     if (!list?.length) return [];
+
+    const restrictKey = this.restrictKey();
+    if (restrictKey != null) {
+      const anchorNode = this.findNodeByValue(list, restrictKey);
+      if (!anchorNode) {
+        return [];
+      }
+
+      // Start from anchor children only, so siblings outside this branch are hidden.
+      let anchoredLevel: HierarchicalNode[] = this.getChildren(anchorNode) ?? [];
+      for (const parent of stack) {
+        const children = this.getChildren(parent);
+        anchoredLevel = children ?? [];
+      }
+      return anchoredLevel;
+    }
+
     let level: HierarchicalNode[] = list;
     for (const parent of stack) {
       const children = this.getChildren(parent);
@@ -201,6 +236,43 @@ export class BkHierarchicalSelect implements ControlValueAccessor {
   }
 
   openDropdown(): void {
+    if (this.restrictKey() != null) {
+      const restrictKey = this.restrictKey();
+      const sel = this.selected();
+
+      if (sel) {
+        const selectedPath = this.buildPathTo(sel);
+        const anchorIndex = selectedPath.findIndex(
+          (node) => this.getValue(node) === restrictKey
+        );
+
+        if (anchorIndex >= 0) {
+          const relativePath = selectedPath.slice(anchorIndex + 1);
+          const selectedHasChildren = this.hasChildren(sel);
+
+          // If selected has children, open at selected node so user can navigate deeper.
+          // If selected is leaf, open at parent level so siblings are still visible/selectable.
+          if (selectedHasChildren) {
+            this.breadcrumb.set(relativePath);
+          } else {
+            this.breadcrumb.set(relativePath.slice(0, -1));
+          }
+        } else {
+          this.breadcrumb.set([]);
+        }
+      } else {
+        this.breadcrumb.set([]);
+      }
+
+      if (this.appendToBody()) {
+        this.updatePosition();
+      }
+      this.isOpen.set(true);
+      this.searchTerm.set('');
+      setTimeout(() => this.searchInput?.nativeElement?.focus(), 0);
+      return;
+    }
+
     const sel = this.selected();
     if (sel) {
       const path = this.buildPathTo(sel);
@@ -284,9 +356,12 @@ export class BkHierarchicalSelect implements ControlValueAccessor {
       return;
     }
     this.selected.set(node);
+    const value = this.getValue(node);
+    this._value = value;
+    this.valueSignal.set(value);
     this.onChange(this.getValue(node));
     this.selectionChange.emit(node);
-    this.valueChange.emit(this.getValue(node));
+    this.valueChange.emit(value);
     this.closeDropdown();
   }
 
@@ -305,17 +380,13 @@ export class BkHierarchicalSelect implements ControlValueAccessor {
 
   // --- ControlValueAccessor ---
   private _value: any = null;
+  private valueSignal = signal<any>(null);
   onChange: (value: any) => void = () => {};
   onTouched: () => void = () => {};
 
   writeValue(value: any): void {
     this._value = value;
-    if (value == null) {
-      this.selected.set(null);
-      return;
-    }
-    const node = this.findNodeByValue(this.items(), value);
-    this.selected.set(node ?? null);
+    this.valueSignal.set(value);
   }
 
   registerOnChange(fn: (value: any) => void): void {
@@ -346,6 +417,7 @@ export class BkHierarchicalSelect implements ControlValueAccessor {
     event.stopPropagation();
     this.selected.set(null);
     this._value = null;
+    this.valueSignal.set(null);
     this.onChange(null);
     this.selectionChange.emit(null);
     this.valueChange.emit(null);
