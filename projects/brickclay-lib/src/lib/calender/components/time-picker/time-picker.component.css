@@ -50,6 +50,7 @@
 
 .time-input-group.lg .time-input {
   font-size: 14px;
+  line-height: 18px;
   padding: 10px 40px 10px 12px;
 }
 
@@ -229,4 +230,11 @@
   font-weight: 600;
   color: #6b7280;
   margin: 5px 0 0px;
+}
+
+.time-input:disabled {
+  cursor: not-allowed;
+  border-color: rgb(227 227 231);
+  background-color: rgb(244 244 246);
+  color: rgb(161 163 174);
 }
