@@ -122,8 +122,31 @@
 }
 
 .bk-options-list {
-  @apply max-h-60 overflow-y-auto overflow-x-hidden relative flex flex-col gap-0.5;
+  @apply overflow-y-auto overflow-x-hidden relative flex flex-col gap-0.5;
 }
+
+/* Medium screens (tablets) */
+/* Small screens */
+@media (max-height: 700px) {
+  .bk-options-list {
+    max-height: 175px;
+  }
+}
+
+/* Medium screens */
+@media (min-height: 701px) and (max-height: 900px) {
+  .bk-options-list {
+    max-height: 210px;
+  }
+}
+
+/* Extra large screens */
+@media (min-height: 901px) {
+  .bk-options-list {
+    max-height: 240px; /* adjust as needed */
+  }
+}
+
 
 /* Options */
 .bk-option {
