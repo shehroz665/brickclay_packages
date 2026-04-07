@@ -113,7 +113,6 @@
       #dropdownPanel
       class="bk-dropdown-panel"
       [attr.data-position]="dropdownPosition()"
-      (scroll)="onScroll($event)"
       [style.position]="appendToBody() ? 'fixed' : 'absolute'"
       [style.top]="getTop()"
       [style.bottom]="getBottom()"
@@ -152,7 +151,7 @@
           </div>
         </div>
       }
-      <div #optionsListContainer class="bk-options-list">
+      <div #optionsListContainer class="bk-options-list" (scroll)="onScroll($event)">
         @if (loading()) {
           <div class="bk-option-disabled">{{ loadingText() }}</div>
         } @else {

@@ -396,12 +396,12 @@ export class BkSelect implements ControlValueAccessor {
   setDisabledState(d: boolean) { this.disabled.set(d); }
 
   private resolveSelectedOptions(val: any) {
-    const list = this.items();
-    if (!list.length) return;
     if (val === null || val === undefined) {
       this.selectedOptions.set([]);
       return;
     }
+    const list = this.items();
+    if (!list.length) return;
     const valArray = Array.isArray(val) ? val : [val];
     const bindVal = this.bindValue();
     const compare = this.compareWith();
