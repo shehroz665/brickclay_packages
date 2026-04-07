@@ -340,6 +340,9 @@ export class BkSelect implements ControlValueAccessor {
     const list = this.filteredItems();
     const current = this.markedIndex();
     switch (event.key) {
+      case 'Tab':
+        this.closeDropdown();
+        break;
       case 'ArrowDown':
         event.preventDefault();
         if (current < list.length - 1) {
@@ -363,6 +366,12 @@ export class BkSelect implements ControlValueAccessor {
         this.closeDropdown();
         break;
     }
+  }
+
+  onTabPress(event: KeyboardEvent){
+     if(event.key === 'Tab') {
+        this.closeDropdown();
+     }
   }
 
   onScroll(event: Event) {

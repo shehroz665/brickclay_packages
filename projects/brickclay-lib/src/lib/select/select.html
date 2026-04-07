@@ -111,6 +111,8 @@
   @if (isOpen()) {
     <div
       #dropdownPanel
+      tabindex="-1"
+      (keydown)="onTabPress($event)"
       class="bk-dropdown-panel"
       [attr.data-position]="dropdownPosition()"
       [style.position]="appendToBody() ? 'fixed' : 'absolute'"
@@ -140,6 +142,7 @@
             </svg>
             <input
               #searchInput
+              tabindex="-1"
               type="text"
               class="bk-search-input"
               [value]="searchTerm()"
@@ -151,7 +154,7 @@
           </div>
         </div>
       }
-      <div #optionsListContainer class="bk-options-list" (scroll)="onScroll($event)">
+      <div #optionsListContainer tabindex="-1" class="bk-options-list" (scroll)="onScroll($event)">
         @if (loading()) {
           <div class="bk-option-disabled">{{ loadingText() }}</div>
         } @else {
@@ -191,6 +194,7 @@
             @for (item of group.items; track $index) {
               <div
                 #optionsRef
+                tabindex="-1"
                 class="bk-option"
                 [class.bk-selected]="isItemSelected(item)"
                 [class.bk-marked]="$index === markedIndex()"
