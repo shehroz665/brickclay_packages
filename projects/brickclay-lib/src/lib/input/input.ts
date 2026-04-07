@@ -345,6 +345,15 @@ export class BkInput implements OnInit, OnDestroy, AfterViewInit, ControlValueAc
       this.isPropagatingViewValue = false;
     });
     this.input.emit(event);
+
+    // If parent handlers mutate the underlying native input value (e.g. clamping/formatting),
+    // resync our internal view-model from the real input to avoid visual "append" artifacts.
+    queueMicrotask(() => {
+      const nativeVal = this.inputField?.nativeElement?.value;
+      if (nativeVal !== undefined && nativeVal !== null && nativeVal !== this.inputValue) {
+        this.inputValue = nativeVal;
+      }
+    });
   }
 
   handleClicked():void {
@@ -457,3 +466,4 @@ selectCountry(country: CountryOption): void {
 
 
 }
+ 
