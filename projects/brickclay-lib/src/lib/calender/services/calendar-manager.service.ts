@@ -60,8 +60,8 @@ export class BkCalendarManagerService {
         end: today,
       },
       'This Month': {
-        start: new Date(today.getFullYear(), today.getMonth(), 1),
-        end: today,
+      start: new Date(today.getFullYear(), today.getMonth(), 1),
+      end: new Date(today.getFullYear(), today.getMonth() + 1, 0),
       },
       'Last Month': {
         start: new Date(today.getFullYear(), today.getMonth() - 1, 1),

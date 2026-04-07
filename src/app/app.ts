@@ -99,7 +99,27 @@ countryPhone1 :string="+1 (111) 111-1111";
       start: this.calenderManager.addDays(today, -59),
       end: today,
     };
+    // This Year
+  this.customRanges['This Year'] = {
+    start: new Date(today.getFullYear(), 0, 1),
+    end: new Date(today.getFullYear(), 11, 31),
+  };
+
+  // Last Year
+  this.customRanges['Last Year'] = {
+    start: new Date(today.getFullYear() - 1, 0, 1),
+    end: new Date(today.getFullYear() - 1, 11, 31),
+  };
+
+  // Last 12 Months
+  this.customRanges['Last 12 Months'] = {
+    start: new Date(today.getFullYear() - 1, today.getMonth(), today.getDate()),
+    end: today,
+  };
     this.rangeOrder.push('Last 60 Days');
+    this.rangeOrder.push('This Year');
+    this.rangeOrder.push('Last Year');
+    this.rangeOrder.push('Last 12 Months');
   }
 
   onCalenderSelected(event: any, calendarId: string):void{
