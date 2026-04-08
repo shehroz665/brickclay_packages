@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
+import { BKTooltipDirective } from '../tooltip/tooltip.directive';
 
 /** Generic hierarchical node; works with note types and any similar tree. */
 export interface HierarchicalNode {
@@ -24,7 +25,7 @@ export interface HierarchicalNode {
 @Component({
   selector: 'bk-hierarchical-select',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, BKTooltipDirective],
   templateUrl: './hierarchical-select.html',
   styleUrls: ['./hierarchical-select.css'],
   providers: [

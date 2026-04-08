@@ -28,7 +28,11 @@
         } @else {
           <div class="hierarchical-value-label" [style.color]="resolveColor(selected())">
             @for (node of displayPath(); track getValue(node); let last = $last) {
-              <span>{{ getLabel(node) }}</span>
+              <span
+                #breadNode
+                class="hierarchical-breadcrumb-node"
+                [bkTooltip]="breadNode.scrollWidth > breadNode.clientWidth ? getLabel(node) : ''"
+                bkTooltipPosition="top">{{ getLabel(node) }}</span>
 
               @if (!last) {
                 <svg
@@ -119,7 +123,12 @@
             class="hierarchical-option"
             [class.selected]="isSelected(item)"
             (mousedown)="selectItem(item, $event)">
-            <span class="hierarchical-option-label" [style.color]="resolveColor(item)">{{ getLabel(item) }}</span>
+            <span
+              #optLabel
+              class="hierarchical-option-label"
+              [style.color]="resolveColor(item)"
+              [bkTooltip]="optLabel.scrollWidth > optLabel.clientWidth ? getLabel(item) : ''"
+              bkTooltipPosition="top">{{ getLabel(item) }}</span>
             @if (hasChildren(item)) {
               <svg width="5" height="8" viewBox="0 0 5 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M4.57142 4.00286C4.57185 3.92766 4.55744 3.85312 4.52901 3.78351C4.50057 3.71389 4.45868 3.65058 4.40572 3.59719L0.977497 0.169008C0.924381 0.115455 0.861186 0.0729493 0.79156 0.0439419C0.721933 0.0149346 0.647251 0 0.571824 0C0.496396 0 0.421714 0.0149346 0.352088 0.0439419C0.282461 0.0729493 0.219267 0.115455 0.16615 0.169008C0.059732 0.27606 0 0.420874 0 0.57182C0 0.722766 0.059732 0.867579 0.16615 0.974631L3.19442 4.00286L0.16615 7.02537C0.059732 7.13242 0 7.27723 0 7.42818C0 7.57913 0.059732 7.72394 0.16615 7.83099C0.219267 7.88454 0.282461 7.92705 0.352088 7.95606C0.421714 7.98507 0.496396 8 0.571824 8C0.647251 8 0.721933 7.98507 0.79156 7.95606C0.861186 7.92705 0.924381 7.88454 0.977497 7.83099L4.40572 4.40281C4.51128 4.29639 4.57079 4.15275 4.57142 4.00286Z" fill="#BBBDC5"/>
