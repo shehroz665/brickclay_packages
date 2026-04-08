@@ -25,6 +25,42 @@
   margin-bottom: 0;
 }
 
+/* Scrollable tooltip */
+.bk-tooltip-content.bk-tooltip-scrollable {
+  overflow: visible; /* visible so triangle (positioned outside bounds) is not clipped */
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  width: auto; /* ← reset width for scrollable */
+}
+
+.bk-tooltip-content.bk-tooltip-scrollable .bk-tooltip-content-wrapper {
+  max-height: 300px; /* default, can be overridden by @Input */
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 8px 12px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+  box-sizing: border-box;
+}
+
+.bk-tooltip-content.bk-tooltip-scrollable .bk-tooltip-content-wrapper::-webkit-scrollbar {
+  width: 6px;
+}
+
+.bk-tooltip-content.bk-tooltip-scrollable .bk-tooltip-content-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.bk-tooltip-content.bk-tooltip-scrollable .bk-tooltip-content-wrapper::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.bk-tooltip-content.bk-tooltip-scrollable .bk-tooltip-content-wrapper::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
 .bk-divider {
   display: block;
   height: 1px;

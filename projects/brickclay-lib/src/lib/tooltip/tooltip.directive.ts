@@ -17,8 +17,15 @@ import {
 export class BKTooltipDirective implements OnInit, OnChanges, OnDestroy {
   @Input('bkTooltip') tooltipContent: string | string[] = '';
   @Input('bkTooltipPosition') tooltipPosition: 'left' | 'right' | 'top' | 'bottom' = 'right';
+  @Input('bkTooltipScrollable') scrollable: boolean = false;
+  @Input('bkTooltipMaxHeight') maxHeight: string = '300px';
+  @Input('bkTooltipAutoHeight') autoHeight: boolean = true; // Auto-adjust height based on available space
 
   private tooltipElement: HTMLElement | null = null;
+  private contentWrapper: HTMLElement | null = null;
+  private isHoveringTooltip: boolean = false;
+  private hideTimeout: any = null;
+  private tooltipListeners: (() => void)[] = [];
 
   constructor(private el: ElementRef, private renderer: Renderer2) { }
 
@@ -33,6 +40,11 @@ export class BKTooltipDirective implements OnInit, OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    if (this.hideTimeout) {
+      clearTimeout(this.hideTimeout);
+      this.hideTimeout = null;
+    }
+    this.cleanupTooltipListeners();
     this.removeTooltip();
   }
 
@@ -61,6 +73,9 @@ export class BKTooltipDirective implements OnInit, OnChanges, OnDestroy {
   appendContent() {
     if (!this.tooltipElement) return;
 
+    // Append to wrapper if scrollable, otherwise to tooltip directly
+    const target = this.contentWrapper || this.tooltipElement;
+
     const contentLines = Array.isArray(this.tooltipContent)
       ? this.tooltipContent
       : [this.tooltipContent];
@@ -74,12 +89,18 @@ export class BKTooltipDirective implements OnInit, OnChanges, OnDestroy {
         const text = this.renderer.createText(line ?? '');
         this.renderer.appendChild(div, text);
       }
-      this.renderer.appendChild(this.tooltipElement!, div);
+      this.renderer.appendChild(target, div);
     });
   }
 
   @HostListener('mouseenter')
   onMouseEnter() {
+    // Clear any pending hide timeout
+    if (this.hideTimeout) {
+      clearTimeout(this.hideTimeout);
+      this.hideTimeout = null;
+    }
+
     if (this.tooltipElement) {
       this.setTooltipPosition();
       this.setStyle(this.tooltipElement, {
@@ -91,21 +112,31 @@ export class BKTooltipDirective implements OnInit, OnChanges, OnDestroy {
   }
 
 
-@HostListener('mouseleave')
+  @HostListener('mouseleave')
   onMouseLeave() {
-    this.hideTooltip();
-  }
-
-  private hideTooltip() {
-    if (this.tooltipElement) {
-      this.setStyle(this.tooltipElement, {
-        visibility: 'hidden',
-        opacity: '0',
-      });
-      this.renderer.removeStyle(document.body, 'overflow-x');
+    // Don't hide immediately - wait a bit to see if mouse moves to tooltip
+    // Only hide if not hovering over tooltip
+    if (!this.isHoveringTooltip) {
+      this.hideTimeout = setTimeout(() => {
+        if (!this.isHoveringTooltip && this.tooltipElement) {
+          this.hideTooltip();
+        }
+      }, 100); // Small delay to allow mouse to move to tooltip
     }
   }
 
+  // private hideTooltip() {
+  //   if (this.tooltipElement) {
+  //     this.setStyle(this.tooltipElement, {
+  //       visibility: 'hidden',
+  //       opacity: '0',
+  //     });
+  //     this.renderer.removeStyle(document.body, 'overflow-x');
+  //   }
+  // }
+
+  // Hide tooltip on mousedown so it doesn't stick during CDK drag-drop
+  // (CDK drag steals the element before mouseleave can fire)
   @HostListener('mousedown')
   @HostListener('touchstart')
   onInteract() {
@@ -127,15 +158,82 @@ export class BKTooltipDirective implements OnInit, OnChanges, OnDestroy {
     }
     return true;
   }
+
+  private hideTooltip() {
+    if (this.tooltipElement) {
+      this.setStyle(this.tooltipElement, {
+        visibility: 'hidden',
+        opacity: '0',
+      });
+      this.renderer.removeStyle(document.body, 'overflow-x'); // ✅ restore scroll when tooltip hides
+    }
+    this.isHoveringTooltip = false;
+  }
+
+  private setupTooltipHoverListeners() {
+    if (!this.tooltipElement) return;
+
+    // Clean up existing listeners
+    this.cleanupTooltipListeners();
+
+    // Add mouseenter listener to tooltip
+    const mouseEnterListener = this.renderer.listen(this.tooltipElement, 'mouseenter', () => {
+      this.isHoveringTooltip = true;
+      // Clear any pending hide timeout
+      if (this.hideTimeout) {
+        clearTimeout(this.hideTimeout);
+        this.hideTimeout = null;
+      }
+      // Ensure tooltip is visible
+      if (this.tooltipElement) {
+        this.setStyle(this.tooltipElement, {
+          visibility: 'visible',
+          opacity: '1',
+        });
+      }
+    });
+
+    // Add mouseleave listener to tooltip
+    const mouseLeaveListener = this.renderer.listen(this.tooltipElement, 'mouseleave', () => {
+      this.isHoveringTooltip = false;
+      // Hide tooltip after a short delay
+      this.hideTimeout = setTimeout(() => {
+        this.hideTooltip();
+      }, 100);
+    });
+
+    // Store listeners for cleanup
+    this.tooltipListeners = [mouseEnterListener, mouseLeaveListener];
+  }
+
+  private cleanupTooltipListeners() {
+    this.tooltipListeners.forEach(cleanup => cleanup());
+    this.tooltipListeners = [];
+  }
   private createTooltip() {
     if (this.isTooltipContentEmpty()) return;
     this.tooltipElement = this.renderer.createElement('div');
     this.renderer.addClass(this.tooltipElement, 'bk-tooltip-content');
 
+    // Add scrollable class if needed
+    if (this.scrollable) {
+      this.renderer.addClass(this.tooltipElement, 'bk-tooltip-scrollable');
+    }
+
+    // Create wrapper for content if scrollable
+    if (this.scrollable) {
+      this.contentWrapper = this.renderer.createElement('div');
+      this.renderer.addClass(this.contentWrapper, 'bk-tooltip-content-wrapper');
+      this.renderer.setStyle(this.contentWrapper, 'max-height', this.maxHeight);
+      this.renderer.appendChild(this.tooltipElement, this.contentWrapper);
+    }
+
     // Add content
     const contentLines = Array.isArray(this.tooltipContent)
       ? this.tooltipContent
       : [this.tooltipContent];
+
+    const target = this.contentWrapper || this.tooltipElement;
 
     contentLines.forEach((line: string) => {
       const div = this.renderer.createElement('div');
@@ -146,7 +244,7 @@ export class BKTooltipDirective implements OnInit, OnChanges, OnDestroy {
         const text = this.renderer.createText(line);
         this.renderer.appendChild(div, text);
       }
-      this.renderer.appendChild(this.tooltipElement!, div);
+      this.renderer.appendChild(target, div);
     });
 
     // Add triangle
@@ -169,22 +267,73 @@ export class BKTooltipDirective implements OnInit, OnChanges, OnDestroy {
     });
 
     this.renderer.appendChild(document.body, this.tooltipElement);
+    
+    // Setup hover listeners for the tooltip itself
+    this.setupTooltipHoverListeners();
   }
 
   private setTooltipPosition() {
     if (!this.tooltipElement) return;
 
     const hostRect = this.el.nativeElement.getBoundingClientRect();
-    const tooltipRect = this.tooltipElement.getBoundingClientRect();
-
+    let tooltipRect = this.tooltipElement.getBoundingClientRect();
 
     const triangle = this.tooltipElement.querySelector('.bk-tooltip-triangle') as HTMLElement;
     const padding = 10;
+    const viewportHeight = window.innerHeight;
+    const viewportWidth = window.innerWidth;
+
+    // Get content wrapper reference
+    const contentWrapper = this.tooltipElement.querySelector('.bk-tooltip-content-wrapper') as HTMLElement;
+    
+    // Get actual content height first (without max-height constraint)
+    let contentHeight = 0;
+    
+    if (contentWrapper && this.scrollable) {
+      // Temporarily remove max-height to get actual content height
+      const originalMaxHeight = contentWrapper.style.maxHeight;
+      this.renderer.setStyle(contentWrapper, 'max-height', 'none');
+      // Force reflow to get accurate scrollHeight
+      contentWrapper.offsetHeight;
+      contentHeight = contentWrapper.scrollHeight;
+      // Restore original styles
+      this.renderer.setStyle(contentWrapper, 'max-height', originalMaxHeight);
+    }
+
+    // Calculate available space and adjust max-height if scrollable and auto-height is enabled
+    if (this.scrollable && this.autoHeight && contentWrapper && contentHeight > 0) {
+      const spaceInfo = this.calculateAvailableSpace(
+        hostRect,
+        this.tooltipPosition,
+        viewportHeight,
+        viewportWidth,
+        padding,
+        contentHeight
+      );
+
+      if (spaceInfo.available > 0) {
+        // Set optimal height
+        const heightToUse = spaceInfo.optimalHeight;
+        this.renderer.setStyle(contentWrapper, 'max-height', `${heightToUse}px`);
+        
+        // Only enable scroll if content exceeds available space
+        if (spaceInfo.needsScroll) {
+          this.renderer.setStyle(contentWrapper, 'overflow-y', 'auto');
+        } else {
+          this.renderer.setStyle(contentWrapper, 'overflow-y', 'hidden');
+        }
+        
+        // Force a reflow to get updated dimensions
+        contentWrapper.offsetHeight;
+      }
+    }
+    
+    // Recalculate tooltip dimensions after max-height adjustment
+    tooltipRect = this.tooltipElement.getBoundingClientRect();
 
     let top = 0, left = 0;
 
-    // Position logic — using viewport-relative coords (getBoundingClientRect)
-    // since the tooltip uses position: fixed (no scroll offset needed)
+    // Position logic
     switch (this.tooltipPosition) {
       case 'right':
       case 'left':
@@ -195,7 +344,7 @@ export class BKTooltipDirective implements OnInit, OnChanges, OnDestroy {
             : hostRect.left - tooltipRect.width - padding;
 
         // Auto flip if out of viewport
-        if (this.tooltipPosition === 'right' && left + tooltipRect.width > window.innerWidth) {
+        if (this.tooltipPosition === 'right' && left + tooltipRect.width > viewportWidth) {
           left = hostRect.left - tooltipRect.width - padding;
         } else if (this.tooltipPosition === 'left' && left < 0) {
           left = hostRect.right + padding;
@@ -216,13 +365,62 @@ export class BKTooltipDirective implements OnInit, OnChanges, OnDestroy {
           : hostRect.bottom + padding;
 
         // Prevent overflow
-        left = Math.max(10, Math.min(left, window.innerWidth - tooltipRect.width - 10));
+        left = Math.max(10, Math.min(left, viewportWidth - tooltipRect.width - 10));
+
+        // Adjust vertically if tooltip goes out of viewport
+        if (this.tooltipPosition === 'bottom' && top + tooltipRect.height > viewportHeight) {
+          // Try positioning above instead
+          if (hostRect.top - tooltipRect.height - padding >= 0) {
+            top = hostRect.top - tooltipRect.height - padding;
+            // Recalculate available space for top position
+            if (this.scrollable && this.autoHeight && contentWrapper && contentHeight > 0) {
+              const spaceInfo = this.calculateAvailableSpace(
+                hostRect,
+                'top',
+                viewportHeight,
+                viewportWidth,
+                padding,
+                contentHeight
+              );
+              if (spaceInfo.available > 0) {
+                this.renderer.setStyle(contentWrapper, 'max-height', `${spaceInfo.optimalHeight}px`);
+                this.renderer.setStyle(contentWrapper, 'overflow-y', spaceInfo.needsScroll ? 'auto' : 'hidden');
+                contentWrapper.offsetHeight;
+                tooltipRect = this.tooltipElement.getBoundingClientRect();
+              }
+            }
+            this.setTriangleStyles(triangle, 'top');
+          }
+        } else if (this.tooltipPosition === 'top' && top < 0) {
+          // Try positioning below instead
+          if (hostRect.bottom + tooltipRect.height + padding <= viewportHeight) {
+            top = hostRect.bottom + padding;
+            // Recalculate available space for bottom position
+            if (this.scrollable && this.autoHeight && contentWrapper && contentHeight > 0) {
+              const spaceInfo = this.calculateAvailableSpace(
+                hostRect,
+                'bottom',
+                viewportHeight,
+                viewportWidth,
+                padding,
+                contentHeight
+              );
+              if (spaceInfo.available > 0) {
+                this.renderer.setStyle(contentWrapper, 'max-height', `${spaceInfo.optimalHeight}px`);
+                this.renderer.setStyle(contentWrapper, 'overflow-y', spaceInfo.needsScroll ? 'auto' : 'hidden');
+                contentWrapper.offsetHeight;
+                tooltipRect = this.tooltipElement.getBoundingClientRect();
+              }
+            }
+            this.setTriangleStyles(triangle, 'bottom');
+          }
+        } else {
+          this.setTriangleStyles(triangle, this.tooltipPosition);
+        }
 
         this.setStyle(this.tooltipElement, {
           transform: 'translateX(0)',
         });
-
-        this.setTriangleStyles(triangle, this.tooltipPosition);
         break;
     }
 
@@ -230,6 +428,55 @@ export class BKTooltipDirective implements OnInit, OnChanges, OnDestroy {
       top: `${top}px`,
       left: `${left}px`,
     });
+  }
+
+  /**
+   * Calculates available space for tooltip based on position
+   * Returns: { available: number, needsScroll: boolean, optimalHeight: number }
+   */
+  private calculateAvailableSpace(
+    hostRect: DOMRect,
+    tooltipPosition: 'left' | 'right' | 'top' | 'bottom',
+    viewportHeight: number,
+    viewportWidth: number,
+    padding: number,
+    contentHeight: number
+  ): { available: number; needsScroll: boolean; optimalHeight: number } {
+    if (!this.scrollable || !this.autoHeight) {
+      return { available: 0, needsScroll: false, optimalHeight: 0 };
+    }
+
+    let availableSpace = 0;
+    const minHeight = 100;
+    const maxHeightLimit = parseInt(this.maxHeight) || 300;
+    const buffer = 35; // Extra buffer to prevent cutting
+
+    switch (tooltipPosition) {
+      case 'bottom':
+        const spaceBelow = viewportHeight - hostRect.bottom - padding - buffer;
+        availableSpace = Math.max(minHeight, Math.min(spaceBelow, maxHeightLimit));
+        break;
+
+      case 'top':
+        const spaceAbove = hostRect.top - padding - buffer;
+        availableSpace = Math.max(minHeight, Math.min(spaceAbove, maxHeightLimit));
+        break;
+
+      case 'left':
+      case 'right':
+        const spaceBelowSide = viewportHeight - hostRect.bottom - padding - buffer;
+        const spaceAboveSide = hostRect.top - padding - buffer;
+        const maxVerticalSpace = Math.max(spaceBelowSide, spaceAboveSide);
+        availableSpace = Math.max(minHeight, Math.min(maxVerticalSpace, maxHeightLimit));
+        break;
+    }
+
+    // Check if content fits without scroll
+    const needsScroll = contentHeight > availableSpace;
+    // Optimal height: use content height if it fits, otherwise use available space
+    const optimalHeight = needsScroll ? availableSpace : contentHeight;
+
+    return { available: availableSpace, needsScroll, optimalHeight };
   }
 
   private setTriangleStyles(
@@ -289,6 +536,7 @@ export class BKTooltipDirective implements OnInit, OnChanges, OnDestroy {
     if (this.tooltipElement) {
       this.renderer.removeChild(document.body, this.tooltipElement);
       this.tooltipElement = null;
+      this.contentWrapper = null;
     }
   }
 
