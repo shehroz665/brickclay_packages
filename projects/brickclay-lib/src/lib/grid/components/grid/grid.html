@@ -74,6 +74,9 @@
                     checkboxClass="sm"
                     [ngModel]="getCheckboxValue(row, col)"
                     (ngModelChange)="setCheckboxValue(row, col, $event)"
+                    [disabled]="typeof col.checkboxDisabled === 'function' ? col.checkboxDisabled(row) : col.checkboxDisabled || false"
+                    [bkTooltip]="typeof col.checkboxTooltip === 'function' ? col.checkboxTooltip(row) : col.checkboxTooltip || ''"
+                    [bkTooltipPosition]="col.checkboxTooltipPosition || 'top'"
                   ></bk-checkbox>
                 } @else if (col.badges) {
                   @let badge = getBadge(row, col);

@@ -15,6 +15,9 @@ export interface TableColumn<T = any> {
   visible?: boolean; // default: true
   actions?: TableAction[] | ((row: T) => TableAction[]);
   checkbox?:boolean;
+  checkboxDisabled?: boolean | ((row: T) => boolean);
+  checkboxTooltip?: string | ((row: T) => string);
+  checkboxTooltipPosition?: 'left' | 'right' | 'top' | 'bottom';
   /** Field whose value is shown as a tooltip on the cell */
   toolTipField?: keyof T;
   /** Position of the tooltip */
