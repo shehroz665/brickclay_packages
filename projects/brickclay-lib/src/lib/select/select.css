@@ -7,10 +7,10 @@
 /* Control */
 .bk-select-control {
   @apply flex items-center justify-between gap-2 w-full bg-white border border-[#E3E3E7] rounded transition-all duration-200 cursor-pointer focus:border-transparent
-  focus-visible:!outline-[0.5px] focus-visible:!outline-[#6B7080]
+  focus-visible:!outline-[0.5px] focus-visible:!outline-[#6B7080] 
   ;
   box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
-
+  
   &:focus-visible{
     outline-style: solid !important
   }
@@ -125,28 +125,23 @@
   @apply overflow-y-auto overflow-x-hidden relative flex flex-col gap-0.5;
 }
 
-/* Medium screens (tablets) */
-/* Small screens */
 @media (max-height: 700px) {
   .bk-options-list {
-    max-height: 175px;
+    max-height: 160px;
   }
 }
 
-/* Medium screens */
 @media (min-height: 701px) and (max-height: 900px) {
   .bk-options-list {
-    max-height: 210px;
+    max-height: 200px;
   }
 }
 
-/* Extra large screens */
 @media (min-height: 901px) {
   .bk-options-list {
-    max-height: 240px; /* adjust as needed */
+    max-height: 240px;
   }
 }
-
 
 /* Options */
 .bk-option {
