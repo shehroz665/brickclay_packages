@@ -1,3 +1,27 @@
 .column-select-option-empty {
      @apply px-3 py-2 text-gray-400 cursor-default text-sm;
 }
+
+.column-select-options-list {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+@media (max-height: 700px) {
+  .column-select-options-list {
+    max-height: 160px;
+  }
+}
+
+@media (min-height: 701px) and (max-height: 900px) {
+  .column-select-options-list {
+    max-height: 200px;
+  }
+}
+
+@media (min-height: 901px) {
+  .column-select-options-list {
+    max-height: 240px;
+  }
+}
