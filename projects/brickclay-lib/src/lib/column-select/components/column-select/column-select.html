@@ -16,7 +16,7 @@
     <div class="column-select-options-list">
       @for (column of list; track column.columnName; let i = $index) {
       <div class="flex items-center gap-2 px-3 py-2">
-        <bk-checkbox [label]="column.columnName" id="columnsFilterList-{{column.columnName}}" checkboxClass="sm" [(ngModel)]="column.selected"
+        <bk-checkbox [label]="column.columnName" id="columnsFilterList-{{column.columnName}}" checkboxClass="sm" [(ngModel)]="column.selected" labelClass="!text-left"
           (change)="onChangeColumnFilter()">
 
         </bk-checkbox>
@@ -25,7 +25,7 @@
           for="columnsFilterList-{{column.columnName}}">
           {{column.columnName}}
         </label> -->
-  
+
       </div>
       }
       @if(!list.length){

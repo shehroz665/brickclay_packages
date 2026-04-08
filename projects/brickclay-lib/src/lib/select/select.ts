@@ -216,7 +216,7 @@ export class BkSelect implements ControlValueAccessor {
     }
 
     // NOT appendToBody
-    return this.dropdownPosition() === 'top' ? '105%' : null;
+    return this.dropdownPosition() === 'top' ? 'calc(100% + 4px)' : null;
   }
 
 
