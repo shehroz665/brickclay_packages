@@ -157,6 +157,14 @@
   &.bk-selected {
     @apply bg-[#F8F8F8] rounded-md;
   }
+
+  &.bk-option-disabled {
+    @apply opacity-50 cursor-not-allowed;
+
+    &:hover {
+      @apply bg-transparent;
+    }
+  }
 }
 
 .bk-option .bk-option-label {

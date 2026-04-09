@@ -20,6 +20,7 @@ export interface HierarchicalNode {
   [key: string]: any;
   childs?: HierarchicalNode[];
   children?: HierarchicalNode[];
+  disabled?: boolean;
 }
 
 @Component({
@@ -45,6 +46,8 @@ export class BkHierarchicalSelect implements ControlValueAccessor {
   valueKey = input<string>('noteTypeKey');
   /** Key for children array (e.g. 'childs' or 'children'). */
   childrenKey = input<string>('childs');
+  /** Key to check if node is disabled (e.g. 'active', 'disabled'). */
+  // disabledKey = input<string>('disabled');
   /** Placeholder when nothing selected. */
   placeholder = input<string>('Select...');
   /** Label above the control. */
@@ -199,6 +202,25 @@ export class BkHierarchicalSelect implements ControlValueAccessor {
     return !!ch?.length;
   }
 
+  // isNodeDisabled(node: HierarchicalNode): boolean {
+  //   if (!node) return false;
+  //   const disabledProp = this.disabledKey();
+  //   if (!disabledProp || typeof node !== 'object') return false;
+
+  //   const value = node[disabledProp];
+  //   if (typeof value !== 'boolean') return value === true;
+
+  //   // Support both patterns:
+  //   // - disabled=true means disabled
+  //   // - active/enabled=false means disabled
+  //   const key = disabledProp.toLowerCase();
+  //   if (key.includes('active') || key.includes('enabled')) {
+  //     return !value;
+  //   }
+
+  //   return value;
+  // }
+
   isSelected(node: HierarchicalNode): boolean {
     const sel = this.selected();
     if (!sel) return false;
@@ -351,6 +373,7 @@ export class BkHierarchicalSelect implements ControlValueAccessor {
 
   selectItem(node: HierarchicalNode, event?: Event): void {
     event?.stopPropagation();
+    if (node.disabled) return;
     const hasChildren = this.hasChildren(node);
     if (hasChildren && !this.allowParentSelection()) {
       this.breadcrumb.update((stack) => [...stack, node]);

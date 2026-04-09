@@ -38,7 +38,7 @@ export class BkAvatarUploader implements OnDestroy, ControlValueAccessor, Valida
   /** Whether upload / remove actions are enabled */
   @Input() editable = true;
   /** Accepted file MIME types for the file picker */
-  @Input() accept = 'image/jpeg, image/png';
+  @Input() accept = 'image/jpeg, image/png, image/heic, image/heif, .heic, .heif';
   /** Max file size in KB (0 = no limit) */
   @Input() maxFileSizeKB = 0;
   /** Label shown on the upload button */
@@ -49,6 +49,7 @@ export class BkAvatarUploader implements OnDestroy, ControlValueAccessor, Valida
   @Input() loading = false;
   /** Whether the remove badge is shown when an image is present */
   @Input() removable = false;
+  @Input() removeableIconTooltip = 'Remove';
 
   // ---------- Form / CVA inputs ----------
   /** Label displayed above the avatar */
@@ -119,8 +120,9 @@ export class BkAvatarUploader implements OnDestroy, ControlValueAccessor, Valida
     this.imageLoadFailed = false;
     this.corrupted = false;
 
-    // When the parent updates [src] via @Input (non-CVA usage), discard the local preview
-    if (changes['src'] && this.previewUrl) {
+    // When the parent updates [src] via @Input (non-CVA usage), discard the local preview,
+    // except when the incoming value is the same preview URL.
+    if (changes['src'] && this.previewUrl && this.src !== this.previewUrl) {
       this.revokePreview();
     }
   }
@@ -167,6 +169,7 @@ export class BkAvatarUploader implements OnDestroy, ControlValueAccessor, Valida
     if (!input.files?.length) return;
 
     const file = input.files[0];
+    const isHeicLike = this.isHeicFile(file);
 
     // Validate file type
     if (this.accept && !this.isFileTypeValid(file)) {
@@ -185,6 +188,20 @@ export class BkAvatarUploader implements OnDestroy, ControlValueAccessor, Valida
     // Create a blob URL and verify the browser can actually decode it as an image
     this.revokePreview();
     const blobUrl = URL.createObjectURL(file);
+
+    if (isHeicLike) {
+      // HEIC/HEIF files are often valid but not decodable by the browser on Windows.
+      // Do not attach a blob preview URL for these formats; some browsers emit
+      // noisy blob fetch errors for unsupported decoders.
+      URL.revokeObjectURL(blobUrl);
+      this.corrupted = false;
+      this.previewUrl = null;
+      this.imageLoadFailed = false;
+      this.onTouched();
+      this.fileSelected.emit(event);
+      input.value = '';
+      return;
+    }
 
     this.validateImage(blobUrl).then(valid => {
       if (!valid) {
@@ -244,13 +261,32 @@ export class BkAvatarUploader implements OnDestroy, ControlValueAccessor, Valida
   }
 
   private isFileTypeValid(file: File): boolean {
-    const accepted = this.accept.split(',').map(t => t.trim());
+    const accepted = this.accept.split(',').map(t => t.trim().toLowerCase()).filter(Boolean);
+    const fileType = (file.type || '').toLowerCase();
+    const fileName = file.name.toLowerCase();
+    const fileExtension = fileName.includes('.') ? fileName.slice(fileName.lastIndexOf('.') + 1) : '';
+
     return accepted.some(type => {
       if (type.endsWith('/*')) {
-        return file.type.startsWith(type.replace('/*', '/'));
+        return fileType.startsWith(type.slice(0, -1));
       }
-      return file.type === type;
+
+      if (type === 'image/heic' || type === 'image/heif' || type === '.heic' || type === '.heif' || type === 'heic' || type === 'heif') {
+        return fileType === 'image/heic' || fileType === 'image/heif' || fileExtension === 'heic' || fileExtension === 'heif';
+      }
+
+      if (type.startsWith('.')) {
+        return fileExtension === type.slice(1);
+      }
+
+      return fileType === type;
     });
+  }
+
+  private isHeicFile(file: File): boolean {
+    const fileType = (file.type || '').toLowerCase();
+    const fileName = file.name.toLowerCase();
+    return fileType === 'image/heic' || fileType === 'image/heif' || fileName.endsWith('.heic') || fileName.endsWith('.heif');
   }
 
   private getInitials(name: string): string {

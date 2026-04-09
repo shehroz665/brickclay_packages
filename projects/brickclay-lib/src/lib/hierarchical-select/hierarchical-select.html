@@ -122,6 +122,8 @@
           <div
             class="hierarchical-option"
             [class.selected]="isSelected(item)"
+            [class.disabled-item]="item.disabled"
+            [class.cursor-not-allowed]="item.disabled"
             (mousedown)="selectItem(item, $event)">
             <span
               #optLabel

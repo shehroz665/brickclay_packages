@@ -204,6 +204,8 @@
                   class="bk-option"
                   [class.bk-selected]="isItemSelected(item)"
                   [class.bk-marked]="$index === markedIndex()"
+                  [class.bk-option-disabled]="isItemDisabled(item)"
+                  [class.cursor-not-allowed]="isItemDisabled(item)"
                   (click)="handleSelection(item, $event)"
                 >
                   <div class="flex-1 flex justify-between gap-2 min-w-0">

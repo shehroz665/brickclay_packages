@@ -150,6 +150,10 @@ export class BkSelect implements ControlValueAccessor {
     return current.some(selected => compareFn(itemVal, this.resolveValue(selected)));
   }
 
+  isItemDisabled(item: any): boolean {
+    return !!item?.disabled;
+  }
+
   compareWith = input<(a: any, b: any) => boolean>((a, b) => a === b);
 
   // --- Actions ---
@@ -264,11 +268,11 @@ export class BkSelect implements ControlValueAccessor {
     if (allSelected) {
       newSelection = newSelection.filter(sel => {
         const selVal = this.resolveValue(sel);
-        return !filtered.some(fItem => compareFn(this.resolveValue(fItem), selVal));
+        return !filtered.some(fItem => compareFn(this.resolveValue(fItem), selVal) && !this.isItemDisabled(fItem));
       });
     } else {
       filtered.forEach(item => {
-        if (!this.isItemSelected(item)) newSelection.push(item);
+        if (!this.isItemSelected(item) && !this.isItemDisabled(item)) newSelection.push(item);
       });
     }
     this.updateModel(newSelection);
@@ -276,6 +280,7 @@ export class BkSelect implements ControlValueAccessor {
 
   handleSelection(item: any, event?: Event) {
     if (event) event.stopPropagation();
+    if (this.isItemDisabled(item)) return;
     if (this.multiple()) {
       const isSelected = this.isItemSelected(item);
       let newSelection = [...this.selectedOptions()];

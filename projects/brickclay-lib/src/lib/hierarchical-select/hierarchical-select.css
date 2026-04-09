@@ -17,6 +17,10 @@
 
 .hierarchical-select-control.disabled {
   @apply bg-[#F4F4F6] cursor-not-allowed opacity-60;
+
+  .hierarchical-placeholder {
+    @apply text-gray-400;
+  }
 }
 
 .hierarchical-value-container {
@@ -106,11 +110,23 @@
 
 .hierarchical-option {
   @apply flex items-center justify-between gap-2 p-2.5 cursor-pointer transition-colors font-normal text-sm text-[#141414] rounded-md;
+
+  &.disabled-item {
+    @apply opacity-50 cursor-not-allowed;
+
+    &:hover {
+      @apply bg-transparent;
+    }
+  }
 }
 
 .hierarchical-option:hover,
 .hierarchical-option.selected {
   @apply bg-[#F8F8F8];
+}
+
+.hierarchical-option.selected.disabled-item {
+  @apply bg-transparent;
 }
 
 .hierarchical-option-label {
