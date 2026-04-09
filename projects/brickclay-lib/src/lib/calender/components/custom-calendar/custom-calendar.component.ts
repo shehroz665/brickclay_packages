@@ -1192,14 +1192,16 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
       this.keyboardFocusDate = new Date(this.startDate.getFullYear(), this.startDate.getMonth(), this.startDate.getDate());
     }
 
-    this.emitSelectionUnlessSingleDateDeferred();
-    if (this.shouldDeferSingleDateCommit()) {
-      if (this.autoApply) {
+    // "Custom Range" returned above — here we only handle predefined presets.
+    // Popup: quick-select preset → same as Apply (commit + close). Inline: keep prior emit / deferred rules.
+    if (this.inline) {
+      this.emitSelectionUnlessSingleDateDeferred();
+      if (this.shouldDeferSingleDateCommit() && this.autoApply) {
         this.apply();
       }
-    } else if (this.autoApply || this.closeOnAutoApply) {
-      this.close();
+      return;
     }
+    this.apply();
   }
 
   // emitSelection() {
