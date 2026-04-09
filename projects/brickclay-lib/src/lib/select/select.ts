@@ -476,5 +476,10 @@ export class BkSelect implements ControlValueAccessor {
       .map((x) => this.resolveLabel(x));
   }
 
+  getTooltipIfEllipsed(el: HTMLElement, text: string): string {
+    if (!el) return '';
+    return el.scrollWidth > el.clientWidth || el.scrollHeight > el.clientHeight ? text : '';
+  }
+
 
 }
