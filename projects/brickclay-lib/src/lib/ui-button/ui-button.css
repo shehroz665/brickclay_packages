@@ -1,6 +1,13 @@
 /* Base Button Style */
 .btn {
-  @apply border rounded transition-colors duration-200 cursor-pointer;
+  @apply border rounded cursor-pointer;
+  transition: none;
+}
+
+.btn:hover,
+.btn:focus-visible,
+.btn:active {
+  @apply transition-colors duration-200;
 }
 
 /* --- VARIANTS --- */

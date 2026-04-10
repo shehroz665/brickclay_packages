@@ -96,13 +96,15 @@
                   @let iconsList = getIcons(row, col);
                   <div class="flex justify-center items-center gap-2">
                     @for (icon of iconsList; track $index) {
-                      <img
-                        [src]="icon.url"
-                        class="size-4"
-                        [ngClass]="{ 'cursor-pointer': icon.url }"
-                        [bkTooltip]="icon.toolTipLabel || []"
-                        [bkTooltipPosition]="icon.tooltipPosition || 'top'"
-                      />
+                      @if(icon.url){
+                        <img
+                          [src]="icon.url"
+                          class="size-4"
+                          [ngClass]="{ 'cursor-pointer': icon.url }"
+                          [bkTooltip]="icon.toolTipLabel || []"
+                          [bkTooltipPosition]="icon.tooltipPosition || 'top'"
+                        />
+                      }
                     }
                   </div>
                 } @else if (col.toolTipField) {
@@ -127,7 +129,7 @@
                     <button
                       [bkTooltip]="action.tooltip"
                       [bkTooltipPosition]="action?.tooltipPosition || 'top'"
-                      class="size-6 flex items-center justify-center rounded hover:bg-[#F8F8FA]"
+                      class="size-6 flex items-center justify-center rounded hover:bg-[#F8F8FA] {{actionIconClass}}"
                       (click)="emitAction(action, row)"
                       [disabled]="isActionDisabled(action, row)"
                     >

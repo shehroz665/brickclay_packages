@@ -46,6 +46,7 @@ export class BkHierarchicalSelect implements ControlValueAccessor {
   valueKey = input<string>('noteTypeKey');
   /** Key for children array (e.g. 'childs' or 'children'). */
   childrenKey = input<string>('childs');
+  clearTooltip = input<string>('');
   /** Key to check if node is disabled (e.g. 'active', 'disabled'). */
   // disabledKey = input<string>('disabled');
   /** Placeholder when nothing selected. */

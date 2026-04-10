@@ -23,6 +23,7 @@ export class BkGrid<T = any> {
   @Input() result!: T[];
   @Input() actions: TableAction<T>[] | ((row: T) => TableAction<T>[]) = [];
   @Input() customClass: string = 'h-[calc(100vh-260px)]';
+  @Input() actionIconClass: string = '';
   @Input() showNoRecords: boolean = false;
   @Input() noRecordFoundHeight: string = '';
 
