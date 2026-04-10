@@ -127,6 +127,10 @@
   @apply text-[#A1A3AE] cursor-not-allowed;
 }
 
+.input-badge-input:-moz-focusring {
+  outline: none;
+}
+
 /* Footer */
 .input-badge-footer {
   @apply flex justify-between items-start font-normal text-sm;
