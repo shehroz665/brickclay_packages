@@ -132,7 +132,7 @@ export class BkInput implements OnInit, OnDestroy, AfterViewInit, ControlValueAc
   @Input() dropSpecialCharacters: boolean | string[] | readonly string[] = false;
   @Input() autoComplete : BkInputAutoComplete = 'off';
   @Input() label: string = '';
-  @Input() placeholder: string = 'stephend@i2cinc.com';
+  @Input() placeholder: string = '';
   @Input() hint: string = '';
   @Input() required: boolean = false;
   @Input() type: BkInputType = 'text';
@@ -466,4 +466,3 @@ selectCountry(country: CountryOption): void {
 
 
 }
- 
