@@ -92,7 +92,7 @@ export class BkToastrService {
       ...config,
       id,
       severity: config.severity ?? 'info',
-      timeOut: config.timeOut ?? 3000,
+      timeOut: config.timeOut ?? 4000,
       sticky: config.sticky ?? false,
       icon: config.icon !== false,
       leaving: false,
