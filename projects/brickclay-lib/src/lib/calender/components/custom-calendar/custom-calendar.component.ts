@@ -52,8 +52,8 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
   @Input() customRangeDirection = false;
   @Input() lockStartDate = false;
   @Input() position: 'center' | 'left' | 'right' = 'left';
-  /** Vertical placement relative to the input. Takes precedence over {@link drop} for default bottom placement. */
-  @Input() popupPosition: 'top' | 'bottom' = 'bottom';
+  /** Vertical placement relative to the input. When explicitly set, overrides viewport-space detection entirely. */
+  @Input() popupPosition?: 'top' | 'bottom';
   @Input() drop: 'up' | 'down' = 'down';
   @Input() dualCalendar = false;
   @Input() showRanges = true;
@@ -208,9 +208,9 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
     this.closed.emit();
   }
 
-  /** User preference before viewport adjustment (legacy `drop` still applies when `popupPosition` is `bottom`). */
+  /** User preference before viewport adjustment (only used when popupPosition is not explicitly set). */
   private preferPopupAbove(): boolean {
-    return this.popupPosition === 'top' || (this.popupPosition === 'bottom' && this.drop === 'up');
+    return this.drop === 'up';
   }
 
   private resolveCustomRangesFromInputsOrService(): void {
@@ -654,6 +654,11 @@ export class BkCustomCalendar implements OnInit, OnDestroy, OnChanges, ControlVa
   }
 
   private computePlacementAbove(rect: DOMRect, popupHeight: number): boolean {
+    // If the consumer explicitly set popupPosition, honour it — no space-check override.
+    if (this.popupPosition === 'top') return true;
+    if (this.popupPosition === 'bottom') return false;
+
+    // No explicit value → auto-detect based on available viewport space.
     const gap = 12;
     const spaceBelow = window.innerHeight - rect.bottom - gap;
     const spaceAbove = rect.top - gap;
