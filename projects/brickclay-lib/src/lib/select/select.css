@@ -129,19 +129,19 @@
 
 @media (max-height: 700px) {
   .bk-options-list {
-    max-height: 125px;
+    max-height: 125px ;
   }
 }
 
 @media (min-height: 701px) and (max-height: 900px) {
   .bk-options-list {
-    max-height: 165px;
+    max-height: 166px ;
   }
 }
 
 @media (min-height: 901px) {
   .bk-options-list {
-    max-height: 210px;
+    max-height: 210px ;
   }
 }
 
@@ -250,4 +250,14 @@
 
 .bk-search-input:focus-visible {
   outline: 2px solid transparent;
+}
+
+/* Option icon (in dropdown rows and selected value) */
+.bk-option-icon {
+  @apply w-4 h-4 object-contain rounded-sm;
+}
+
+/* Badge icon (in multi-select chips) */
+.bk-chip-icon {
+  @apply w-3 h-3 object-contain rounded-sm;
 }

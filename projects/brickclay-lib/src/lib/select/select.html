@@ -31,6 +31,9 @@
           <div class="bk-value-chips flex gap-0.5 flex-wrap h-[18px] overflow-y-auto">
             @for (opt of selectedOptions().slice(0, maxLabels()); track $index) {
               <div class="bk-multi-badge-item me-0.5">
+                @if (resolveIcon(opt)) {
+                  <img [src]="resolveIcon(opt)!" alt="icon" class="bk-chip-icon shrink-0" />
+                }
                 <span #badgeTextEl class="bk-multi-badge-item-text" [style.color]="resolveColor(opt)"
                       [bkTooltip]="getTooltipIfEllipsed(badgeTextEl, resolveLabel(opt))"
                       bkTooltipPosition="top">{{
@@ -69,10 +72,15 @@
           </div>
         }
         @if (!multiple() && selectedOptions().length > 0) {
-          <div #singleValueEl class="bk-value-label-single" [style.color]="resolveColor(selectedOptions()[0])"
-               [bkTooltip]="getTooltipIfEllipsed(singleValueEl, resolveLabel(selectedOptions()[0]))"
-               bkTooltipPosition="top">
-            {{ resolveLabel(selectedOptions()[0]) }}
+          <div class="flex items-center gap-1.5 min-w-0 w-full">
+            @if (resolveIcon(selectedOptions()[0])) {
+              <img [src]="resolveIcon(selectedOptions()[0])!" alt="icon" class="bk-option-icon shrink-0" />
+            }
+            <div #singleValueEl class="bk-value-label-single" [style.color]="resolveColor(selectedOptions()[0])"
+                 [bkTooltip]="getTooltipIfEllipsed(singleValueEl, resolveLabel(selectedOptions()[0]))"
+                 bkTooltipPosition="top">
+              {{ resolveLabel(selectedOptions()[0]) }}
+            </div>
           </div>
         }
       </div>
@@ -213,11 +221,16 @@
                   (click)="handleSelection(item, $event)"
                 >
                   <div class="flex-1 flex justify-between gap-2 min-w-0">
-                    <span #optionLabelEl class="bk-option-label min-w-0" [style.color]="resolveColor(item)"
-                          [bkTooltip]="getTooltipIfEllipsed(optionLabelEl, resolveLabel(item))"
-                          bkTooltipPosition="top">{{
-                      resolveLabel(item)
-                    }}</span>
+                    <div class="flex items-center gap-2 min-w-0 flex-1">
+                      @if (resolveIcon(item)) {
+                        <img [src]="resolveIcon(item)!" alt="icon" class="bk-option-icon shrink-0" />
+                      }
+                      <span #optionLabelEl class="bk-option-label min-w-0" [style.color]="resolveColor(item)"
+                            [bkTooltip]="getTooltipIfEllipsed(optionLabelEl, resolveLabel(item))"
+                            bkTooltipPosition="top">{{
+                        resolveLabel(item)
+                      }}</span>
+                    </div>
 
                     @if (isItemSelected(item)) {
                       <svg

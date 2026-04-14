@@ -38,6 +38,7 @@ export class BkSelect implements ControlValueAccessor {
   items = input<any[]>([]);
   bindLabel = input<string>('label');
   bindValue = input<string>('');
+  bindIcon = input<string>(''); // key in item for icon URL
   placeholder = input<string>('');
   notFoundText = input<string>('No records found');
   loadingText = input<string>('Loading...');
@@ -468,6 +469,12 @@ export class BkSelect implements ControlValueAccessor {
     if (!item) return null;
     const key = this.colorKey();
     return key && typeof item === 'object' ? item[key] : null;
+  }
+
+  resolveIcon(item: any): string | null {
+    if (!item) return null;
+    const key = this.bindIcon();
+    return key && typeof item === 'object' ? item[key] ?? null : null;
   }
 
   getRemainingItems(): string[] {
