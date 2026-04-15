@@ -15,52 +15,93 @@
     'input-wrapper--icon': iconSrc && showIcon
   }">
 
-    <input
-      #inputField
-      [type]="currentInputType"
-      [id]="id"
-      [name]="name"
-      [disabled]="disabled"
-      [tabindex]="tabIndex"
-      [readOnly]="readOnly"
-      [attr.maxlength]="maxlength"
-      [attr.minlength]="minlength"
-      [autocomplete]="autoComplete"
-      [autocapitalize]="autoCapitalize"
+    @if (maskValue) {
+      <input
+        #inputField
+        [type]="currentInputType"
+        [id]="id"
+        [name]="name"
+        [disabled]="disabled"
+        [tabindex]="tabIndex"
+        [readOnly]="readOnly"
+        [attr.maxlength]="maxlength"
+        [attr.minlength]="minlength"
+        [autocomplete]="autoComplete"
+        [autocapitalize]="autoCapitalize"
 
-      [attr.max]="max"
-      [attr.min]="min"
-      [attr.step]="step"
+        [attr.max]="max"
+        [attr.min]="min"
+        [attr.step]="step"
 
-      [placeholder]="placeHolderText"
-      [attr.pattern]="pattern"
-      [autocomplete]="autoComplete"
-      [value]="inputValue"
+        [placeholder]="placeHolderText"
+        [attr.pattern]="pattern"
+        [autocomplete]="autoComplete"
+        [value]="inputValue"
 
+        [mask]="maskValue"
+        [prefix]="maskPrefixValue"
+        [showMaskTyped]="false"
+        [dropSpecialCharacters]="dropSpecialCharacters"
+        (change)="handleChange($event)"
+        (input)="handleInput($event)"
+        (focus)="handleFocus($event)"
+        (blur)="handleBlur($event)"
+        class="input-field"
 
+        [ngClass]="{
+          'input-field--url': type === 'url',
+          'input-field--phone': phone,
+          'input-field--icon-left': iconSrc && showIcon && iconOrientation === 'left',
+          'input-field--icon-right': iconSrc && showIcon && iconOrientation === 'right',
+          'input-field--password': password,
+          'input-field--default': inputState === 'default',
+          'input-field--focused': inputState === 'focused',
+          'input-field--filled': inputState === 'filled',
+          'input-field--error': inputState === 'error',
+          'input-field--disabled': inputState === 'disabled'
+        }">
+    } @else {
+      <input
+        #inputField
+        [type]="currentInputType"
+        [id]="id"
+        [name]="name"
+        [disabled]="disabled"
+        [tabindex]="tabIndex"
+        [readOnly]="readOnly"
+        [attr.maxlength]="maxlength"
+        [attr.minlength]="minlength"
+        [autocomplete]="autoComplete"
+        [autocapitalize]="autoCapitalize"
 
-      [mask]="maskValue"
-      [prefix]="maskPrefixValue"
-      [showMaskTyped]="false"
-      [dropSpecialCharacters]="dropSpecialCharacters"
-      (change)="handleChange($event)"
-      (input)="handleInput($event)"
-      (focus)="handleFocus($event)"
-      (blur)="handleBlur($event)"
-      class="input-field"
+        [attr.max]="max"
+        [attr.min]="min"
+        [attr.step]="step"
 
-      [ngClass]="{
-        'input-field--url': type === 'url',
-        'input-field--phone': phone,
-        'input-field--icon-left': iconSrc && showIcon && iconOrientation === 'left',
-        'input-field--icon-right': iconSrc && showIcon && iconOrientation === 'right',
-        'input-field--password': password,
-        'input-field--default': inputState === 'default',
-        'input-field--focused': inputState === 'focused',
-        'input-field--filled': inputState === 'filled',
-        'input-field--error': inputState === 'error',
-        'input-field--disabled': inputState === 'disabled'
-      }">
+        [placeholder]="placeHolderText"
+        [attr.pattern]="pattern"
+        [autocomplete]="autoComplete"
+        [value]="inputValue"
+
+        (change)="handleChange($event)"
+        (input)="handleInput($event)"
+        (focus)="handleFocus($event)"
+        (blur)="handleBlur($event)"
+        class="input-field"
+
+        [ngClass]="{
+          'input-field--url': type === 'url',
+          'input-field--phone': phone,
+          'input-field--icon-left': iconSrc && showIcon && iconOrientation === 'left',
+          'input-field--icon-right': iconSrc && showIcon && iconOrientation === 'right',
+          'input-field--password': password,
+          'input-field--default': inputState === 'default',
+          'input-field--focused': inputState === 'focused',
+          'input-field--filled': inputState === 'filled',
+          'input-field--error': inputState === 'error',
+          'input-field--disabled': inputState === 'disabled'
+        }">
+    }
 
     @if(iconSrc && showIcon){
       <img (click)="handleIconClick($event)" [src]="iconSrc" [alt]="iconAlt" [ngClass]="{
