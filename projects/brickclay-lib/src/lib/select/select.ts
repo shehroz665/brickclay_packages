@@ -39,6 +39,7 @@ export class BkSelect implements ControlValueAccessor {
   bindLabel = input<string>('label');
   bindValue = input<string>('');
   bindIcon = input<string>(''); // key in item for icon URL
+  isResponsive = input<boolean>(true)
   placeholder = input<string>('');
   notFoundText = input<string>('No records found');
   loadingText = input<string>('Loading...');

@@ -171,6 +171,7 @@
           #optionsListContainer
           tabindex="-1"
           class="bk-options-list"
+          [class.bk-no-responsive]="!isResponsive()"
           (scroll)="onScroll($event)"
         >
           @if (loading()) {

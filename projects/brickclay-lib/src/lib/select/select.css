@@ -108,7 +108,7 @@
 
 /* Dropdown */
 .bk-dropdown-panel {
-  @apply absolute left-0 w-full bg-white border border-[#E3E3E7] rounded-xl shadow-lg z-[99] overflow-hidden cursor-default p-2.5;
+  @apply absolute left-0 w-full bg-white border border-[#E3E3E7] rounded-xl shadow-lg z-[100] overflow-hidden cursor-default p-2.5;
 }
 
 .bk-dropdown-search {
@@ -143,6 +143,10 @@
   .bk-options-list {
     max-height: 210px ;
   }
+}
+
+.bk-options-list.bk-no-responsive {
+  max-height: 166px !important;
 }
 
 /* Options */
